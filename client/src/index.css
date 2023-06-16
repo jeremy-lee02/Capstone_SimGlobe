@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.background {
+    width: 100%;
+    min-height: 100vh;
+    background-image: url("./assets/theme/background.png");
+}
