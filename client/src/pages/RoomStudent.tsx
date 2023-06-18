@@ -37,8 +37,18 @@ const RoomStudent: React.FC = () => {
     { teamNumber: 1, teamMembers: 3 },
     { teamNumber: 2, teamMembers: 0 },
     { teamNumber: 3, teamMembers: 0 },
-    { teamNumber: 4, teamMembers: 0 },
+    { teamNumber: 4, teamMembers: 4 },
+    { teamNumber: 5, teamMembers: 0 },
+    { teamNumber: 6, teamMembers: 0 },
+    { teamNumber: 7, teamMembers: 4 },
+    { teamNumber: 8, teamMembers: 0 },
+    { teamNumber: 9, teamMembers: 0 },
+    { teamNumber: 10, teamMembers: 0 }
   ]);
+
+  const handleLeaveRoom = () => {
+    // Handle leave room functionality here
+  };
 
   return (
     <div className="flex flex-col items-center bg-gray-900 text-white min-h-screen">
@@ -48,9 +58,9 @@ const RoomStudent: React.FC = () => {
         </div>
         <h1 className="text-2xl font-bold">Daniel Borer</h1>
       </div>
-      <div className="flex flex-col items-center">
-        <h2 className="text-xl font-bold mb-4">CodeRoom</h2>
-        <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col items-center flex-grow">
+        <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
+        <div className="grid grid-cols-2 gap-10">
           {teams.map((team) => (
             <TeamCard
               key={team.teamNumber}
@@ -63,6 +73,12 @@ const RoomStudent: React.FC = () => {
           ))}
         </div>
       </div>
+      <button
+        className="fixed bottom-4 right-4 bg-red-500 text-white rounded-lg p-3 shadow-lg border border-red-500 hover:bg-white hover:text-red-500 transition-colors"
+        onClick={handleLeaveRoom}
+      >
+        <span className="font-bold">Leave Room</span>
+      </button>
     </div>
   );
 };
