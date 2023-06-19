@@ -1,3 +1,4 @@
+import EmailVerify from "./components/EmailVerify"
 import GamePlay from "./pages/GamePlay"
 import Home from "./pages/Home"
 
@@ -9,6 +10,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element= {<Home />} />
+        <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
         <Route path= {`/${1}`} element= {<GamePlay />} />
       </Routes>
     </>
