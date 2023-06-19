@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
+import LeaveIcon from '../components/LeaveIcon';
 
 type Team = {
   teamNumber: number;
   teamMembers: number;
 };
+
 
 const RoomStudent: React.FC = () => {
   const [joinedTeam, setJoinedTeam] = useState<number | null>(null);
@@ -77,7 +79,10 @@ const RoomStudent: React.FC = () => {
         className="fixed bottom-4 right-4 bg-red-500 text-white rounded-lg p-3 shadow-lg border border-red-500 hover:bg-white hover:text-red-500 transition-colors"
         onClick={handleLeaveRoom}
       >
-        <span className="font-bold">Leave Room</span>
+        <div className="flex items-center">
+          <LeaveIcon className="w-4 h-4 fill-current mr-2" />
+          <span className="font-bold">Leave Room</span>
+        </div>
       </button>
     </div>
   );
