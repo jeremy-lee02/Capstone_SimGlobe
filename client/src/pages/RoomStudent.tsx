@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import LeaveIcon from '../components/LeaveIcon';
-
+import "../pages/RoomStudent.css"
 type Team = {
   teamNumber: number;
   teamMembers: number;
@@ -45,11 +45,30 @@ const RoomStudent: React.FC = () => {
     { teamNumber: 7, teamMembers: 4 },
     { teamNumber: 8, teamMembers: 0 },
     { teamNumber: 9, teamMembers: 0 },
-    { teamNumber: 10, teamMembers: 0 }
+    { teamNumber: 10, teamMembers: 0 },
+    { teamNumber: 11, teamMembers: 3 },
+    { teamNumber: 12, teamMembers: 0 },
+    { teamNumber: 13, teamMembers: 0 },
+    { teamNumber: 14, teamMembers: 4 },
+    { teamNumber: 15, teamMembers: 0 },
+    { teamNumber: 16, teamMembers: 0 },
+    { teamNumber: 17, teamMembers: 4 },
+    { teamNumber: 18, teamMembers: 0 },
+    { teamNumber: 19, teamMembers: 0 },
+    { teamNumber: 20, teamMembers: 0 },
+    { teamNumber: 21, teamMembers: 3 },
+    { teamNumber: 22, teamMembers: 0 },
+    { teamNumber: 23, teamMembers: 0 },
+    { teamNumber: 24, teamMembers: 4 },
+    { teamNumber: 25, teamMembers: 0 },
+    { teamNumber: 26, teamMembers: 0 },
+    { teamNumber: 27, teamMembers: 4 },
+    { teamNumber: 28, teamMembers: 0 },
+    { teamNumber: 29, teamMembers: 0 },
   ]);
 
   const handleLeaveRoom = () => {
-    // Handle leave room functionality here
+    
   };
 
   return (
@@ -62,7 +81,7 @@ const RoomStudent: React.FC = () => {
       </div>
       <div className="flex flex-col items-center flex-grow">
         <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
-        <div className="grid grid-cols-2 gap-10">
+        <div className="grid grid-cols-2 gap-10 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
           {teams.map((team) => (
             <TeamCard
               key={team.teamNumber}
