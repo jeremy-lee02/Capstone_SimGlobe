@@ -6,7 +6,7 @@ type TeamCardProps = {
   teamMembers: number;
   joined: boolean;
   isFull: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const TeamCard: React.FC<TeamCardProps> = ({
@@ -17,7 +17,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
   onClick,
 }) => {
   const handleClick = () => {
-    if (!isFull && !joined) {
+    if (onClick &&!isFull && !joined) {
       onClick();
     }
   };
