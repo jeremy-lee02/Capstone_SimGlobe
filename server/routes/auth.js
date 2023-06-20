@@ -1,45 +1,54 @@
 const router = require("express").Router();
-const { User } = require("../models/user");
-const Token = require("../models/token");
-const crypto = require("crypto");
-const sendEmail = require("../utils/sendEmail");
+
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
+const {db} = require('../firebase');
+const jwt = require("jsonwebtoken");
 
 router.post("/", async (req, res) => {
 	try {
 		const { error } = validate(req.body);
-		if (error)
+		if (error) {
 			return res.status(400).send({ message: error.details[0].message });
+		}
 
-		const user = await User.findOne({ email: req.body.email });
-		if (!user)
+		const userRef = db.collection("users");
+		const tokenRef = db.collection("tokens");
+		const queryUserRef = await userRef.where('email', '==', req.body.email).get();
+		const userInfo = [];
+		const tokenInfo = [];
+
+		queryUserRef.forEach(user => {
+			userInfo.push(user.data())
+		})
+		const queryTokenRef = await tokenRef.where('userId', '==', userInfo[0].user_id).get();
+
+		queryTokenRef.forEach(token => {
+			tokenInfo.push(token.data())
+		})
+
+		if (queryUserRef.size !== 1)
 			return res.status(401).send({ message: "Invalid Email or Password" });
-
+			
 		const validPassword = await bcrypt.compare(
 			req.body.password,
-			user.password
+			userInfo[0].password
 		);
+
+
 		if (!validPassword)
 			return res.status(401).send({ message: "Invalid Email or Password" });
 
-		if (!user.verified) {
-			let token = await Token.findOne({ userId: user._id });
-			if (!token) {
-				token = await new Token({
-					userId: user._id,
-					token: crypto.randomBytes(32).toString("hex"),
-				}).save();
-				const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
-				await sendEmail(user.email, "Verify Email", url);
-			}
-
+		if (!userInfo[0].verified) {
 			return res
 				.status(400)
 				.send({ message: "An Email sent to your account please verify" });
 		}
 
-		const token = user.generateAuthToken();
+		const token = jwt.sign({ _id: userInfo[0].user_id }, process.env.JWTPRIVATEKEY, {
+			expiresIn: "7d",
+		});
+
 		res.status(200).send({ data: token, message: "logged in successfully" });
 	} catch (error) {
 		res.status(500).send({ message: "Internal Server Error" });

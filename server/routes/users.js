@@ -1,18 +1,20 @@
 const router = require("express").Router();
-const { User, validate } = require("../models/user");
-const Token = require("../models/token");
+const { validate } = require("../models/user");
+
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const bcrypt = require("bcrypt");
+const {db} = require('../firebase');
 
 router.post("/", async (req, res) => {
 	try {
+		const userRef = db.collection("users");
+		const queryUserRef = await userRef.where('email', '==', req.body.email).get();
 		const { error } = validate(req.body);
 		if (error)
 			return res.status(400).send({ message: error.details[0].message });
 
-		let user = await User.findOne({ email: req.body.email });
-		if (user)
+		if (queryUserRef.size > 1)
 			return res
 				.status(409)
 				.send({ message: "User with given email already Exist!" });
@@ -20,14 +22,28 @@ router.post("/", async (req, res) => {
 		const salt = await bcrypt.genSalt(Number(process.env.SALT));
 		const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-		user = await new User({ ...req.body, password: hashPassword }).save();
 
-		const token = await new Token({
-			userId: user._id,
+		const user = db.collection('users').doc()
+		await user.set({
+		...req.body,
+		user_id: user.id,	
+		password: hashPassword, verified: false
+		})
+
+		const token = db.collection('tokens').doc()
+		await token.set({
+			userId: user.id,
 			token: crypto.randomBytes(32).toString("hex"),
-		}).save();
-		const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
-		await sendEmail(user.email, "Verify Email", url);
+		})
+
+		const userDb = db.collection('users').doc(user.id)
+		const userGetter = (await userDb.get()).data();
+
+		const tokenDb = db.collection('tokens').doc(token.id)
+		const tokenGetter = (await tokenDb.get()).data();
+
+		const url = `${process.env.BASE_URL}users/${user.id}/verify/${tokenGetter.token}`;
+		await sendEmail(userGetter.email, "Verify Email", url);
 
 		res
 			.status(201)
@@ -40,17 +56,17 @@ router.post("/", async (req, res) => {
 
 router.get("/:id/verify/:token/", async (req, res) => {
 	try {
-		const user = await User.findOne({ _id: req.params.id });
-		if (!user) return res.status(400).send({ message: "Invalid link" });
+		const userDb = db.collection('users').doc(req.params.id)
+		const isUserExist = await (await userDb.get()).exists
 
-		const token = await Token.findOne({
-			userId: user._id,
-			token: req.params.token,
-		});
-		if (!token) return res.status(400).send({ message: "Invalid link" });
+		if (!isUserExist) return res.status(400).send({ message: "Invalid link" });
 
-		await User.updateOne({ _id: user._id, verified: true });
-		await token.remove();
+		const tokenRef = db.collection("tokens");
+		const queryTokenRef = await tokenRef.where('userId', '==', req.params.id).where('token', '==', req.params.token).get();
+
+		if (queryTokenRef.size < 1) return res.status(400).send({ message: "Invalid link" });
+		userDb.update('verified', true)
+
 
 		res.status(200).send({ message: "Email verified successfully" });
 	} catch (error) {
