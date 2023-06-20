@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import DeleteIcon from '../components/DeleteIcon';
-import "../pages/RoomStudent.css"
+import "../index.css"
 
 type Team = {
   teamNumber: number;

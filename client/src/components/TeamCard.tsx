@@ -26,10 +26,11 @@ const TeamCard: React.FC<TeamCardProps> = ({
     joined ? 'bg-green-500' : isFull ? 'bg-yellow-400' : 'bg-gray-700'
   } ${!joined && !isFull ? 'hover:bg-teal-500' : ''}`;
 
+  const teamNumberClass = `font-bold ${isFull ? 'text-black' : 'text-white'}`;
   return (
     <div className={cardClass} onClick={!isFull ? handleClick : undefined}>
       <div className="flex justify-between items-center relative">
-        <span className="font-bold text-white">Team {teamNumber}</span>
+        <span className={teamNumberClass}>Team {teamNumber}</span>
         {joined && (
           <div className="joined-container">
             <span

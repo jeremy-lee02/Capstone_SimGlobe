@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import LeaveIcon from '../components/LeaveIcon';
-import "../pages/RoomStudent.css"
+import "../index.css"
 type Team = {
   teamNumber: number;
   teamMembers: number;
@@ -81,17 +81,19 @@ const RoomStudent: React.FC = () => {
       </div>
       <div className="flex flex-col items-center flex-grow">
         <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
-        <div className="grid grid-cols-2 gap-10 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
-          {teams.map((team) => (
-            <TeamCard
-              key={team.teamNumber}
-              teamNumber={team.teamNumber}
-              teamMembers={team.teamMembers}
-              joined={joinedTeam === team.teamNumber}
-              isFull={team.teamMembers === 4}
-              onClick={() => handleJoinTeam(team.teamNumber)}
-            />
-          ))}
+        <div className="max-h-[34rem] overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+          <div className="grid grid-cols-2 gap-10">
+            {teams.map((team) => (
+              <TeamCard
+                key={team.teamNumber}
+                teamNumber={team.teamNumber}
+                teamMembers={team.teamMembers}
+                joined={joinedTeam === team.teamNumber}
+                isFull={team.teamMembers === 4}
+                onClick={() => handleJoinTeam(team.teamNumber)}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <button
