@@ -36,9 +36,10 @@ router.post("/", async (req, res) => {
 		);
 
 
-		if (!validPassword)
+		if (!validPassword) {
 			return res.status(401).send({ message: "Invalid Email or Password" });
-
+		}
+			
 		if (!userInfo[0].verified) {
 			return res
 				.status(400)
