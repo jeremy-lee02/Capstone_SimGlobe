@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { validate } = require("../models/user");
 
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
@@ -10,9 +9,6 @@ router.post("/", async (req, res) => {
 	try {
 		const userRef = db.collection("users");
 		const queryUserRef = await userRef.where('email', '==', req.body.email).get();
-		const { error } = validate(req.body);
-		if (error)
-			return res.status(400).send({ message: error.details[0].message });
 
 		if (queryUserRef.size > 1)
 			return res
