@@ -10,10 +10,11 @@ router.post("/", async (req, res) => {
 		const userRef = db.collection("users");
 		const queryUserRef = await userRef.where('email', '==', req.body.email).get();
 
-		if (queryUserRef.size > 1)
+		if (queryUserRef.size > 1) {
 			return res
 				.status(409)
 				.send({ message: "User with given email already Exist!" });
+		}
 
 		const salt = await bcrypt.genSalt(Number(process.env.SALT));
 		const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -55,14 +56,17 @@ router.get("/:id/verify/:token/", async (req, res) => {
 		const userDb = db.collection('users').doc(req.params.id)
 		const isUserExist = await (await userDb.get()).exists
 
-		if (!isUserExist) return res.status(400).send({ message: "Invalid link" });
+		if (!isUserExist) {
+			return res.status(400).send({ message: "Invalid link" });
+		}
 
 		const tokenRef = db.collection("tokens");
 		const queryTokenRef = await tokenRef.where('userId', '==', req.params.id).where('token', '==', req.params.token).get();
 
-		if (queryTokenRef.size < 1) return res.status(400).send({ message: "Invalid link" });
+		if (queryTokenRef.size < 1) {
+			return res.status(400).send({ message: "Invalid link" });
+		}
 		userDb.update('verified', true)
-
 
 		res.status(200).send({ message: "Email verified successfully" });
 	} catch (error) {
