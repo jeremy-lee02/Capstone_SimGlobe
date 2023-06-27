@@ -2,16 +2,19 @@
 import React, { useRef, useState } from 'react';
 import Input from './Input'
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   onClick: () => void
 }
 type FormValues = {
-  username: string;
+  email: string;
   password: string;
 };
 
 const SignIn = ({onClick}: Props) => {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
 
   const formRef = useRef<HTMLFormElement>(null)
@@ -20,13 +23,13 @@ const SignIn = ({onClick}: Props) => {
     const formData: FormValues = {
       email: formRef.current?.email.value,
       password: formRef.current?.password.value,
-
     }
     try {
 			const url = "http://localhost:8080/api/auth";
 			const { data: res } = await axios.post(url, formData);
 			localStorage.setItem("token", res.data);
-			window.location = "/1";
+      toast.success("Login Success!")
+			navigate('/1')
 		} catch (error) {
 			if (
 				error.response &&
@@ -34,6 +37,7 @@ const SignIn = ({onClick}: Props) => {
 				error.response.status <= 500
 			) {
 				setError(error.response.data.message);
+        toast.error(error.response.data.message)
 			}
 		}
 

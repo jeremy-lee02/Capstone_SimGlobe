@@ -1,8 +1,8 @@
-
-
 import axios from 'axios';
 import Input from './Input'
 import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   onClick: () => void
@@ -14,6 +14,7 @@ type FormValues = {
 	password: string;
   };
 const Register = ({onClick}: Props) => {
+	const navigate = useNavigate();
 	const formRef = useRef<HTMLFormElement>(null)
 	const [error, setError] = useState("");
 	const [msg, setMsg] = useState("");
@@ -29,6 +30,7 @@ const Register = ({onClick}: Props) => {
 		try {
 			const url = "http://localhost:8080/api/users";
 			const { data: res } = await axios.post(url, formData);
+			toast.success(res.message)
 			setMsg(res.message);
 		} catch (error) {
 			if (
@@ -37,6 +39,7 @@ const Register = ({onClick}: Props) => {
 				error.response.status <= 500
 			) {
 				setError(error.response.data.message);
+				toast.error(error.response.data.message)
 			}
 		}
 	};

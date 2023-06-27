@@ -2,6 +2,7 @@ import EmailVerify from "./components/EmailVerify"
 import GamePlay from "./pages/GamePlay"
 import Home from "./pages/Home"
 
+
 import {Routes, Route} from "react-router-dom"
 
 function App() {
