@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element= {<Home />} />
         <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
-        <Route path= {`/${1}`} element= {<GamePlay />} />
+        <Route path= {`/game/:id`} element= {<GamePlay />} />
         <Route path="/room" element={<RoomStudent />} />
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />

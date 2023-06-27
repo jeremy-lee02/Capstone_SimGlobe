@@ -29,7 +29,7 @@ const SignIn = ({onClick}: Props) => {
 			const { data: res } = await axios.post(url, formData);
 			localStorage.setItem("token", res.data);
       toast.success("Login Success!")
-			navigate('/1')
+			navigate('/homestudent')
 		} catch (error) {
 			if (
 				error.response &&
