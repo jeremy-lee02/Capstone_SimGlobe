@@ -1,12 +1,16 @@
 import React from 'react';
 import { simGlobe_logo } from '../assets';
 import "../index.css"
+import { useNavigate } from 'react-router-dom';
+
 
 const HomeStudent: React.FC = () => {
+  const navigate = useNavigate();
   const handleSinglePlayer = () => {
   };
 
   const handleJoinRoom = () => {
+    navigate('/room')
   };
 
   return (

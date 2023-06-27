@@ -3,6 +3,7 @@ import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import LeaveIcon from '../components/LeaveIcon';
 import "../index.css"
+import { useNavigate } from 'react-router-dom';
 type Team = {
   teamNumber: number;
   teamMembers: number;
@@ -10,6 +11,7 @@ type Team = {
 
 
 const RoomStudent: React.FC = () => {
+  const navigate = useNavigate();
   const [joinedTeam, setJoinedTeam] = useState<number | null>(null);
 
   const handleJoinTeam = (teamNumber: number) => {
@@ -68,7 +70,7 @@ const RoomStudent: React.FC = () => {
   ]);
 
   const handleLeaveRoom = () => {
-    
+    navigate('/homestudent')
   };
 
   return (
