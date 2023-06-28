@@ -1,8 +1,9 @@
 import React, { useState, useEffect} from 'react';
-import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import DeleteIcon from '../components/DeleteIcon';
 import "../index.css"
+import Logo from '../components/Logo';
+import Username from '../components/Username';
 
 type Team = {
   teamNumber: number;
@@ -104,105 +105,109 @@ const RoomHost: React.FC = () => {
     };
   }, [countdownInterval]);
 
+  type Username = {
+    name: string;
+  }
+
+
+
   return (
-    <div className="flex flex-col items-center bg-gray-900 text-white min-h-screen">
+    <>
       {/* HEADER */}
-      <div className="flex justify-between w-full p-4">
-        <div className="flex items-center">
-          <img src={simGlobe_logo} alt="Logo" width={150} height={60} className="object-contain" />
-        </div>
-        <h1 className="text-2xl font-bold">Daniel Borer</h1>
-      </div>
+      <Logo/>
+      <Username name="Daniel Borer"/>
+      <div className="flex flex-col justify-center items-center bg-gray-900 text-white min-h-screen">
 
-      {/* TEAMS */}
-      <div className="flex flex-col items-center ">
-        <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
-        <div className="grid grid-cols-2 gap-10 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
-          {teams.map((team) => (
-            <TeamCard
-              key={team.teamNumber}
-              teamNumber={team.teamNumber}
-              teamMembers={team.teamMembers}
-              isFull={team.teamMembers === 4}
-              joined = {false}
+        {/* TEAMS */}
+        <div className="flex flex-col items-center ">
+          <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
+          <div className="grid grid-cols-2 gap-10 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+            {teams.map((team) => (
+              <TeamCard
+                key={team.teamNumber}
+                teamNumber={team.teamNumber}
+                teamMembers={team.teamMembers}
+                isFull={team.teamMembers === 4}
+                joined = {false}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* COUNTDOWN */}
+        <div className="flex items-center justify-center mt-8 mb-5 ">
+          <div className="flex items-center mx-4">
+            <input
+              type="text"
+              inputMode="numeric"
+              className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
+              value={remainingTime.days}
+              onChange={(e) => handleNumberChange('days', parseInt(e.target.value))}
+              
             />
-          ))}
+            <span className="text-sm ml-1">Days</span>
+          </div>
+
+          <span className="text-4xl mx-2">:</span>
+
+          <div className="flex items-center mx-4">
+            <input
+              type="text"
+              inputMode="numeric"
+              className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
+              value={remainingTime.hours}
+              onChange={(e) => handleNumberChange('hours', parseInt(e.target.value))}
+            />
+            <span className="text-sm ml-1">Hours</span>
+          </div>
+
+          <span className="text-4xl mx-2">:</span>
+
+          <div className="flex items-center mx-4">
+            <input
+              type="text"
+              inputMode="numeric"
+              className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
+              value={remainingTime.minutes}
+              onChange={(e) => handleNumberChange('minutes', parseInt(e.target.value))}
+            />
+            <span className="text-sm ml-1">Minutes</span>
+          </div>
+
+          <span className="text-4xl mx-2">:</span>
+
+          <div className="flex items-center mx-4">
+            <input
+              type="text"
+              inputMode="numeric"
+              className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
+              value={remainingTime.seconds}
+              onChange={(e) => handleNumberChange('seconds', parseInt(e.target.value))}
+            />
+            <span className="text-sm ml-1">Seconds</span>
+          </div>
         </div>
+        {/* BUTTONS */}
+        <div className="flex items-center mt-4">
+              <button
+                  className="bg-green-500 text-white rounded-lg p-3 shadow-lg border border-green-500 hover:bg-white hover:text-green-500 transition-colors"
+                  onClick={handleStartGame}
+              >
+                  <span className="font-bold">Start Game</span>
+              </button>
+
+              <button
+                  className="fixed bottom-4 right-4 bg-red-500 text-white rounded-lg p-3 shadow-lg border border-red-500 hover:bg-white hover:text-red-500 transition-colors ml-4"
+                  onClick={handleDeleteRoom}
+              >
+                  <div className="flex items-center">
+                  <DeleteIcon className="w-4 h-4 fill-current mr-2" />
+                  <span className="font-bold">Delete Room</span>
+                  </div>
+              </button>
+          </div>
       </div>
-
-      {/* COUNTDOWN */}
-      <div className="flex items-center justify-center mt-8 mb-5 ">
-        <div className="flex items-center mx-4">
-          <input
-            type="text"
-            inputMode="numeric"
-            className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
-            value={remainingTime.days}
-            onChange={(e) => handleNumberChange('days', parseInt(e.target.value))}
-            
-          />
-          <span className="text-sm ml-1">Days</span>
-        </div>
-
-        <span className="text-4xl mx-2">:</span>
-
-        <div className="flex items-center mx-4">
-          <input
-            type="text"
-            inputMode="numeric"
-            className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
-            value={remainingTime.hours}
-            onChange={(e) => handleNumberChange('hours', parseInt(e.target.value))}
-          />
-          <span className="text-sm ml-1">Hours</span>
-        </div>
-
-        <span className="text-4xl mx-2">:</span>
-
-        <div className="flex items-center mx-4">
-          <input
-            type="text"
-            inputMode="numeric"
-            className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
-            value={remainingTime.minutes}
-            onChange={(e) => handleNumberChange('minutes', parseInt(e.target.value))}
-          />
-          <span className="text-sm ml-1">Minutes</span>
-        </div>
-
-        <span className="text-4xl mx-2">:</span>
-
-        <div className="flex items-center mx-4">
-          <input
-            type="text"
-            inputMode="numeric"
-            className="text-4xl font-semibold w-12 text-center bg-transparent border-b border-white outline-none"
-            value={remainingTime.seconds}
-            onChange={(e) => handleNumberChange('seconds', parseInt(e.target.value))}
-          />
-          <span className="text-sm ml-1">Seconds</span>
-        </div>
-      </div>
-      {/* BUTTONS */}
-      <div className="flex items-center mt-4">
-            <button
-                className="bg-green-500 text-white rounded-lg p-3 shadow-lg border border-green-500 hover:bg-white hover:text-green-500 transition-colors"
-                onClick={handleStartGame}
-            >
-                <span className="font-bold">Start Game</span>
-            </button>
-
-            <button
-                className="fixed bottom-4 right-4 bg-red-500 text-white rounded-lg p-3 shadow-lg border border-red-500 hover:bg-white hover:text-red-500 transition-colors ml-4"
-                onClick={handleDeleteRoom}
-            >
-                <div className="flex items-center">
-                <DeleteIcon className="w-4 h-4 fill-current mr-2" />
-                <span className="font-bold">Delete Room</span>
-                </div>
-            </button>
-        </div>
-    </div>
+    </>
   );
 };
 
