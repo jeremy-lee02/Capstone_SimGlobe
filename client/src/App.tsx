@@ -1,4 +1,4 @@
-import EmailVerify from "./components/EmailVerify"
+import EmailVerify from "./pages/EmailVerify"
 import GamePlay from "./pages/GamePlay"
 import Home from "./pages/Home"
 
@@ -16,7 +16,8 @@ function App() {
         <Route path="/" element= {<Home />} />
         <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
         <Route path= {`/${1}`} element= {<GamePlay />} />
-        <Route path= {`/game/:id`} element= {<GamePlay />} />
+        {/* Room and Game play same route (Room isStart == true => GamePlay) */}
+        <Route path= {`/room/:id`} element= {<GamePlay />} />
         <Route path="/room" element={<RoomStudent />} />
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
