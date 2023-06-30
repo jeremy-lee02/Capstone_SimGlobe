@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import "../index.css"
 import Logo from '../components/Logo';
 import Username from '../components/Username';
+import { useNavigate } from 'react-router-dom';
+
 
 const HomeStudent: React.FC = () => {
+  const navigate = useNavigate();
   const handleSinglePlayer = () => {
     
   };
 
   const handleJoinRoom = () => {
+    navigate('/room')
   };
 
   type Username = {

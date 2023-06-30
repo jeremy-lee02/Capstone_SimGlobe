@@ -1,4 +1,7 @@
+import EmailVerify from "./components/EmailVerify"
+import GamePlay from "./pages/GamePlay"
 import Home from "./pages/Home"
+
 
 import {Routes, Route} from "react-router-dom"
 import RoomStudent from "./pages/RoomStudent"
@@ -11,6 +14,9 @@ function App() {
     <>
       <Routes>
         <Route path="/" element= {<Home />} />
+        <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
+        <Route path= {`/${1}`} element= {<GamePlay />} />
+        <Route path= {`/game/:id`} element= {<GamePlay />} />
         <Route path="/room" element={<RoomStudent />} />
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />

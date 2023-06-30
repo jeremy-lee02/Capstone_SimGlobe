@@ -5,6 +5,7 @@ import "../index.css"
 import Username from '../components/Username';
 import Logo from '../components/Logo';
 
+import { useNavigate } from 'react-router-dom';
 type Team = {
   teamNumber: number;
   teamMembers: number;
@@ -12,6 +13,7 @@ type Team = {
 
 
 const RoomStudent: React.FC = () => {
+  const navigate = useNavigate();
   const [joinedTeam, setJoinedTeam] = useState<number | null>(null);
 
   const handleJoinTeam = (teamNumber: number) => {
@@ -70,7 +72,7 @@ const RoomStudent: React.FC = () => {
   ]);
 
   const handleLeaveRoom = () => {
-    
+    navigate('/homestudent')
   };
 
   type Username = {

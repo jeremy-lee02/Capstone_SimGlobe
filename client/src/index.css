@@ -7,7 +7,13 @@
     min-height: 100vh;
     background-size: cover;
     background-image: url("./assets/theme/background.png");
+    background-size: cover;
 }
+
+.range::-webkit-slider-thumb {
+    background: #00fd0a;
+}
+
 
 
 /* Hide the default scrollbar */
