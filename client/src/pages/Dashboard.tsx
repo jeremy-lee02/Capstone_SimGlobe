@@ -1,9 +1,23 @@
 import Logo from '../components/Logo'
-import AdminSVG from '../assets/icons/Admin.svg'
-import LecturerSVG from '../assets/icons/Lecturer.svg'
 import Avatar from '../assets/logo/vn.png'
-
+import { useState } from 'react'
+import AdminIcon from '../components/AdminIcon'
+import LecturerIcon from '../components/LecturerIcon'
+import Administrator from '../components/dashboard/Admin'
+import Lecturer from '../components/dashboard/Lecturer'
 function Dashboard() {
+const [selectedComponent, setSelectedComponent] = useState('admin');
+
+const renderComponent = () => {
+    if (selectedComponent === 'admin') {
+      return <Administrator />;
+    } else if (selectedComponent === 'lecturer') {
+      return <Lecturer />;
+    } else {
+      // Return some default component or null if nothing is selected
+      return null;
+    }
+  };
   return (
     <div className="relative">
         <div className="h-screen bg-[#A9A9A9] ">
@@ -12,13 +26,15 @@ function Dashboard() {
             <Logo/>
             {/* Admin/Lecturer selection */}
             <div className= 'w-[220px] h-[100px] absolute top-[20%] flex flex-col gap-10 '>
-                <div className='flex flex-row gap-4 text-white pl-4 hover:cursor-pointer'>
-                    <img className='fill-white' src={AdminSVG} alt="Admin"/>
-                    <h1 className="text-xl font-bold ">{"Administrator"}</h1>
+                <div className='flex flex-row items-center gap-4 text-white pl-4 hover:cursor-pointer'
+                onClick={() => setSelectedComponent('admin')}>
+                    <AdminIcon color={selectedComponent === 'admin' ? '#FF7100' : '#A9A9A9'}/>
+                    <h1 className={`text-xl font-bold ${selectedComponent === 'admin' ? 'text-orange-500' : ''}`}>{"Administrator"}</h1>
                 </div>
-                <div className='flex flex-row gap-4 text-white pl-4 hover:cursor-pointer'>
-                    <img className='fill-white' src={LecturerSVG} alt="Admin"/>
-                    <h1 className="text-xl font-bold ">{"Lecturer"}</h1>
+                <div className='flex flex-row items-center gap-4 text-white pl-4 hover:cursor-pointer'
+                onClick={() => setSelectedComponent('lecturer')}>
+                    <LecturerIcon color={selectedComponent === 'lecturer' ? '#FF7100' : '#A9A9A9'}/>
+                    <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
                 </div>
             </div>
          
@@ -44,9 +60,12 @@ function Dashboard() {
                 </div>
             </div>
             
-            
-            
-
+        {/*Main Content */} 
+            <div className="absolute left-[220px] right-0 top-[10%] bottom-0 bg-gray-600">
+                <div className="absolute top-[3%] left-[2%] right-[2%] bottom-[3%] bg-[#282C35] rounded-lg">
+                {renderComponent()}
+                </div>
+            </div>
         </div>
     </div>
   )
