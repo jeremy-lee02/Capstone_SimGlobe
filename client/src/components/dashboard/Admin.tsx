@@ -44,6 +44,9 @@ const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSel
     </div>
   );
 };
+
+
+
 const Administrator: React.FC = () => {
   const [selectedPopulation, setSelectedPopulation] = useState('BIG');
   const [selectedGDP, setSelectedGDP] = useState('BIG');
@@ -59,6 +62,21 @@ const Administrator: React.FC = () => {
     setSelectedGDP(value);
   };
 
+  const elasticitiesData = [
+    { label: 'Label 1', value: 10 },
+    { label: 'Label 2', value: 15 },
+    { label: 'Label 3', value: 20 },
+    { label: 'Label 4', value: 10 },
+    { label: 'Label 5', value: 15 },
+    { label: 'Label 6', value: 20 },
+    { label: 'Label 7', value: 10 },
+    { label: 'Label 8', value: 15 },
+    { label: 'Label 9', value: 20 },
+    { label: 'Label 10', value: 10 },
+    { label: 'Label 11', value: 15 },
+    { label: 'Label 12', value: 20 },
+    
+  ];
   return (
     <div className="flex flex-col h-full">
       {/* Top Part */}
@@ -88,9 +106,31 @@ const Administrator: React.FC = () => {
       </div>
 
       {/* Bottom Part */}
-      <div className="flex flex-grow justify-center items-center">
-        {/* Add any content you want for the bottom part */}
-        <p className="text-white text-lg">Additional content for the Administrator component.</p>
+      <div className="flex flex-col mx-11 mt-4">
+        <div className="flex justify-between items-center pb-2 pr-5">
+          <p className="text-xl font-semibold text-white">Elasticities</p>
+          <p className="text-xl font-semibold text-white">Value</p>
+        </div>
+
+        <div className="max-h-[34rem] pr-4 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+          <div className="grid divide-y divide-gray-600">
+            {elasticitiesData.map((data, index) => (
+              <div key={index} className="flex justify-between items-center py-2">
+                <p className="text-white ml-4">{data.label}</p>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  className="bg-gray-800  rounded p-2 w-10 text-white text-center"
+                  value={data.value}
+                  onChange={(e) => {
+                    const updatedData = [...elasticitiesData];
+                    updatedData[index].value = parseInt(e.target.value, 10);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
