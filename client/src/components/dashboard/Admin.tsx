@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import DropboxArrowIcon from '../DropboxArrowIcon';
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 
@@ -26,7 +26,9 @@ const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSel
       >
         <div className="selected-option">
           {selectedValue}
+          <DropboxArrowIcon className="w-10 h-10 fill-current text-white absolute top-1/2 right-1 transform -translate-y-1/2 pointer-events-none" />
         </div>
+        
       </div>
       {isOpen && (
         <div className='absolute' >
