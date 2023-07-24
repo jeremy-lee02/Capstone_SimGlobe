@@ -6,7 +6,7 @@ import LecturerIcon from '../components/LecturerIcon'
 import Administrator from '../components/dashboard/Admin'
 import Lecturer from '../components/dashboard/Lecturer'
 function Dashboard() {
-const [selectedComponent, setSelectedComponent] = useState('admin');
+const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
@@ -14,8 +14,13 @@ const renderComponent = () => {
     } else if (selectedComponent === 'lecturer') {
       return <Lecturer />;
     } else {
-      // Return some default component or null if nothing is selected
-      return null;
+        return (
+            <div className="flex justify-center items-center h-full">
+              <h1 className="text-white text-3xl font-semibold">
+                Welcome to the Dashboard!
+              </h1>
+            </div>
+          );
     }
   };
   return (

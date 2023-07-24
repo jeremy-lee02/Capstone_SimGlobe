@@ -38,9 +38,9 @@ const Lecturer: React.FC = () => {
                 background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${item.value}%, #4a5568 ${item.value}%, #4a5568 100%)`
               }}
             />
-            <p className="text-white ml-4">
-              {item.value} {item.label.endsWith('%') ? '' : 'Max'}
-            </p>
+             <div className="w-14 text-right">
+              <p className="text-white">{item.value}</p>
+            </div>
           </div>
         ))}
       </div>
