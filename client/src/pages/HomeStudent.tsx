@@ -1,26 +1,30 @@
-import React from 'react';
-import { simGlobe_logo } from '../assets';
+import React, { useState } from 'react';
 import "../index.css"
+import Logo from '../components/Logo';
+import Username from '../components/Username';
 import { useNavigate } from 'react-router-dom';
 
 
 const HomeStudent: React.FC = () => {
   const navigate = useNavigate();
   const handleSinglePlayer = () => {
+    
   };
 
   const handleJoinRoom = () => {
     navigate('/room')
   };
 
+  type Username = {
+    name: string;
+  }
+
+
+
   return (
     <>
-      <img src={simGlobe_logo} alt="Logo" width={150} height={60} className="object-contain absolute left-6 top-6" />
-      <h1 className=" flex flex-col font-bold absolute right-6 top-6">
-          <span className="text-gray-500 text-xl">Welcome,</span> 
-          <span className="text-2xl text-white">Daniel Borer</span>
-      </h1>
-
+      <Logo/>
+      <Username name="Daniel Borer"/>
       <div className="flex flex-col justify-center items-center background text-white min-h-screen">
         <div className="flex flex-col items-center w-screen gap-5">
           <div className="flex flex-row justify-center space-x-20">

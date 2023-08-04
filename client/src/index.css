@@ -52,5 +52,20 @@
   .scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #555;
   }
-  
-  
+
+  /* Custom CSS for the slider */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0; /* Set width to 0 */
+  height: 0; /* Set height to 0 */
+}
+
+.slider::-moz-range-thumb {
+  width: 0;
+  height: 0;
+}
+
+.slider::-ms-thumb {
+  width: 0;
+  height: 0;
+}
