@@ -31,7 +31,6 @@ export interface Country {
 }
 
 export interface InputValue{
-    id: string,
     name: string, 
     value: number,
     max: number,
@@ -63,4 +62,21 @@ export interface Elasticity{
     elasticity_id: string,
     name: string,
     value: number,
+}
+
+//cpt: consumption pre-tax
+// i: Investment,
+// y: Nominal GDP,
+// k: capital
+export interface Prev_Value {
+    prev_cpt: number,
+    prev_supply: number,
+    prev_i: number,
+    prev_y: number,
+    prev_y_percent: number,
+    prev_k: number,
+    prev_ipt: number,
+    prev_d:number,
+    prev_u: number,
+    prev_fx: number
 }
