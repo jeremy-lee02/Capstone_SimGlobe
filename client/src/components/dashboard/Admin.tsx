@@ -143,7 +143,7 @@ const Administrator: React.FC = () => {
     }
   
     console.log("Selected Cluster:", selectedCluster);
-  }, [selectedGDP, selectedPopulation]);
+  }, [selectedGDP, selectedPopulation, selectedCluster]);
   const handlePopulationChange = (value: string) => {
     setSelectedPopulation(value);
   };
