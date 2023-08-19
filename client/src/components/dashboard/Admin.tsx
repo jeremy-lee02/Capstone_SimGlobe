@@ -140,10 +140,9 @@ const Administrator: React.FC = () => {
   
     if (newSelectedCluster !== null) {
       setSelectedCluster(newSelectedCluster);
-    }
-  
-    console.log("Selected Cluster:", selectedCluster);
-  }, [selectedGDP, selectedPopulation, selectedCluster]);
+      console.log("Selected Cluster:", newSelectedCluster);
+    }  
+  }, [selectedGDP, selectedPopulation]);
   const handlePopulationChange = (value: string) => {
     setSelectedPopulation(value);
   };
