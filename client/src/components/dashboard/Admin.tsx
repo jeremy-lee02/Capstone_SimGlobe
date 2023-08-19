@@ -108,10 +108,34 @@ const Administrator: React.FC = () => {
   const [selectedPopulation, setSelectedPopulation] = useState('SMALL');
   const [selectedGDP, setSelectedGDP] = useState('SMALL');
   const [selectedCluster, setSelectedCluster] = useState(clusterValues[0]);
-  
+
+
+  const initialElasticitiesData = [
+    { label: 'Initial Consumption', value: 0 },
+    { label: 'Initial Investment', value: 0 },
+    { label: 'Initial Spending', value: 0 },
+    { label: 'Initial Growth', value: 0 },
+    { label: 'Initial Capital Stock', value: 0 },
+    { label: 'Initial Autonomous Imports', value: 0 },
+    { label: 'Max GDP Score', value: 0 },
+    { label: 'Depreciation', value: 0 },
+    { label: 'Impact of Government Debt on Investment Growth', value: 0 },
+    { label: 'Impact of Real GDP on Unemployment', value: 0 },
+    { label: 'Portion of GDP as Induced Import', value: 0 },
+  ];
+  const [elasticitiesData, setElasticitiesData] = useState(initialElasticitiesData);
+
   const populations = ['BIG', 'MEDIUM', 'SMALL'];
   const gdps = ['BIG', 'MEDIUM', 'SMALL'];
   
+  const handleSaveChanges = () => {
+    const updatedElasticitiesData = elasticitiesData.map((data) => ({
+      label: data.label,
+      value: data.value,
+    }));
+    
+    console.log("Updated Elasticities Data:", updatedElasticitiesData);
+  };
   useEffect(() => {
     console.log("Selected GDP:", selectedGDP);
     console.log("Selected Population:", selectedPopulation);
@@ -151,22 +175,6 @@ const Administrator: React.FC = () => {
     setSelectedGDP(value);
   };
 
-  const elasticitiesData = [
-    { label: 'Label 1', value: 10 },
-    { label: 'Label 2', value: 15 },
-    { label: 'Label 3', value: 20 },
-    { label: 'Label 4', value: 10 },
-    { label: 'Label 5', value: 15 },
-    { label: 'Label 6', value: 20 },
-    { label: 'Label 7', value: 10 },
-    { label: 'Label 8', value: 15 },
-    { label: 'Label 9', value: 20 },
-    { label: 'Label 10', value: 10 },
-    { label: 'Label 11', value: 15 },
-    { label: 'Label 12', value: 20 },
-    
-  ];
-
   return (
     <div className="flex flex-col h-full">
       {/* Top Part */}
@@ -202,25 +210,40 @@ const Administrator: React.FC = () => {
           <p className="text-xl font-semibold text-white">Value</p>
         </div>
 
-        <div className="max-h-[34rem] pr-4 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+        <div className="max-h-[29rem] mb-5 pr-1 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
           <div className="grid divide-y divide-gray-600">
             {elasticitiesData.map((data, index) => (
               <div key={index} className="flex justify-between items-center py-2">
                 <p className="text-white ml-4">{data.label}</p>
                 <input
                   type="text"
-                  inputMode="numeric"
-                  className="bg-gray-800  rounded p-2 w-10 text-white text-center"
-                  value={data.value}
+                  className="bg-gray-800 rounded p-2 w-16 text-white text-center"
                   onChange={(e) => {
+                    const inputValue = e.target.value;
+                    const parsedValue = parseFloat(inputValue);
                     const updatedData = [...elasticitiesData];
-                    updatedData[index].value = parseInt(e.target.value, 10);
+                    if (isNaN(parsedValue)) {
+                      updatedData[index].value = 0;
+                    } else {
+                      updatedData[index].value = parsedValue;
+                    }
+        
+                    setElasticitiesData(updatedData); // Update state to reflect changes
                   }}
                 />
               </div>
             ))}
           </div>
         </div>
+        {/* Save Changes Button */}
+          <div className="flex justify-end">
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
+              onClick={handleSaveChanges}
+            >
+              Save Changes
+            </button>
+          </div>
       </div>
     </div>
   );
