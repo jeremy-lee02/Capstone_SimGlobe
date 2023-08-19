@@ -35,7 +35,7 @@ const Lecturer: React.FC = () => {
               onChange={(e) => handleChangeValue(index, Number(e.target.value))}
               className="slider h-8 w-full appearance-none"
               style={{
-                background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${item.value}%, #4a5568 ${item.value}%, #4a5568 100%)`
+                background: `linear-gradient(to right, #FF7100 0%, #f59e0b ${item.value}%, #4a5568 ${item.value}%, #4a5568 100%)`
               }}
             />
              <div className="w-14 text-right">
