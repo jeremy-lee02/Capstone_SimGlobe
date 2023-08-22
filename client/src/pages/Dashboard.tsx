@@ -1,12 +1,12 @@
 import Logo from '../components/Logo'
 import Avatar from '../assets/logo/vn.png'
 import { useState } from 'react'
-import AdminIcon from '../components/AdminIcon'
-import LecturerIcon from '../components/LecturerIcon'
+import AdminIcon from '../components/icons/AdminIcon'
+import LecturerIcon from '../components/icons/LecturerIcon'
 import Administrator from '../components/dashboard/Admin'
 import RoomSetting from '../components/dashboard/RoomSetting'
 import PresetData from '../components/dashboard/PresetData'
-
+import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 function Dashboard() {
 const [selectedComponent, setSelectedComponent] = useState("admin");
 const [selectedLecturerOption, setSelectedLecturerOption] = useState("roomSetting");
@@ -43,16 +43,18 @@ const renderComponent = () => {
                         <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
                     </div>
                     {selectedComponent === 'lecturer' && (
-                    <div className='pl-12 mt-2'>
+                    <div className='pl-4 mt-2'>
                         <div
-                            className="text-white mb-2" 
+                            className="flex items-center text-white mb-2" 
                             onClick={() => setSelectedLecturerOption('roomSetting')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'roomSetting' ? 'block' : 'invisible'}`} color="#FF7100" />
                                 <h1 className={`text-l font-bold ${selectedLecturerOption === 'roomSetting' ? 'text-orange-500' : ''}`}>{"Room Setting"}</h1>
                             
                         </div>
                         <div
-                            className="text-white" 
+                            className="flex items-center text-white"
                             onClick={() => setSelectedLecturerOption('presetData')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'presetData' ? 'block' : 'invisible'}`} color="#FF7100" />
                                 <h1 className={`text-l font-bold ${selectedLecturerOption === 'presetData' ? 'text-orange-500' : ''}`}>{"Preset Data"}</h1>
                            
                         </div>

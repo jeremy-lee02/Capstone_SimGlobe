@@ -1,5 +1,5 @@
 import React, { useState}from 'react';
-import DropboxArrowIcon from '../DropboxArrowIcon';
+import DropboxArrowIcon from '../icons/DropboxArrowIcon';
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 
