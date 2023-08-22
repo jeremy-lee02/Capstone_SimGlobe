@@ -4,17 +4,23 @@ import { useState } from 'react'
 import AdminIcon from '../components/AdminIcon'
 import LecturerIcon from '../components/LecturerIcon'
 import Administrator from '../components/dashboard/Admin'
-import Lecturer from '../components/dashboard/Lecturer'
+import RoomSetting from '../components/dashboard/RoomSetting'
+import PresetData from '../components/dashboard/PresetData'
+
 function Dashboard() {
 const [selectedComponent, setSelectedComponent] = useState("admin");
-
+const [selectedLecturerOption, setSelectedLecturerOption] = useState("roomSetting");
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
       return <Administrator />;
     } else if (selectedComponent === 'lecturer') {
-      return <Lecturer />;
+      if (selectedLecturerOption === 'roomSetting') {
+        return <RoomSetting />;
+      } else if (selectedLecturerOption === 'presetData') {
+        return <PresetData />;
+      }
     } else {
-        return null;
+      return null;
     }
   };
   return (
@@ -30,11 +36,30 @@ const renderComponent = () => {
                     <AdminIcon color={selectedComponent === 'admin' ? '#FF7100' : '#A9A9A9'}/>
                     <h1 className={`text-xl font-bold ${selectedComponent === 'admin' ? 'text-orange-500' : ''}`}>{"Administrator"}</h1>
                 </div>
-                <div className='flex flex-row items-center gap-4 text-white pl-4 hover:cursor-pointer'
+                <div className='flex flex-col text-white pl-4 hover:cursor-pointer'
                 onClick={() => setSelectedComponent('lecturer')}>
-                    <LecturerIcon color={selectedComponent === 'lecturer' ? '#FF7100' : '#A9A9A9'}/>
-                    <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
+                    <div className='flex flex-row items-center gap-4'>
+                        <LecturerIcon color={selectedComponent === 'lecturer' ? '#FF7100' : '#A9A9A9'}/>
+                        <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
+                    </div>
+                    {selectedComponent === 'lecturer' && (
+                    <div className='pl-12 mt-2'>
+                        <div
+                            className="text-white mb-2" 
+                            onClick={() => setSelectedLecturerOption('roomSetting')}>
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'roomSetting' ? 'text-orange-500' : ''}`}>{"Room Setting"}</h1>
+                            
+                        </div>
+                        <div
+                            className="text-white" 
+                            onClick={() => setSelectedLecturerOption('presetData')}>
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'presetData' ? 'text-orange-500' : ''}`}>{"Preset Data"}</h1>
+                           
+                        </div>
+                    </div>
+                )}
                 </div>
+                
             </div>
          
             <div className="flex w-screen h-[10%] justify-between items-center pl-60 pr-10 absolute">
