@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import Input from './Input'
 import axios from 'axios';
-
+import {useSignIn} from 'react-auth-kit'
 type Props = {
   onClick: () => void
 }
@@ -13,6 +13,7 @@ type FormValues = {
 
 const SignIn = ({onClick}: Props) => {
   const [error, setError] = useState("");
+  const signIn = useSignIn();
 
   const formRef = useRef<HTMLFormElement>(null)
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,10 +24,16 @@ const SignIn = ({onClick}: Props) => {
 
     }
     try {
-			const url = "http://localhost:8080/api/auth";
-			const { data: res } = await axios.post(url, formData);
-			localStorage.setItem("token", res.data);
-			window.location = "/1";
+      const response = await axios.post("http://localhost:8080/api/auth", formData)
+			signIn({
+        token: response.data.token,
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        authState: {
+          email: formData.email
+        }
+      })
+			window.location = "/gameplay";
 		} catch (error) {
 			if (
 				error.response &&
