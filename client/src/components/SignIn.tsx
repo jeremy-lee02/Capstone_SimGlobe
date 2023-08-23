@@ -3,15 +3,19 @@ import React, { useRef, useState } from 'react';
 import Input from './Input'
 import axios from 'axios';
 import {useSignIn} from 'react-auth-kit'
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+
 type Props = {
   onClick: () => void
 }
 type FormValues = {
-  username: string;
+  email: string;
   password: string;
 };
 
 const SignIn = ({onClick}: Props) => {
+  const navigate = useNavigate();
   const [error, setError] = useState("");
   const signIn = useSignIn();
 
@@ -21,7 +25,6 @@ const SignIn = ({onClick}: Props) => {
     const formData: FormValues = {
       email: formRef.current?.email.value,
       password: formRef.current?.password.value,
-
     }
     try {
       const response = await axios.post("http://localhost:8080/api/auth", formData)
@@ -33,7 +36,8 @@ const SignIn = ({onClick}: Props) => {
           email: formData.email
         }
       })
-			window.location = "/gameplay";
+			toast.success("Login Success!")
+			navigate('/homestudent')
 		} catch (error) {
 			if (
 				error.response &&
@@ -41,6 +45,7 @@ const SignIn = ({onClick}: Props) => {
 				error.response.status <= 500
 			) {
 				setError(error.response.data.message);
+        toast.error(error.response.data.message)
 			}
 		}
 
