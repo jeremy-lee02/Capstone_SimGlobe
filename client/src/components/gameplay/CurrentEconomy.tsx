@@ -4,6 +4,10 @@ type Props = {}
 
 const Economy = [
     {
+    name: "Approval Index",
+    number: "90"
+    },
+    {
     name: "Nominal GDP",
     number: "3.1%"
     },
@@ -28,12 +32,12 @@ const Economy = [
     number: "60%"
     },
     {
-    name: "Export",
-    number: "9.9"
+    name: "Consumption © pre-tax",
+    number: "150"
     },
     {
-    name: "Import",
-    number: "9.9"
+    name: "Consumption (C)",
+    number: "127.5"
     },
     {
     name: "Trade balance",
@@ -41,7 +45,7 @@ const Economy = [
     },
     {
     name: "Exchange Rate",
-    number: "100"
+    number: "100%"
     },
     {
     name: "Average Global Interest Rate",

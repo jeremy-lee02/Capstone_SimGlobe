@@ -27,17 +27,11 @@ const SignIn = ({onClick}: Props) => {
       password: formRef.current?.password.value,
     }
     try {
-      const response = await axios.post("http://localhost:8080/api/auth", formData)
-			signIn({
-        token: response.data.token,
-        expiresIn: 3600,
-        tokenType: "Bearer",
-        authState: {
-          email: formData.email
-        }
-      })
-			toast.success("Login Success!")
-			navigate('/homestudent')
+			const url = "http://localhost:8080/api/auth";
+			const { data: res } = await axios.post(url, formData);
+			localStorage.setItem("token", res.data);
+      toast.success("Login Success!")
+			navigate('/dashboard')
 		} catch (error) {
 			if (
 				error.response &&
