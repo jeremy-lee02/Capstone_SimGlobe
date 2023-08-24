@@ -24,8 +24,8 @@ const renderComponent = () => {
     }
   };
   return (
-    <div className="relative">
-        <div className="h-screen bg-[#A9A9A9] ">
+    <div className="relative h-[120vh] bg-gray-600">
+        <div className="bg-[#282C35] h-[120vh]  ">
             <div className="w-[220px] h-screen bg-[#282C35] absolute left-0 "/>
             <div className="w-screen h-[10%] bg-[#282C35] absolute left-0 "/>
             <Logo/>
@@ -88,7 +88,7 @@ const renderComponent = () => {
             
         {/*Main Content */} 
             <div className="absolute left-[220px] right-0 top-[10%] bottom-0 bg-gray-600">
-                <div className="absolute top-[3%] left-[2%] right-[2%] bottom-[3%] bg-[#282C35] rounded-lg">
+                <div className="absolute h-screen top-[3%] left-[2%] right-[2%] bottom-[3%] bg-[#282C35] rounded-lg">
                 {renderComponent()}
                 </div>
             </div>
