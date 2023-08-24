@@ -38,13 +38,13 @@ const Administrator: React.FC = () => {
       </div>
 
       {/* Bottom Part */}
-      <div className="flex flex-col mx-11 mt-4">
-        <div className="flex justify-between items-center pb-2 pr-5">
+      <div className="flex flex-col ml-11 mr-9 mt-4">
+        <div className="flex justify-between items-center pb-2 pr-10">
           <p className="text-xl font-semibold text-white">Elasticities</p>
           <p className="text-xl font-semibold text-white">Value</p>
         </div>
 
-        <div className="max-h-[36rem] mb-5 pr-1 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+        <div className="lg:max-h-[400px] xl:max-h-[590px] max-h-[20rem] mb-5 pr-6 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
           <div className="grid divide-y divide-gray-600">
             {elasticitiesData.map((data, index) => (
               <div key={index} className="flex justify-between items-center py-2">

@@ -8,7 +8,7 @@ import RoomSetting from '../components/dashboard/RoomSetting'
 import PresetData from '../components/dashboard/PresetData'
 import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 function Dashboard() {
-const [selectedComponent, setSelectedComponent] = useState("admin");
+const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 const [selectedLecturerOption, setSelectedLecturerOption] = useState("roomSetting");
 const renderComponent = () => {
     if (selectedComponent === 'admin') {

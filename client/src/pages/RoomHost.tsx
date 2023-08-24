@@ -119,9 +119,9 @@ const RoomHost: React.FC = () => {
       <div className="flex flex-col justify-center items-center bg-gray-900 text-white min-h-screen">
 
         {/* TEAMS */}
-        <div className="flex flex-col items-center ">
+        <div className="flex flex-col items-center">
           <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
-          <div className="grid grid-cols-2 gap-10 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+          <div className="grid grid-cols-2 ml-4 gap-10 max-h-96 pr-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
             {teams.map((team) => (
               <TeamCard
                 key={team.teamNumber}
