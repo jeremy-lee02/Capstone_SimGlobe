@@ -27,8 +27,9 @@ router.post("/", async (req, res) => {
 			tokenInfo.push(token.data())
 		})
 
-		if (queryUserRef.size !== 1)
+		if (queryUserRef.size !== 1) {
 			return res.status(401).send({ message: "Invalid Email or Password" });
+		}
 			
 		const validPassword = await bcrypt.compare(
 			req.body.password,
@@ -41,20 +42,23 @@ router.post("/", async (req, res) => {
 		}
 			
 		if (!userInfo[0].verified) {
-			return res
-				.status(400)
-				.send({ message: "An Email sent to your account please verify" });
+			return res.status(400).send({ message: "An Email sent to your account please verify" });
 		}
 
-		const token = jwt.sign({ _id: userInfo[0].user_id }, process.env.JWTPRIVATEKEY, {
+		const token = jwt.sign({ _id: userInfo[0].user_id, email: req.body.email }, process.env.JWTPRIVATEKEY, {
 			expiresIn: "7d",
 		});
 
-		res.status(200).send({ data: token, message: "logged in successfully" });
+		res.json({message: "Logged in successfully", token: token})
+
 	} catch (error) {
 		res.status(500).send({ message: "Internal Server Error" });
 	}
 });
+
+router.get("/auth/me", async(req, res) =>{
+	
+})
 
 const validate = (data) => {
 	const schema = Joi.object({
