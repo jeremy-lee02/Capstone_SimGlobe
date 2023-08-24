@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TeamCard from '../components/TeamCard';
-import LeaveIcon from '../components/LeaveIcon';
+import LeaveIcon from '../components/icons/LeaveIcon';
 import "../index.css"
 import Username from '../components/Username';
 import Logo from '../components/Logo';

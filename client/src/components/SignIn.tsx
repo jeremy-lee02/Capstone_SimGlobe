@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react';
 import Input from './Input'
 import axios from 'axios';
+import {useSignIn} from 'react-auth-kit'
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ type FormValues = {
 const SignIn = ({onClick}: Props) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const signIn = useSignIn();
 
   const formRef = useRef<HTMLFormElement>(null)
   const handleSubmit = async (e: React.FormEvent) => {

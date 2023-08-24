@@ -1,26 +1,26 @@
 import Logo from '../components/Logo'
 import Avatar from '../assets/logo/vn.png'
 import { useState } from 'react'
-import AdminIcon from '../components/AdminIcon'
-import LecturerIcon from '../components/LecturerIcon'
+import AdminIcon from '../components/icons/AdminIcon'
+import LecturerIcon from '../components/icons/LecturerIcon'
 import Administrator from '../components/dashboard/Admin'
-import Lecturer from '../components/dashboard/Lecturer'
+import RoomSetting from '../components/dashboard/RoomSetting'
+import PresetData from '../components/dashboard/PresetData'
+import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 function Dashboard() {
-const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
-
+const [selectedComponent, setSelectedComponent] = useState("admin");
+const [selectedLecturerOption, setSelectedLecturerOption] = useState("roomSetting");
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
       return <Administrator />;
     } else if (selectedComponent === 'lecturer') {
-      return <Lecturer />;
+      if (selectedLecturerOption === 'roomSetting') {
+        return <RoomSetting />;
+      } else if (selectedLecturerOption === 'presetData') {
+        return <PresetData />;
+      }
     } else {
-        return (
-            <div className="flex justify-center items-center h-full">
-              <h1 className="text-white text-3xl font-semibold">
-                Welcome to the Dashboard!
-              </h1>
-            </div>
-          );
+      return null;
     }
   };
   return (
@@ -36,11 +36,32 @@ const renderComponent = () => {
                     <AdminIcon color={selectedComponent === 'admin' ? '#FF7100' : '#A9A9A9'}/>
                     <h1 className={`text-xl font-bold ${selectedComponent === 'admin' ? 'text-orange-500' : ''}`}>{"Administrator"}</h1>
                 </div>
-                <div className='flex flex-row items-center gap-4 text-white pl-4 hover:cursor-pointer'
+                <div className='flex flex-col text-white pl-4 hover:cursor-pointer'
                 onClick={() => setSelectedComponent('lecturer')}>
-                    <LecturerIcon color={selectedComponent === 'lecturer' ? '#FF7100' : '#A9A9A9'}/>
-                    <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
+                    <div className='flex flex-row items-center gap-4'>
+                        <LecturerIcon color={selectedComponent === 'lecturer' ? '#FF7100' : '#A9A9A9'}/>
+                        <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
+                    </div>
+                    {selectedComponent === 'lecturer' && (
+                    <div className='pl-4 mt-2'>
+                        <div
+                            className="flex items-center text-white mb-2" 
+                            onClick={() => setSelectedLecturerOption('roomSetting')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'roomSetting' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'roomSetting' ? 'text-orange-500' : ''}`}>{"Room Setting"}</h1>
+                            
+                        </div>
+                        <div
+                            className="flex items-center text-white"
+                            onClick={() => setSelectedLecturerOption('presetData')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'presetData' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'presetData' ? 'text-orange-500' : ''}`}>{"Preset Data"}</h1>
+                           
+                        </div>
+                    </div>
+                )}
                 </div>
+                
             </div>
          
             <div className="flex w-screen h-[10%] justify-between items-center pl-60 pr-10 absolute">

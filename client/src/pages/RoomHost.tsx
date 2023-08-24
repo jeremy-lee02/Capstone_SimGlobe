@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import TeamCard from '../components/TeamCard';
-import DeleteIcon from '../components/DeleteIcon';
+import DeleteIcon from '../components/icons/DeleteIcon';
 import "../index.css"
 import Logo from '../components/Logo';
 import Username from '../components/Username';
