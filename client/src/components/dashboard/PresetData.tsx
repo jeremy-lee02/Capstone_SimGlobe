@@ -1,7 +1,9 @@
-import React, { useState}from 'react';
+import React, { useEffect, useState}from 'react';
 import DropboxArrowIcon from '../icons/DropboxArrowIcon';
+import usePresetData from '../../hooks/usePresetData';
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
+
 
 {/*Custom DropBox*/}
 const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSelect: (value: string) => void }> = ({ options, selectedValue, onSelect }) => {
@@ -47,48 +49,60 @@ const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSel
   );
 };
 
+const initialPresetData = [
+  { label: 'Initial Consumption', value: 0 },
+  { label: 'Initial Investment', value: 0 },
+  { label: 'Initial Spending', value: 0 },
+  { label: 'Initial Growth', value: 0 },
+  { label: 'Initial Capital Stock', value: 0 },
+  { label: 'Initial Autonomous Imports', value: 0 },
+  { label: 'Max GDP Score', value: 0 },
+  { label: 'Depreciation', value: 0 },
+  { label: 'Impact of Government Debt on Investment Growth', value: 0 },
+  { label: 'Impact of Real GDP on Unemployment', value: 0 },
+  { label: 'Portion of GDP as Induced Import', value: 0 },
+  { label: 'Unemployment', value: 0 },
+  { label: 'Inflation', value: 0 },
+];
+
 const PresetData: React.FC = () => {
     const [selectedPopulation, setSelectedPopulation] = useState('SMALL');
     const [selectedGDP, setSelectedGDP] = useState('SMALL');
+    const [name, setName] = useState("small_small")
+    const {data} = usePresetData(name, initialPresetData)
   
-  
-    const initialElasticitiesData = [
-      { label: 'Initial Consumption', value: 0 },
-      { label: 'Initial Investment', value: 0 },
-      { label: 'Initial Spending', value: 0 },
-      { label: 'Initial Growth', value: 0 },
-      { label: 'Initial Capital Stock', value: 0 },
-      { label: 'Initial Autonomous Imports', value: 0 },
-      { label: 'Max GDP Score', value: 0 },
-      { label: 'Depreciation', value: 0 },
-      { label: 'Impact of Government Debt on Investment Growth', value: 0 },
-      { label: 'Impact of Real GDP on Unemployment', value: 0 },
-      { label: 'Portion of GDP as Induced Import', value: 0 },
-      { label: 'Unemployment', value: 0 },
-    ];
-    const [elasticitiesData, setElasticitiesData] = useState(initialElasticitiesData);
+
+    const [presetData, setpresetData] = useState(initialPresetData);
   
     const populations = ['BIG', 'MEDIUM', 'SMALL'];
     const gdps = ['BIG', 'MEDIUM', 'SMALL'];
     
     const handleSaveChanges = () => {
-      const updatedElasticitiesData = elasticitiesData.map((data) => ({
+      const updatedpresetData = presetData.map((data) => ({
         label: data.label,
         value: data.value,
       }));
       
-      console.log("Updated Elasticities Data:", updatedElasticitiesData);
+      console.log("Updated Elasticities Data:", updatedpresetData);
+      console.log(data)
     };
     const handlePopulationChange = (value: string) => {
       setSelectedPopulation(value);
+      setName(selectedGDP.toLowerCase()+"_" + value.toLowerCase())
     };
   
     const handleGDPChange = (value: string) => {
       setSelectedGDP(value);
+      setName(value.toLowerCase()+"_" + selectedPopulation.toLowerCase())
     };
+
+
+    useEffect(()=>{
+
+    }, [])
   
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-fit">
         {/* Top Part */}
         <div className="rounded-t-lg p-4">
           {/* Add any content you want for the top part */}
@@ -124,23 +138,24 @@ const PresetData: React.FC = () => {
   
           <div className="lg:max-h-[310px] xl:max-h-[490px] max-h-[20rem] mb-5 pr-6 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
             <div className="grid divide-y divide-gray-600">
-              {elasticitiesData.map((data, index) => (
+              {data.map((e, index) => (
                 <div key={index} className="flex justify-between items-center py-2">
-                  <p className="text-white">{data.label}</p>
+                  <p className="text-white">{e.label}</p>
                   <input
-                    type="text"
+                    type="number"
+                    value={e.value}
                     className="bg-gray-800 rounded p-2 w-16 text-white text-center"
                     onChange={(e) => {
                       const inputValue = e.target.value;
                       const parsedValue = parseFloat(inputValue);
-                      const updatedData = [...elasticitiesData];
+                      const updatedData = [...data];
                       if (isNaN(parsedValue)) {
                         updatedData[index].value = 0;
                       } else {
                         updatedData[index].value = parsedValue;
                       }
           
-                      setElasticitiesData(updatedData); // Update state to reflect changes
+                      setpresetData(updatedData); // Update state to reflect changes
                     }}
                   />
                 </div>

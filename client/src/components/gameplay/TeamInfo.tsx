@@ -1,23 +1,28 @@
-import { vn_logo } from "../../assets"
+import { Team } from "../../../typing"
+import { country_logo } from "../../assets/logo"
 
-type Props = {}
 
-const TeamInfo = (props: Props) => {
+type Props = {
+    team: Team
+}
+
+const TeamInfo = ({team}: Props) => {
   return (
     <div className='text-white w-[700px] bg-[#282C35] py-2 pl-3'>
         <div className='flex justify-between'>
             <div className='font-semibold text-lg basis-[50%]'>
                 Member:
                 <ul className='font-normal text-sm list-disc ml-9 '>
-                    <li>Le Trung Tin</li>
-                    <li>Luu Duy Toan</li>
-                    <li>Hoang Ngoc Anh Duc</li>
-                    <li>Ngo Nhat Minh</li>
+                    {team.user.map(name => (
+                        <>
+                            <li>{name}</li>
+                        </>
+                    ))}
                 </ul>
             </div>
             <div className='basis-[50%] flex gap-3 items-start'>
-                <p className='font-semibold text-lg '>Country: <span className='font-normal'>VietNam</span></p>
-                <img src= {vn_logo} width={40} height={40} className="object-contain mt-1" />
+                <p className='font-semibold text-lg '>Country: <span className='font-normal'>{team.country.name}</span></p>
+                <img src= {country_logo(team.country.name)} width={40} height={40} className="object-contain mt-1" />
             </div>
         </div>
         <div className="flex justify-between text-lg font-semibold mt-3">

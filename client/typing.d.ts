@@ -1,12 +1,3 @@
-
-export interface User {
-    user_id: string,
-    first_name: string,
-    last_name: string,
-    email: string,
-    password: string,
-    role: string
-}
 export interface Team {
     team_id: string,
     user: Array<string>
@@ -33,9 +24,14 @@ export interface CountryCluster {
     name: string,
     elasticity: Elasticity,
     input_value: InputValue
-    preset_value: PresetValue,
+    preset_value: PresetValue ,
     other_value: OtherValue,
     score: ClusterScore
+}
+
+export interface Preset_Value {
+    name: string,
+    value: number
 }
 
 export interface PresetValue {
@@ -58,17 +54,17 @@ export interface Elasticity {
     perpetual_growth: number,
     impact_of_inflation_on_induced_consumption: number,
     impact_of_interest_rate_on_induced_consumption_change: number,
-    impact_of_interest_rate_on_induced_consumption_level:	number,
-    impact_of_interest_rate_on_induced_investment_change:	number,
+    impact_of_interest_rate_on_induced_consumption_level: number,
+    impact_of_interest_rate_on_induced_investment_change: number,
     impact_of_interest_rate_on_induced_investment_level: number,
-    impact_of_interest_rate_on_inflation:	number,
-    impact_of_inflation_expectation_on_inflation:	number,
-    impact_of_supply_and_demand_change_on_inflation:	number,
-    impact_of_interest_rate_differential_on_capital_flow:	number,
+    impact_of_interest_rate_on_inflation: number,
+    impact_of_inflation_expectation_on_inflation: number,
+    impact_of_supply_and_demand_change_on_inflation: number,
+    impact_of_interest_rate_differential_on_capital_flow: number,
     autonousmous_import: number,
-    impact_of_fx_rate_on_induced_import:	number,
+    impact_of_fx_rate_on_induced_import: number,
     height_of_sigmoid: number,
-    width_of_sigmoid:	number,
+    width_of_sigmoid: number,
     position_of_sigmoid: number,
     size_of_rewards:number,
 }
