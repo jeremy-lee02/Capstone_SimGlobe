@@ -46,22 +46,70 @@ export interface PresetValue {
 }
 
 export interface Elasticity {
-    perpetual_growth: number,
-    impact_of_inflation_on_induced_consumption: number,
-    impact_of_interest_rate_on_induced_consumption_change: number,
-    impact_of_interest_rate_on_induced_consumption_level:	number,
-    impact_of_interest_rate_on_induced_investment_change:	number,
-    impact_of_interest_rate_on_induced_investment_level: number,
-    impact_of_interest_rate_on_inflation:	number,
-    impact_of_inflation_expectation_on_inflation:	number,
-    impact_of_supply_and_demand_change_on_inflation:	number,
-    impact_of_interest_rate_differential_on_capital_flow:	number,
-    autonousmous_import: number,
-    impact_of_fx_rate_on_induced_import:	number,
-    height_of_sigmoid: number,
-    width_of_sigmoid:	number,
-    position_of_sigmoid: number,
-    size_of_rewards:number,
+    perpetual_growth: {
+        name: "Perpetual Growth",
+        value: number
+    },
+    impact_of_inflation_on_induced_consumption: {
+        name: "Impact of inflation on induced consumption",
+        value: number
+    },
+    impact_of_interest_rate_on_induced_consumption_change: {
+        name: "Impact of interest rate on induced consumption change",
+        value: number
+    },
+    impact_of_interest_rate_on_induced_consumption_level: {
+        name: "Impact of interest rate on induced consumption level",
+        value: number
+    },
+    impact_of_interest_rate_on_induced_investment_change:{
+        name: "Impact of interest rate on induced investment change",
+        value: number
+    },
+    impact_of_interest_rate_on_induced_investment_level:{
+        name: "Impact of interest rate on induced investment level",
+        value: number
+    },
+    impact_of_interest_rate_on_inflation: {
+        name: "Impact of interest rate on inflation",
+        value: number
+    },
+    impact_of_inflation_expectation_on_inflation: {
+        name: "Impact of inflation expectation  on inflation",
+        value: number
+    },
+    impact_of_supply_and_demand_change_on_inflation: {
+        name: "Impact of supply and demand change on inflation",
+        value: number
+    },
+    impact_of_interest_rate_differential_on_capital_flow: {
+        name: "Impact of interest rate differential on capital flow ",
+        value: number
+    },
+    autonousmous_import: {
+        name: "Autonousmous import",
+        value: number
+    },
+    impact_of_fx_rate_on_induced_import: {
+        name: "Impact of fx rate on induced import",
+        value: number
+    },
+    height_of_sigmoid: {
+        name: "Height of sigmoid",
+        value: number
+    },
+    width_of_sigmoid: {
+        name: "Width of sigmoid",
+        value: number
+    },
+    position_of_sigmoid: {
+        name: "Position of sigmoid",
+        value: number
+    },
+    size_of_rewards: {
+        name: "Size of rewards",
+        value: number
+    },
 }
 
 export interface OtherValue {

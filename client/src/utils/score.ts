@@ -1,6 +1,6 @@
 import { ClusterScore, Room, Team } from "../../typing";
 
-export const cluster1: ClusterScore = {
+export const score1: ClusterScore = {
     gdp: {
         min: 0,
         max: 6,
@@ -19,7 +19,7 @@ export const cluster1: ClusterScore = {
         max: 5,
     },
 }
-export const cluster2: ClusterScore = {
+export const score2: ClusterScore = {
     gdp: {
         min: 2,
         max: 8,
@@ -38,7 +38,7 @@ export const cluster2: ClusterScore = {
         max: 5,
     },
 }
-export const cluster3: ClusterScore = {
+export const score3: ClusterScore = {
     gdp: {
         min: 1,
         max: 6,
@@ -57,7 +57,7 @@ export const cluster3: ClusterScore = {
         max: 5,
     },
 }
-export const cluster4: ClusterScore = {
+export const score4: ClusterScore = {
     gdp: {
         min: 0,
         max: 6,
@@ -76,7 +76,7 @@ export const cluster4: ClusterScore = {
         max: 2,
     },
 }
-export const cluster5: ClusterScore = {
+export const score5: ClusterScore = {
     gdp: {
         min: 0,
         max: 8,
@@ -95,7 +95,7 @@ export const cluster5: ClusterScore = {
         max: 0,
     },
 }
-export const cluster6: ClusterScore = {
+export const score6: ClusterScore = {
     gdp: {
         min: 2,
         max: 8,
@@ -114,7 +114,7 @@ export const cluster6: ClusterScore = {
         max: -2,
     },
 }
-export const cluster7: ClusterScore = {
+export const score7: ClusterScore = {
     gdp: {
         min: 0,
         max: 5,
@@ -133,7 +133,7 @@ export const cluster7: ClusterScore = {
         max: 2,
     },
 }
-export const cluster8: ClusterScore = {
+export const score8: ClusterScore = {
     gdp: {
         min: 0,
         max: 5,
@@ -152,7 +152,7 @@ export const cluster8: ClusterScore = {
         max: -2,
     },
 }
-export const cluster9: ClusterScore = {
+export const score9: ClusterScore = {
     gdp: {
         min: -1,
         max: 3,

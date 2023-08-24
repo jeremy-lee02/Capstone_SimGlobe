@@ -1,7 +1,9 @@
-import React, { useState}from 'react';
+import React, { useEffect, useState}from 'react';
 import DropboxArrowIcon from '../icons/DropboxArrowIcon';
+import {preset1, preset2, preset3} from '../../utils/presetData'
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
+
 
 {/*Custom DropBox*/}
 const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSelect: (value: string) => void }> = ({ options, selectedValue, onSelect }) => {
@@ -50,9 +52,10 @@ const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSel
 const PresetData: React.FC = () => {
     const [selectedPopulation, setSelectedPopulation] = useState('SMALL');
     const [selectedGDP, setSelectedGDP] = useState('SMALL');
+    const [name, setName] = useState("small_small")
   
   
-    const initialElasticitiesData = [
+    const initialPresetData = [
       { label: 'Initial Consumption', value: 0 },
       { label: 'Initial Investment', value: 0 },
       { label: 'Initial Spending', value: 0 },
@@ -66,7 +69,7 @@ const PresetData: React.FC = () => {
       { label: 'Portion of GDP as Induced Import', value: 0 },
       { label: 'Unemployment', value: 0 },
     ];
-    const [elasticitiesData, setElasticitiesData] = useState(initialElasticitiesData);
+    const [elasticitiesData, setElasticitiesData] = useState(initialPresetData);
   
     const populations = ['BIG', 'MEDIUM', 'SMALL'];
     const gdps = ['BIG', 'MEDIUM', 'SMALL'];
@@ -78,14 +81,22 @@ const PresetData: React.FC = () => {
       }));
       
       console.log("Updated Elasticities Data:", updatedElasticitiesData);
+      console.log(name)
     };
     const handlePopulationChange = (value: string) => {
       setSelectedPopulation(value);
+      setName(selectedGDP.toLowerCase()+"_" + value.toLowerCase())
     };
   
     const handleGDPChange = (value: string) => {
       setSelectedGDP(value);
+      setName(value.toLowerCase()+"_" + selectedPopulation.toLowerCase())
     };
+
+
+    useEffect(()=>{
+
+    }, [])
   
     return (
       <div className="flex flex-col h-full">
@@ -128,7 +139,7 @@ const PresetData: React.FC = () => {
                 <div key={index} className="flex justify-between items-center py-2">
                   <p className="text-white">{data.label}</p>
                   <input
-                    type="text"
+                    type="number"
                     className="bg-gray-800 rounded p-2 w-16 text-white text-center"
                     onChange={(e) => {
                       const inputValue = e.target.value;
