@@ -1,18 +1,53 @@
 
-import React, {useState} from 'react';
+import {useState, useEffect} from 'react';
 import RangeSlider from './RangeSlider';
-type Props = {}
+import {InputValue, Room, Team } from '../../../typing';
+import { useUpdateRoom } from '../../utils/economic';
+type Props = {
+    input_values: InputValue
 
-const AdjustEconomy = (props: Props) => {
-    const [interestRate, setInterestRate] = useState(10)
-    const [vatRate, setVatRate] = useState(20)
-    const [corporateTax, setCorporateTax] = useState(20)
-    const [importTariff, setImportTariff] = useState(50)
-    const [govExpenditure, setGovExpenditure] = useState(45)
+    room: Room
+    onUpdateCountry: (updatedValues: Team) => void;
+}
+
+const AdjustEconomy = ({input_values, onUpdateCountry, room}: Props) => {
+    const [interestRate, setInterestRate] = useState(input_values.interest_rate)
+    const [vatRate, setVatRate] = useState(input_values.vat_rate)
+    const [corporateTax, setCorporateTax] = useState(input_values.corporate_tax_rate)
+    const [importTariff, setImportTariff] = useState(input_values.import_tariff_rate)
+    const [govExpenditure, setGovExpenditure] = useState(input_values.government_expenditure_us)
+    const [values, setValues] = useState<InputValue>(input_values)
+
+    useEffect(()=>{
+        //Update values when any of the 5 input changes
+        setValues(prev =>{
+            const newValues = {
+                ...prev,
+                interest_rate: interestRate,
+                vat_rate: vatRate,
+                corporate_tax_rate: corporateTax,
+                import_tariff_rate: importTariff,
+                government_expenditure_us: govExpenditure,
+            }
+            return newValues
+        })
+    },[interestRate,vatRate,importTariff,govExpenditure,corporateTax])
+
+    function handleSubmit(e:any) {
+        e.preventDefault()
+        const newRoom = {...room}
+        newRoom.team[2].country.cluster.input_value = values
+        // const newCountry = {...room[2]}
+        // newCountry.cluster.input_value = values
+        // function take in values
+        const updatedRoom = useUpdateRoom(newRoom)
+        onUpdateCountry(updatedRoom.team[2])
+        // console.log(newRoom[2].cluster.other_value.global_interestRate)
+    }
   return (
     <div className="bg-[#282C35] text-white flex flex-col w-[70%]">
         <h2 className="font-bold text-2xl mt-3 mx-auto pb-10">Adjust Economy</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
             <RangeSlider
             name='Interest Rate'
             min={0}
