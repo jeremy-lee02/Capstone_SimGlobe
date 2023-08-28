@@ -122,4 +122,4 @@ export interface ClusterScore  {
         min: number,
         max: number,
     },
-  };
+};

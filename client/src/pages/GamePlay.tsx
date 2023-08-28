@@ -13,7 +13,7 @@ const GamePlay = (props: Props) => {
     // Room clone data
     
     const room: Room = useCloneData()
-    const initialTeam = room.team[0]
+    const initialTeam = room.team[2]
     // const [roomData, setRoomData] = useState<Array<Country>>(room)
     // use state and use effect to get the country
     const [team, setTeam] = useState<Team>(initialTeam)

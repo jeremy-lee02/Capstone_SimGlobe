@@ -5,6 +5,8 @@ const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 
 
+
+
 {/*Custom DropBox*/}
 const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSelect: (value: string) => void }> = ({ options, selectedValue, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,22 +71,15 @@ const PresetData: React.FC = () => {
     const [selectedPopulation, setSelectedPopulation] = useState('SMALL');
     const [selectedGDP, setSelectedGDP] = useState('SMALL');
     const [name, setName] = useState("small_small")
-    const {data} = usePresetData(name, initialPresetData)
-  
-
-    const [presetData, setpresetData] = useState(initialPresetData);
+    const {data, updateData} = usePresetData(name, initialPresetData)
+    const [presetData, setpresetData] = useState(data);
   
     const populations = ['BIG', 'MEDIUM', 'SMALL'];
     const gdps = ['BIG', 'MEDIUM', 'SMALL'];
     
     const handleSaveChanges = () => {
-      const updatedpresetData = presetData.map((data) => ({
-        label: data.label,
-        value: data.value,
-      }));
-      
-      console.log("Updated Elasticities Data:", updatedpresetData);
-      console.log(data)
+      updateData()
+      console.log("Updated Data:", presetData);
     };
     const handlePopulationChange = (value: string) => {
       setSelectedPopulation(value);
@@ -97,9 +92,6 @@ const PresetData: React.FC = () => {
     };
 
 
-    useEffect(()=>{
-
-    }, [])
   
     return (
       <div className="flex flex-col h-fit">
