@@ -1,17 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { simGlobe_logo } from '../assets';
 import "../index.css"
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 
 const HomeStudent: React.FC = () => {
+
+  const [room, setRoom] = useState('');
+
+  const handleChange = event => {
+    setRoom(event.target.value);
+  };
+
   const navigate = useNavigate();
   const handleSinglePlayer = () => {
   };
 
-  const handleJoinRoom = () => {
-    navigate('/room')
-  };
+  const handleJoinRoom = async () => {
+		try {
+			const url = `http://localhost:9000/api/rooms/join/${room}`;
+			const { data: res } = await axios.get(url);
+      navigate(`/join/${room}`);
+		} catch (error) {
+			if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				setError(error.response.data.message);
+				toast.error(error.response.data.message)
+			}
+		}
+	};
 
   return (
     <>
@@ -37,6 +59,8 @@ const HomeStudent: React.FC = () => {
                   type="text"
                   placeholder="Enter Code"
                   className="bg-gray-800 text-white py-2 px-4 mb-4 rounded-lg w-full"
+                  onChange={handleChange}
+                  value={room}
                 />
                 <button className="bg-purple-700 hover:bg-purple-900 text-white font-bold py-2 px-8 rounded-lg w-full" onClick={handleJoinRoom}>
                   Join Room

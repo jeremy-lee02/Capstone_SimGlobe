@@ -37,7 +37,7 @@ function App() {
           </RequireAuth>
         } />
         <Route path= {`/game/:id`} element= {<GamePlay />} />
-        <Route path="/room" element={<RoomStudent />} />
+        <Route path="/join/:roomId" element={<RoomStudent />} />
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
       </Routes>
