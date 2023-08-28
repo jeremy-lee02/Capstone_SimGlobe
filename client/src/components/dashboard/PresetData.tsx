@@ -1,12 +1,9 @@
-import React, { useEffect, useState}from 'react';
+import React, { useState}from 'react';
 import DropboxArrowIcon from '../icons/DropboxArrowIcon';
 import usePresetData from '../../hooks/usePresetData';
+
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
-
-
-
-
 {/*Custom DropBox*/}
 const CustomDropdown: React.FC<{ options: string[], selectedValue: string, onSelect: (value: string) => void }> = ({ options, selectedValue, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +64,10 @@ const initialPresetData = [
   { label: 'Inflation', value: 0 },
 ];
 
-const PresetData: React.FC = () => {
+const PresetData: React.FC<{
+  onMoveToNumberofTeam: () => void;
+  onMoveToRules: () => void;
+}> = ({ onMoveToNumberofTeam, onMoveToRules }) => {
     const [selectedPopulation, setSelectedPopulation] = useState('SMALL');
     const [selectedGDP, setSelectedGDP] = useState('SMALL');
     const [name, setName] = useState("small_small")
@@ -122,13 +122,13 @@ const PresetData: React.FC = () => {
         </div>
   
         {/* Bottom Part */}
-        <div className="flex flex-col mx-11 mt-4">
-          <div className="flex justify-between items-center pb-2 pr-5">
+        <div className="flex flex-col ml-11 mr-9 mt-4">
+          <div className="flex justify-between items-center pb-2 pr-10">
             <p className="text-xl font-semibold text-white">Lables</p>
             <p className="text-xl font-semibold text-white">Value</p>
           </div>
   
-          <div className="h-[25rem] mb-5 pr-1 overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+          <div className="lg:max-h-[310px] xl:max-h-[490px] max-h-[20rem] mb-5 pr-6 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
             <div className="grid divide-y divide-gray-600">
               {data.map((e, index) => (
                 <div key={index} className="flex justify-between items-center py-2">
@@ -154,13 +154,19 @@ const PresetData: React.FC = () => {
               ))}
             </div>
           </div>
-          {/* Save Changes Button */}
+          {/* Button */}
             <div className="flex justify-end">
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
-                onClick={handleSaveChanges}
+                onClick={onMoveToRules}
               >
-                Save Changes
+                Back
+              </button>
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                onClick={onMoveToNumberofTeam}
+              >
+                Next
               </button>
             </div>
         </div>

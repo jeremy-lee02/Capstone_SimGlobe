@@ -39,7 +39,7 @@ const Administrator: React.FC = () => {
 
       {/* Bottom Part */}
       <div className="flex flex-col ml-11 mr-9 mt-4">
-        <div className="flex justify-between items-center pb-2 pr-5">
+        <div className="flex justify-between items-center pb-2 pr-10">
           <p className="text-xl font-semibold text-white">Elasticities</p>
           <p className="text-xl font-semibold text-white">Value</p>
         </div>
