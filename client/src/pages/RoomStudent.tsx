@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import LeaveIcon from '../components/LeaveIcon';
 import "../index.css"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 type Team = {
   teamNumber: number;
   teamMembers: number;
@@ -72,6 +74,28 @@ const RoomStudent: React.FC = () => {
   const handleLeaveRoom = () => {
     navigate('/homestudent')
   };
+  const param = useParams();
+
+  const handleJoinRoom = async () => {
+		try {
+			const url = `http://localhost:9000/api/rooms/join/${param.roomId}`;
+			const { data: res } = await axios.get(url);
+			toast.success(res.message)
+		} catch (error) {
+			if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				setError(error.response.data.message);
+				toast.error(error.response.data.message)
+			}
+		}
+	};
+
+  useEffect(() => {
+    handleJoinRoom();
+  }, []);
 
   return (
     <div className="flex flex-col items-center bg-gray-900 text-white min-h-screen">
