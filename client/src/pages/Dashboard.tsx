@@ -4,30 +4,64 @@ import { useState } from 'react'
 import AdminIcon from '../components/icons/AdminIcon'
 import LecturerIcon from '../components/icons/LecturerIcon'
 import Administrator from '../components/dashboard/Admin'
-import RoomSetting from '../components/dashboard/RoomSetting'
 import PresetData from '../components/dashboard/PresetData'
+import NumberofTeam from '../components/dashboard/roomcreation/NumberofTeam'
+import CountriesSelection from '../components/dashboard/roomcreation/CountriesSelection'
 import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
+import Rules from '../components/dashboard/Rules'
+
+
+
 function Dashboard() {
 const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
-const [selectedLecturerOption, setSelectedLecturerOption] = useState("roomSetting");
+const [selectedLecturerOption, setSelectedLecturerOption] = useState("rules");
+
+const handleMoveToRules = () => {
+    setSelectedLecturerOption('rules');
+  };
+const handleMoveToPreset = () => {
+    setSelectedLecturerOption('presetData');
+  };
+const handleMoveToNumberofTeam = () => {
+setSelectedLecturerOption('numOfTeam');
+};
+const handleMoveTocountriesSelect= () => {
+setSelectedLecturerOption('countriesSelect');
+};
+
+
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
       return <Administrator />;
     } else if (selectedComponent === 'lecturer') {
-      if (selectedLecturerOption === 'roomSetting') {
-        return <RoomSetting />;
+      if (selectedLecturerOption === 'rules') {
+        return <Rules onMoveToPreset={handleMoveToPreset} />;
       } else if (selectedLecturerOption === 'presetData') {
-        return <PresetData />;
+        return <PresetData
+        onMoveToNumberofTeam={handleMoveToNumberofTeam}
+        onMoveToRules={handleMoveToRules}
+      />;
+      } else if(selectedLecturerOption === 'numOfTeam'){
+        return <NumberofTeam
+        onMoveToPreset={handleMoveToPreset}
+        onMoveTocountriesSelect={handleMoveTocountriesSelect}
+        />;
       }
+      else if(selectedLecturerOption === 'countriesSelect'){
+        return <CountriesSelection
+        onMoveToNumberofTeam={handleMoveToNumberofTeam}
+        />;
+      }
+
     } else {
       return null;
     }
   };
   return (
-    <div className="relative h-[120vh] bg-gray-600">
-        <div className="bg-[#282C35] h-[120vh]  ">
-            <div className="w-[220px] h-screen bg-[#282C35] absolute left-0 "/>
-            <div className="w-screen h-[10%] bg-[#282C35] absolute left-0 "/>
+    <div className="relative h-screen bg-gray-600">
+        <div className="bg-gray-900 h-full">
+            <div className="w-[220px] h-screen bg-gray-900 absolute left-0 "/>
+            <div className="w-screen h-[10%] bg-gray-900 absolute left-0 "/>
             <Logo/>
             {/* Admin/Lecturer selection */}
             <div className= 'w-[220px] h-[100px] absolute top-[20%] flex flex-col gap-10 '>
@@ -46,16 +80,30 @@ const renderComponent = () => {
                     <div className='pl-4 mt-2'>
                         <div
                             className="flex items-center text-white mb-2" 
-                            onClick={() => setSelectedLecturerOption('roomSetting')}>
-                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'roomSetting' ? 'block' : 'invisible'}`} color="#FF7100" />
-                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'roomSetting' ? 'text-orange-500' : ''}`}>{"Room Setting"}</h1>
+                            onClick={() => setSelectedLecturerOption('rules')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'rules' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'rules' ? 'text-orange-500' : ''}`}>{"Rules"}</h1>
                             
                         </div>
                         <div
-                            className="flex items-center text-white"
+                            className="flex items-center text-white mb-2"
                             onClick={() => setSelectedLecturerOption('presetData')}>
                                 <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'presetData' ? 'block' : 'invisible'}`} color="#FF7100" />
                                 <h1 className={`text-l font-bold ${selectedLecturerOption === 'presetData' ? 'text-orange-500' : ''}`}>{"Preset Data"}</h1>
+                           
+                        </div>
+                        <div
+                            className="flex items-center text-white mb-2"
+                            onClick={() => setSelectedLecturerOption('numOfTeam')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'numOfTeam' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'numOfTeam' ? 'text-orange-500' : ''}`}>{"Number Of Team"}</h1>
+                           
+                        </div>
+                        <div
+                            className="flex items-center text-white mb-2"
+                            onClick={() => setSelectedLecturerOption('countriesSelect')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'countriesSelect' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'countriesSelect' ? 'text-orange-500' : ''}`}>{"Select Countries"}</h1>
                            
                         </div>
                     </div>
@@ -88,7 +136,7 @@ const renderComponent = () => {
             
         {/*Main Content */} 
             <div className="absolute left-[220px] right-0 top-[10%] bottom-0 bg-gray-600">
-                <div className="absolute h-screen top-[3%] left-[2%] right-[2%] bottom-[3%] bg-[#282C35] rounded-lg">
+                <div className="absolute top-[3%] left-[2%] right-[2%] bottom-[3%] bg-gray-900 rounded-lg">
                 {renderComponent()}
                 </div>
             </div>

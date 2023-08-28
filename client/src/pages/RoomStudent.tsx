@@ -88,7 +88,7 @@ const RoomStudent: React.FC = () => {
       <div className="flex flex-col items-center bg-gray-900 text-white min-h-screen">
         <div className="flex flex-col justify-center items-center flex-grow">
           <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
-          <div className="max-h-[34rem] overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
+          <div className="max-h-[34rem] ml-4 pr-4 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
             <div className="grid grid-cols-2 gap-10">
               {teams.map((team) => (
                 <TeamCard
