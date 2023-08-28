@@ -36,8 +36,6 @@ router.post("/", async (req, res) => {
 router.get("/join/:roomId", async (req, res) => {
     const roomRef = db.collection("rooms");
     const queryRoomRef = await roomRef.where('roomId', '==', req.params.roomId).get();
-	console.log("2134")
-	console.log(queryRoomRef)
     if (queryRoomRef.size < 1) {
         return res
             .status(409)
