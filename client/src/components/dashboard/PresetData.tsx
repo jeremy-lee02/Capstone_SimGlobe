@@ -64,10 +64,7 @@ const initialPresetData = [
   { label: 'Inflation', value: 0 },
 ];
 
-const PresetData: React.FC<{
-  onMoveToNumberofTeam: () => void;
-  onMoveToRules: () => void;
-}> = ({ onMoveToNumberofTeam, onMoveToRules }) => {
+const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveTocountriesSelect }) => {
     const [selectedPopulation, setSelectedPopulation] = useState('SMALL');
     const [selectedGDP, setSelectedGDP] = useState('SMALL');
     const [name, setName] = useState("small_small")
@@ -167,16 +164,15 @@ const PresetData: React.FC<{
           {/* Button */}
             <div className="flex justify-end">
               <button
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
-                onClick={onMoveToRules}
+                className="mr-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                onClick={onMoveTocountriesSelect}
               >
                 Back
               </button>
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
-                onClick={onMoveToNumberofTeam}
               >
-                Next
+                Submit
               </button>
             </div>
         </div>

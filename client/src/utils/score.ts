@@ -139,17 +139,17 @@ export const score8: ClusterScore = {
         max: 5,
     },
     unemployment: {
-        min: 1,
-        max: 10,
+        min: 2,
+        max: 12,
       },
     inflation: {
-        second_min: -2,
+        second_min: -1,
         min: 0,
-        max: 6,
+        max: 7,
     },
     budget_surplus: {
         min: -10,
-        max: -2,
+        max: -3,
     },
 }
 export const score9: ClusterScore = {

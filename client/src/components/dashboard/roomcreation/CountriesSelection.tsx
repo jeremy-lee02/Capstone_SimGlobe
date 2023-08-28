@@ -38,7 +38,11 @@ const countryGroups = [
       countries: ['USA', 'Japan', 'Germany', 'UK', 'Australia', 'Korea'],
     },
   ];
-const CountriesSelection: React.FC<{ onMoveToNumberofTeam: () => void }> = ({ onMoveToNumberofTeam }) => {
+const CountriesSelection: React.FC<{
+  onMoveToNumberofTeam: () => void;
+  onMoveToPreset: () => void;
+}> = ({  onMoveToNumberofTeam,  onMoveToPreset }) => {
+
 
 
   const numTeams = parseInt(localStorage.getItem('numTeams') || '2', 10);
@@ -71,7 +75,7 @@ const CountriesSelection: React.FC<{ onMoveToNumberofTeam: () => void }> = ({ on
 
   return (
     <div className="flex items-center justify-center bg-gray-900 text-white">
-      <div className="p-8 rounded-lg">
+      <div className="p-8 rounded-lg shadow-2xl bg-[#1e2433]">
         <h1 className="text-3xl font-semibold mb-4">Countries Selection Page</h1>
         <p className="mb-4">Select countries for your teams:</p>
         <div className='max-h-[600px] mb-5 pr-6 overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700'>
@@ -94,7 +98,8 @@ const CountriesSelection: React.FC<{ onMoveToNumberofTeam: () => void }> = ({ on
           </div>
         ))}
       </div>
-        <div className='flex justify-end'>
+      <div className='flex justify-end'>
+        <div className='mr-3'>
           <button
             className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
             onClick={onMoveToNumberofTeam}
@@ -102,14 +107,15 @@ const CountriesSelection: React.FC<{ onMoveToNumberofTeam: () => void }> = ({ on
             Back
           </button>
         </div>
-        <div className='flex justify-end'>
+        <div className=''>
           <button
             className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            onClick={handleNext}
+            onClick={onMoveToPreset}
           >
-            Submit
+            Next
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

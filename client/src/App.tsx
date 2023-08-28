@@ -7,7 +7,7 @@ import RoomStudent from "./pages/RoomStudent"
 import RoomHost from "./pages/RoomHost"
 import HomeStudent from "./pages/HomeStudent"
 import Dashboard from "./pages/Dashboard"
-import Rules2 from "./components/dashboard/Rules2"
+
 
 
 
@@ -30,7 +30,6 @@ function App() {
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/rules2" element={<Rules2 />} />
       </Routes>
     </>
   )
