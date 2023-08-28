@@ -9,6 +9,26 @@ import { Server, Socket } from "socket.io";
 
 @SocketController()
 export class RoomController {
+  private getSocketGameRoom(socket: Socket): string {
+    const socketRooms = Array.from(socket.rooms.values()).filter(
+      (r) => r !== socket.id
+    );
+    const gameRoom = socketRooms && socketRooms[0];
+
+    return gameRoom;
+  }
+
+  @OnMessage("update_teams")
+  public async updateTeam(
+    @SocketIO() io: Server,
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() message: any
+  ) {
+    const gameTeam = this.getSocketGameRoom(socket);
+    console.log(gameTeam);
+    socket.to(gameTeam).emit("on_team_update", message);
+  }
+
   @OnMessage("join_game")
   public async joinGame(
     @SocketIO() io: Server,
@@ -21,10 +41,9 @@ export class RoomController {
     const socketRooms = Array.from(socket.rooms.values()).filter(
       (r) => r !== socket.id
     );
-
+    
     if (
-      socketRooms.length > 0 ||
-      (connectedSockets && connectedSockets.size === 2)
+      (connectedSockets && connectedSockets.size === 50)
     ) {
       socket.emit("room_join_error", {
         error: "Room is full please choose another room to play!",
