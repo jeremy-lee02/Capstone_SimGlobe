@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { simGlobe_logo } from '../assets';
-import "../index.css"
+import "../index.css";
+import gameContext from '../gameContext';
+import gameService from '../services/gameService';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import socketService from '../services/socketService';
 
 
 const HomeStudent: React.FC = () => {
-
+  const {setInRoom, isInRoom} = useContext(gameContext);
   const [room, setRoom] = useState('');
 
   const handleChange = event => {
@@ -17,11 +20,29 @@ const HomeStudent: React.FC = () => {
   const navigate = useNavigate();
   const handleSinglePlayer = () => {
   };
+  
+  const joinRoom = async () => {
+    const socket = socketService.socket;
+    if(!room || room.trim() === "" || !socket) {
+      return;
+    }
+
+    const joined = await gameService
+      .joinGameRoom(socket, room)
+      .catch((err) => {
+        alert(err)
+      });
+
+    if (joined) {
+      setInRoom(true);
+    }
+  }
 
   const handleJoinRoom = async () => {
 		try {
 			const url = `http://localhost:9000/api/rooms/join/${room}`;
 			const { data: res } = await axios.get(url);
+      joinRoom();
       navigate(`/join/${room}`);
 		} catch (error) {
 			if (
