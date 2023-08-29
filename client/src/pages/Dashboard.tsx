@@ -1,25 +1,115 @@
 import Logo from '../components/Logo'
-import AdminSVG from '../assets/icons/Admin.svg'
-import LecturerSVG from '../assets/icons/Lecturer.svg'
 import Avatar from '../assets/logo/vn.png'
+import { useState } from 'react'
+import AdminIcon from '../components/icons/AdminIcon'
+import LecturerIcon from '../components/icons/LecturerIcon'
+import Administrator from '../components/dashboard/Admin'
+import PresetData from '../components/dashboard/PresetData'
+import NumberofTeam from '../components/dashboard/roomcreation/NumberofTeam'
+import CountriesSelection from '../components/dashboard/roomcreation/CountriesSelection'
+import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
+import Rules from '../components/dashboard/Rules'
+
+
 
 function Dashboard() {
+const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+const [selectedLecturerOption, setSelectedLecturerOption] = useState("rules");
+
+const handleMoveToRules = () => {
+    setSelectedLecturerOption('rules');
+  };
+const handleMoveToPreset = () => {
+    setSelectedLecturerOption('presetData');
+  };
+const handleMoveToNumberofTeam = () => {
+setSelectedLecturerOption('numOfTeam');
+};
+const handleMoveTocountriesSelect= () => {
+setSelectedLecturerOption('countriesSelect');
+};
+
+
+const renderComponent = () => {
+    if (selectedComponent === 'admin') {
+      return <Administrator />;
+    } else if (selectedComponent === 'lecturer') {
+      if (selectedLecturerOption === 'rules') {
+        return <Rules onMoveToNumberofTeam={handleMoveToNumberofTeam} />;
+      } else if (selectedLecturerOption === 'presetData') {
+        return <PresetData
+        onMoveTocountriesSelect={handleMoveTocountriesSelect}
+      />;
+      } else if(selectedLecturerOption === 'numOfTeam'){
+        return <NumberofTeam
+        onMoveToRules={handleMoveToRules}
+        onMoveTocountriesSelect={handleMoveTocountriesSelect}
+        />;
+      }
+      else if(selectedLecturerOption === 'countriesSelect'){
+        return <CountriesSelection
+        onMoveToNumberofTeam={handleMoveToNumberofTeam}
+        onMoveToPreset={handleMoveToPreset}
+        />;
+      }
+
+    } else {
+      return null;
+    }
+  };
   return (
-    <div className="relative">
-        <div className="h-screen bg-[#A9A9A9] ">
-            <div className="w-[220px] h-screen bg-[#282C35] absolute left-0 "/>
-            <div className="w-screen h-[10%] bg-[#282C35] absolute left-0 "/>
+    <div className="relative h-screen bg-gray-600">
+        <div className="bg-gray-900 h-full">
+            <div className="w-[220px] h-screen bg-gray-900 absolute left-0 "/>
+            <div className="w-screen h-[10%] bg-gray-900 absolute left-0 "/>
             <Logo/>
             {/* Admin/Lecturer selection */}
             <div className= 'w-[220px] h-[100px] absolute top-[20%] flex flex-col gap-10 '>
-                <div className='flex flex-row gap-4 text-white pl-4 hover:cursor-pointer'>
-                    <img className='fill-white' src={AdminSVG} alt="Admin"/>
-                    <h1 className="text-xl font-bold ">{"Administrator"}</h1>
+                <div className='flex flex-row items-center gap-4 text-white pl-4 hover:cursor-pointer'
+                onClick={() => setSelectedComponent('admin')}>
+                    <AdminIcon color={selectedComponent === 'admin' ? '#FF7100' : '#A9A9A9'}/>
+                    <h1 className={`text-xl font-bold ${selectedComponent === 'admin' ? 'text-orange-500' : ''}`}>{"Administrator"}</h1>
                 </div>
-                <div className='flex flex-row gap-4 text-white pl-4 hover:cursor-pointer'>
-                    <img className='fill-white' src={LecturerSVG} alt="Admin"/>
-                    <h1 className="text-xl font-bold ">{"Lecturer"}</h1>
+                <div className='flex flex-col text-white pl-4 hover:cursor-pointer'
+                onClick={() => setSelectedComponent('lecturer')}>
+                    <div className='flex flex-row items-center gap-4'>
+                        <LecturerIcon color={selectedComponent === 'lecturer' ? '#FF7100' : '#A9A9A9'}/>
+                        <h1 className={`text-xl font-bold ${selectedComponent === 'lecturer' ? 'text-orange-500' : ''}`}>{"Lecturer"}</h1>
+                    </div>
+                    {selectedComponent === 'lecturer' && (
+                    <div className='pl-4 mt-2'>
+                        <div
+                            className="flex items-center text-white mb-2" 
+                            onClick={() => setSelectedLecturerOption('rules')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'rules' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'rules' ? 'text-orange-500' : ''}`}>{"Rules"}</h1>
+                            
+                        </div>
+                        <div
+                            className="flex items-center text-white mb-2"
+                            onClick={() => setSelectedLecturerOption('numOfTeam')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'numOfTeam' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'numOfTeam' ? 'text-orange-500' : ''}`}>{"Number Of Team"}</h1>
+                           
+                        </div>
+                        <div
+                            className="flex items-center text-white mb-2"
+                            onClick={() => setSelectedLecturerOption('countriesSelect')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'countriesSelect' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'countriesSelect' ? 'text-orange-500' : ''}`}>{"Select Countries"}</h1>
+                           
+                        </div>
+                        <div
+                            className="flex items-center text-white mb-2"
+                            onClick={() => setSelectedLecturerOption('presetData')}>
+                                <ArrowSelectIcon className={`w-5 h-5 mr-2 ml-1 ${selectedLecturerOption === 'presetData' ? 'block' : 'invisible'}`} color="#FF7100" />
+                                <h1 className={`text-l font-bold ${selectedLecturerOption === 'presetData' ? 'text-orange-500' : ''}`}>{"Preset Data"}</h1>
+                           
+                        </div>
+                    </div>
+                )}
                 </div>
+                
             </div>
          
             <div className="flex w-screen h-[10%] justify-between items-center pl-60 pr-10 absolute">
@@ -44,9 +134,12 @@ function Dashboard() {
                 </div>
             </div>
             
-            
-            
-
+        {/*Main Content */} 
+            <div className="absolute left-[220px] right-0 top-[10%] bottom-0 bg-gray-600">
+                <div className="absolute top-[3%] left-[2%] right-[2%] bottom-[3%] bg-gray-900 rounded-lg">
+                {renderComponent()}
+                </div>
+            </div>
         </div>
     </div>
   )
