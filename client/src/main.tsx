@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <>
     <AuthProvider
       authType={"cookie"}
       authName={"_auth"}
@@ -23,5 +23,5 @@ root.render(
         <App />
       </BrowserRouter>
     </AuthProvider>
-  </React.StrictMode>
+  </>
 );

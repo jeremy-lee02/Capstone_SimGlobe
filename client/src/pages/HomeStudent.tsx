@@ -28,15 +28,11 @@ const HomeStudent: React.FC = () => {
       return;
     }
 
-    const joined = await roomService
+    await roomService
       .joinGeneralRoom(socket, room)
       .catch((err) => {
         alert(err)
       });
-
-    if (joined) {
-      setInRoom(true);
-    }
   }
 
   const handleJoinRoom = async () => {
