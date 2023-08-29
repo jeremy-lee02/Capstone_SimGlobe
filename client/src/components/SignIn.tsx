@@ -25,13 +25,6 @@ const SignIn = ({onClick}: Props) => {
       password: formRef.current?.password.value,
     }
     try {
-<<<<<<< HEAD
-			const url = "http://localhost:8080/api/auth";
-			const { data: res } = await axios.post(url, formData);
-			localStorage.setItem("token", res.data);
-      toast.success("Login Success!")
-			navigate('/dashboard')
-=======
       const response = await axios.post("http://localhost:9000/api/auth", formData)
 			signIn({
         token: response.data.token,
@@ -43,7 +36,6 @@ const SignIn = ({onClick}: Props) => {
       })
 			toast.success("Login Success!")
 			navigate('/homestudent')
->>>>>>> test
 		} catch (error) {
 			if (
 				error.response &&

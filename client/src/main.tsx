@@ -4,18 +4,9 @@ import App from './App.tsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import {Toaster} from 'react-hot-toast';
+import { AuthProvider } from 'react-auth-kit'
 
 
-<<<<<<< HEAD
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Toaster />
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-)
-=======
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
@@ -34,4 +25,3 @@ root.render(
     </AuthProvider>
   </>
 );
->>>>>>> test

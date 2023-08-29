@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import "../index.css"
-import Logo from '../components/Logo';
-import Username from '../components/Username';
-=======
 import React, { useContext, useState } from 'react';
 import { simGlobe_logo } from '../assets';
 import "../index.css";
 import gameContext from '../gameContext';
 import gameService from '../services/gameService';
->>>>>>> test
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -26,17 +19,13 @@ const HomeStudent: React.FC = () => {
   };
 
   const navigate = useNavigate();
-<<<<<<< HEAD
-=======
-  const handleSinglePlayer = () => {
-  };
+  const handleSinglePlayer = () => {};
   
   const joinRoom = async () => {
     const socket = socketService.socket;
     if(!room || room.trim() === "" || !socket) {
       return;
     }
->>>>>>> test
 
     await roomService
       .joinGeneralRoom(socket, room)
