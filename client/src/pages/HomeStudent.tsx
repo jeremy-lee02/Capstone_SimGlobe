@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import socketService from '../services/socketService';
+import roomService from '../services/teamService';
 
 
 const HomeStudent: React.FC = () => {
@@ -27,15 +28,11 @@ const HomeStudent: React.FC = () => {
       return;
     }
 
-    const joined = await gameService
-      .joinGameRoom(socket, room)
+    await roomService
+      .joinGeneralRoom(socket, room)
       .catch((err) => {
         alert(err)
       });
-
-    if (joined) {
-      setInRoom(true);
-    }
   }
 
   const handleJoinRoom = async () => {

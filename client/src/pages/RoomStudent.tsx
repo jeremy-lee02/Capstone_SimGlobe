@@ -6,7 +6,11 @@ import "../index.css"
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-type Team = {
+import socketService from '../services/socketService';
+import gameService from '../services/gameService';
+import roomService from '../services/teamService';
+import teamService from '../services/teamService';
+export type Team = {
   teamNumber: number;
   teamMembers: number;
 };
@@ -15,6 +19,7 @@ type Team = {
 const RoomStudent: React.FC = () => {
   const navigate = useNavigate();
   const [joinedTeam, setJoinedTeam] = useState<number | null>(null);
+
 
   const handleJoinTeam = (teamNumber: number) => {
     if (teamNumber !== joinedTeam) {
@@ -36,50 +41,74 @@ const RoomStudent: React.FC = () => {
 
       setJoinedTeam(teamNumber);
       setTeams(updatedTeams);
+      updateTeam(updatedTeams);
     }
   };
 
   const [teams, setTeams] = useState<Team[]>([
-    { teamNumber: 1, teamMembers: 3 },
+    { teamNumber: 1, teamMembers: 0 },
     { teamNumber: 2, teamMembers: 0 },
     { teamNumber: 3, teamMembers: 0 },
-    { teamNumber: 4, teamMembers: 4 },
+    { teamNumber: 4, teamMembers: 0 },
     { teamNumber: 5, teamMembers: 0 },
     { teamNumber: 6, teamMembers: 0 },
-    { teamNumber: 7, teamMembers: 4 },
+    { teamNumber: 7, teamMembers: 0 },
     { teamNumber: 8, teamMembers: 0 },
     { teamNumber: 9, teamMembers: 0 },
     { teamNumber: 10, teamMembers: 0 },
-    { teamNumber: 11, teamMembers: 3 },
+    { teamNumber: 11, teamMembers: 0 },
     { teamNumber: 12, teamMembers: 0 },
     { teamNumber: 13, teamMembers: 0 },
-    { teamNumber: 14, teamMembers: 4 },
+    { teamNumber: 14, teamMembers: 0 },
     { teamNumber: 15, teamMembers: 0 },
     { teamNumber: 16, teamMembers: 0 },
-    { teamNumber: 17, teamMembers: 4 },
+    { teamNumber: 17, teamMembers: 0 },
     { teamNumber: 18, teamMembers: 0 },
     { teamNumber: 19, teamMembers: 0 },
     { teamNumber: 20, teamMembers: 0 },
-    { teamNumber: 21, teamMembers: 3 },
+    { teamNumber: 21, teamMembers: 0 },
     { teamNumber: 22, teamMembers: 0 },
     { teamNumber: 23, teamMembers: 0 },
-    { teamNumber: 24, teamMembers: 4 },
+    { teamNumber: 24, teamMembers: 0 },
     { teamNumber: 25, teamMembers: 0 },
     { teamNumber: 26, teamMembers: 0 },
-    { teamNumber: 27, teamMembers: 4 },
+    { teamNumber: 27, teamMembers: 0 },
     { teamNumber: 28, teamMembers: 0 },
     { teamNumber: 29, teamMembers: 0 },
   ]);
-
+  const updateTeam = (updatedTeam : Team[]) => {
+    if(socketService.socket) {
+      teamService.updateTeam(socketService.socket, updatedTeam);
+    }
+  }
+  const handleTeamUpdate = () => {
+    if(socketService.socket) {
+      teamService.onTeamUpdate(socketService.socket, (teams : any) =>{
+        setTeams(teams)
+      })
+    }
+  }
   const handleLeaveRoom = () => {
     navigate('/homestudent')
   };
   const param = useParams();
+  const joinRoom = async (room: any) => {
+    const socket = socketService.socket;
+    if(!room || room.trim() === "" || !socket) {
+      return;
+    }
 
+    await roomService
+      .joinGeneralRoom(socket, room)
+      .catch((err) => {
+        alert(err)
+      });
+  }
   const handleJoinRoom = async () => {
 		try {
 			const url = `http://localhost:9000/api/rooms/join/${param.roomId}`;
 			const { data: res } = await axios.get(url);
+      joinRoom(param.roomId)
 			toast.success(res.message)
 		} catch (error) {
 			if (
@@ -95,6 +124,7 @@ const RoomStudent: React.FC = () => {
 
   useEffect(() => {
     handleJoinRoom();
+    handleTeamUpdate();
   }, []);
 
   return (
