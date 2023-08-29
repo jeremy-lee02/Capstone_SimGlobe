@@ -28,7 +28,7 @@ const Register = ({onClick}: Props) => {
 	  
 		  }
 		try {
-			const url = "http://localhost:8080/api/users";
+			const url = "http://localhost:9000/api/users";
 			const { data: res } = await axios.post(url, formData);
 			toast.success(res.message)
 			setMsg(res.message);

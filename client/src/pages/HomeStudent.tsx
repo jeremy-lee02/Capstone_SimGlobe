@@ -1,16 +1,67 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import "../index.css"
 import Logo from '../components/Logo';
 import Username from '../components/Username';
+=======
+import React, { useContext, useState } from 'react';
+import { simGlobe_logo } from '../assets';
+import "../index.css";
+import gameContext from '../gameContext';
+import gameService from '../services/gameService';
+>>>>>>> test
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import socketService from '../services/socketService';
+import roomService from '../services/teamService';
 
 
 const HomeStudent: React.FC = () => {
-  const navigate = useNavigate();
+  const {setInRoom, isInRoom} = useContext(gameContext);
+  const [room, setRoom] = useState('');
 
-  const handleJoinRoom = () => {
-    navigate('/room')
+  const handleChange = event => {
+    setRoom(event.target.value);
   };
+
+  const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+  const handleSinglePlayer = () => {
+  };
+  
+  const joinRoom = async () => {
+    const socket = socketService.socket;
+    if(!room || room.trim() === "" || !socket) {
+      return;
+    }
+>>>>>>> test
+
+    await roomService
+      .joinGeneralRoom(socket, room)
+      .catch((err) => {
+        alert(err)
+      });
+  }
+
+  const handleJoinRoom = async () => {
+		try {
+			const url = `http://localhost:9000/api/rooms/join/${room}`;
+			const { data: res } = await axios.get(url);
+      joinRoom();
+      navigate(`/join/${room}`);
+		} catch (error) {
+			if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				setError(error.response.data.message);
+				toast.error(error.response.data.message)
+			}
+		}
+	};
 
   type Username = {
     name: string;
@@ -38,6 +89,8 @@ const HomeStudent: React.FC = () => {
                   type="text"
                   placeholder="Enter Code"
                   className="bg-gray-800 text-white py-2 px-4 mb-4 rounded-lg w-full"
+                  onChange={handleChange}
+                  value={room}
                 />
                 <button className="bg-purple-700 hover:bg-purple-900 text-white font-bold py-2 px-8 rounded-lg w-full" onClick={handleJoinRoom}>
                   Join Room
