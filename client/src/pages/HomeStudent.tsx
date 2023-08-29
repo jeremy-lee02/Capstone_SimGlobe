@@ -3,6 +3,9 @@ import { simGlobe_logo } from '../assets';
 import "../index.css";
 import gameContext from '../gameContext';
 import gameService from '../services/gameService';
+import "../index.css"
+import Logo from '../components/Logo';
+import Username from '../components/Username';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';

@@ -29,10 +29,10 @@ export interface CountryCluster {
     score: ClusterScore
 }
 
-export interface Preset_Value {
-    name: string,
-    value: number
-}
+// export interface Preset_Value {
+//     name: string,
+//     value: number
+// }
 
 export interface PresetValue {
     initial_consumption: number,
@@ -122,4 +122,4 @@ export interface ClusterScore  {
         min: number,
         max: number,
     },
-  }
+};

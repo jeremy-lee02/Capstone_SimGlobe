@@ -1,6 +1,7 @@
 
 import { RequireAuth} from "react-auth-kit"
 import React, { useEffect, useState } from "react";
+
 import {Routes, Route} from "react-router-dom"
 
 import RoomStudent from "./pages/RoomStudent"
@@ -12,6 +13,10 @@ import GamePlay from "./pages/GamePlay"
 import Home from "./pages/Home"
 import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/LeaderBoard";
+
+
+
+
 function App() {
 
   const connectSocket = async () => {
@@ -37,8 +42,16 @@ function App() {
             <GamePlay />
           </RequireAuth>
         } />
+
         <Route path= {`/game/:id`} element= {<GamePlay />} />
         <Route path="/join/:roomId" element={<RoomStudent />} />
+
+        <Route path= {`/game/:id`} element= {<GamePlay />} />
+        <Route path="/join/:roomId" element={<RoomStudent />} />
+        <Route path= {`/${1}`} element= {<GamePlay />} />
+        {/* Room and Game play same route (Room isStart == true => GamePlay) */}
+        <Route path= {`/room/:id`} element= {<GamePlay />} />
+        <Route path="/room" element={<RoomStudent />} />
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
         <Route path="/dashboard" element={<Dashboard />} />

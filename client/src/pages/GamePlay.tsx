@@ -1,19 +1,19 @@
-import { useState, useEffect} from 'react'
+import { useState} from 'react'
 import { Room, Team} from '../../typing'
 import { simGlobe_logo} from '../assets'
 import AdjustEconomy from '../components/gameplay/AdjustEconomy'
 import CurrentEconomy from '../components/gameplay/CurrentEconomy'
 import TeamInfo from '../components/gameplay/TeamInfo'
-import { useCloneData } from '../utils/create_room'
-// import { calculate_score } from '../utils/score'
+
+
 
 type Props = {}
 
 const GamePlay = (props: Props) => {
     // Room clone data
     
-    const room: Room = useCloneData()
-    const initialTeam = room.team[0]
+    const room: Room = JSON.parse(localStorage.getItem('room') || "{}") // Fetch from api
+    const initialTeam = room.team[1]
     // const [roomData, setRoomData] = useState<Array<Country>>(room)
     // use state and use effect to get the country
     const [team, setTeam] = useState<Team>(initialTeam)

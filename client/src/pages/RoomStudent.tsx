@@ -10,6 +10,11 @@ import socketService from '../services/socketService';
 import gameService from '../services/gameService';
 import roomService from '../services/teamService';
 import teamService from '../services/teamService';
+
+import Username from '../components/Username';
+import Logo from '../components/Logo';
+
+
 export type Team = {
   teamNumber: number;
   teamMembers: number;

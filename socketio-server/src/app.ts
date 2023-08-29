@@ -8,6 +8,8 @@ import "reflect-metadata";
 require("dotenv").config();
 
 const userRoutes = require("./routes/users");
+const adminRoutes = require("./routes/admin");
+const settingRoutes = require("./routes/setting");
 const authRoutes = require("./routes/auth");
 const roomRoutes = require("./routes/room");
 var indexRouter = require("./routes/index");
@@ -28,6 +30,8 @@ app.use(cors());
 // routes
 app.use("/", indexRouter);
 app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/setting", settingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 // catch 404 and forward to error handler
