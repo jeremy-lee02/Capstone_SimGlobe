@@ -1,6 +1,7 @@
 
 import {useState, useEffect} from 'react'
 import { preset1, preset2, preset3,preset4, preset5, preset6, preset7, preset8, preset9, updatePresetData, check_and_update_PresetData } from '../utils/presetData'
+import { PresetValue } from '../../typing'
 
 
 type InitValue = {
@@ -8,13 +9,6 @@ type InitValue = {
     value: number
 }
 
-
-const clone = [
-    {
-        name: "small_small",
-        preset_data: preset1
-    }
-]
 
 
 export default function usePresetData(name: string, init_data: Array<InitValue>) {
@@ -28,44 +22,33 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
     const [preset_8, setPreset8] = useState(preset8)
     const [preset_9, setPreset9] = useState(preset9)
     const [data, setData] = useState<Array<InitValue>>(init_data)
+    const [preset, setPreset] = useState<{ [key: string]: PresetValue }>({
+        small_small: preset_1,
+        small_medium: preset_2,
+        small_big: preset_3,
+        medium_small: preset_4,
+        medium_medium: preset_5,
+        medium_big: preset_6,
+        big_small: preset_7,
+        big_medium: preset_8,
+        big_big: preset_9,
+    });
 
     useEffect(()=>{
         createInitData()
-        console.log("Change name")
     },[name])
     useEffect(()=>{
         updateData()
         // updateStorageData();
         // console.log("Save changes")
+
     },[data])
 
     useEffect(()=>{
         updateStorageData();
-        console.log("Save in local storage")
+
     },[updateData])
 
-    // useEffect(() => {
-    //     const storedPresets = localStorage.getItem('presets');
-    //     if (storedPresets) {
-    //         const parsedPresets = JSON.parse(storedPresets);
-    //         setPreset1(parsedPresets.preset_1);
-    //         setPreset2(parsedPresets.preset_2);
-    //         setPreset3(parsedPresets.preset_3);
-    //         setPreset4(parsedPresets.preset_4);
-    //         setPreset5(parsedPresets.preset_5);
-    //         setPreset6(parsedPresets.preset_6);
-    //         setPreset7(parsedPresets.preset_7);
-    //         setPreset8(parsedPresets.preset_8);
-    //         setPreset9(parsedPresets.preset_9);
-
-    //     }
-
-    //     const storedData = localStorage.getItem('data');
-    //     if (storedData) {
-    //         setData(JSON.parse(storedData));
-    //     }
-    //     console.log("Get local storage")
-    // }, []);
 
     function createInitData() {
         switch (name) {
@@ -163,7 +146,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
                     })
-                    console.log(updatePrev)
+                    setPreset(prev =>{
+                        return {
+                            small_small: updatePrev,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
+                    })
                     return updatePrev
                 })
                 break;
@@ -172,6 +167,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     let updatePrev = {...prev}
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
+                    })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: updatePrev,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
                     })
                     return updatePrev
                 })   
@@ -182,6 +190,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
                     })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: updatePrev,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
+                    })
                     return updatePrev
                 })  
                 break;
@@ -190,6 +211,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     let updatePrev = {...prev}
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
+                    })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: updatePrev,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
                     })
                     return updatePrev
                 }) 
@@ -200,6 +234,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
                     })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: updatePrev,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
+                    })
                     return updatePrev
                 })
                 break;
@@ -208,6 +255,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     let updatePrev = {...prev}
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
+                    })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: updatePrev,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
                     })
                     return updatePrev
                 })  
@@ -218,6 +278,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
                     })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: updatePrev,
+                            big_medium: prev.big_medium,
+                            big_big: prev.big_big,
+                        }
+                    })
                     return updatePrev
                 })
                 break;
@@ -226,6 +299,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     let updatePrev = {...prev}
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
+                    })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: updatePrev,
+                            big_big: prev.big_big,
+                        }
                     })
                     return updatePrev
                 })
@@ -236,6 +322,19 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
                     data.forEach(d => {
                         updatePrev = check_and_update_PresetData(d.label, d.value, updatePrev)
                     })
+                    setPreset(prev =>{
+                        return {
+                            small_small: prev.small_small,
+                            small_medium: prev.small_medium,
+                            small_big: prev.small_big,
+                            medium_small: prev.medium_small,
+                            medium_medium: prev.medium_medium,
+                            medium_big: prev.medium_big,
+                            big_small: prev.big_small,
+                            big_medium: prev.big_medium,
+                            big_big: updatePrev,
+                        }
+                    })
                     return updatePrev
                 })
                 break;
@@ -245,7 +344,8 @@ export default function usePresetData(name: string, init_data: Array<InitValue>)
     }
 
     function updateStorageData() {
-        localStorage.setItem('presets', JSON.stringify({preset_1, preset_2, preset_3, preset_4, preset_5, preset_6, preset_7, preset_8, preset_9}));
+        //localStorage.setItem('presets', JSON.stringify({preset_1, preset_2, preset_3, preset_4, preset_5, preset_6, preset_7, preset_8, preset_9}));
+        localStorage.setItem('presets', JSON.stringify(preset));
         localStorage.setItem('data', JSON.stringify(data));
     }
 

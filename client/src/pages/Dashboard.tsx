@@ -8,7 +8,7 @@ import PresetData from '../components/dashboard/PresetData'
 import NumberofTeam from '../components/dashboard/roomcreation/NumberofTeam'
 import CountriesSelection from '../components/dashboard/roomcreation/CountriesSelection'
 import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
-import Rules from '../components/dashboard/Rules'
+import GameRules from '../components/dashboard/GameRules'
 
 
 
@@ -30,12 +30,14 @@ setSelectedLecturerOption('countriesSelect');
 };
 
 
+
+
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
       return <Administrator />;
     } else if (selectedComponent === 'lecturer') {
       if (selectedLecturerOption === 'rules') {
-        return <Rules onMoveToNumberofTeam={handleMoveToNumberofTeam} />;
+        return <GameRules onMoveToNumberofTeam={handleMoveToNumberofTeam} />;
       } else if (selectedLecturerOption === 'presetData') {
         return <PresetData
         onMoveTocountriesSelect={handleMoveTocountriesSelect}
@@ -123,7 +125,7 @@ const renderComponent = () => {
                 <input type="search" id="location-search" className="block rounded-l-lg p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500" placeholder="" />
                 <button type="submit" className="absolute top-0 right-0 h-full p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border  hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ">
                     <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                     </svg>
                     <span className="sr-only">Search</span>
                 </button>
