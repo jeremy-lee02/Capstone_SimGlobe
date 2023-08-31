@@ -1,7 +1,11 @@
-import React, { useState}from 'react';
+import React, { useContext, useState}from 'react';
 import DropboxArrowIcon from '../icons/DropboxArrowIcon';
 import usePresetData from '../../hooks/usePresetData';
 import { finalizeRoom } from '../../utils/create_room';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { Navigate, useNavigate } from 'react-router-dom';
+import gameContext from '../../gameContext';
 
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
@@ -70,7 +74,8 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
     const [selectedGDP, setSelectedGDP] = useState('SMALL');
     const [name, setName] = useState("small_small")
     const {data, updateData} = usePresetData(name, initialPresetData)
-  
+    const navigate = useNavigate();
+    const {codeRoom, setCodeRoom} = useContext(gameContext);
     const populations = ['BIG', 'MEDIUM', 'SMALL'];
     const gdps = ['BIG', 'MEDIUM', 'SMALL'];
     
@@ -80,7 +85,7 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
       const presets = JSON.parse(localStorage.getItem("presets")|| "{}")
       const room = finalizeRoom(countries, rules, presets)
       localStorage.setItem("room", JSON.stringify(room)) // Replace set value to local storage by calling API to create room
-      console.log(finalizeRoom(countries, rules, presets))
+      handleCreateRoom(finalizeRoom(countries, rules, presets))
     };
     const handlePopulationChange = (value: string) => {
       setSelectedPopulation(value);
@@ -92,7 +97,23 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
       setName(value.toLowerCase()+"_" + selectedPopulation.toLowerCase())
     };
 
-
+    const handleCreateRoom = async (data: any) => {
+      try {
+        const url = "http://localhost:9000/api/lecture";
+        const { data: res } = await axios.post(url, data);
+        toast.success(res.message)
+        setCodeRoom(res.roomId)
+        navigate(`/join/room=${res.roomId}`)
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.status >= 400 &&
+          error.response.status <= 500
+        ) {
+          toast.error(error.response.data.message)
+        }
+      }
+    }
   
     return (
       <div className="flex flex-col h-fit">

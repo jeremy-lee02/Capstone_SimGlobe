@@ -9,6 +9,7 @@ require("dotenv").config();
 
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
+const lectureRoutes = require("./routes/lecture");
 const settingRoutes = require("./routes/setting");
 const authRoutes = require("./routes/auth");
 const roomRoutes = require("./routes/room");
@@ -31,6 +32,7 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/lecture", lectureRoutes);
 app.use("/api/setting", settingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
