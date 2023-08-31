@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const bcrypt = require("bcrypt");
 const {db} = require('../firebase');
+const onSnapshot = require('@firebase/firestore');
 
 router.post("/", async (req, res) => {
 	try {
@@ -21,6 +22,7 @@ router.post("/", async (req, res) => {
 
 
 		const user = db.collection('users').doc()
+		console.log(req.body)
 		await user.set({
 		...req.body,
 		user_id: user.id,	
@@ -73,5 +75,15 @@ router.get("/:id/verify/:token/", async (req, res) => {
 		res.status(500).send({ message: "Internal Server Error" });
 	}
 });
+
+router.get("/userData", async (req, res) => {
+	try {
+		const userDb = db.collection('users').doc('3wxVNa83u6oV4H5U4W34')
+		const userGetter = (await userDb.get()).data();
+		res.json({message: "Get value successfully", userData: userGetter.lastName})
+	} catch (err) {
+		res.status(404).send({ message: err})
+	}
+})
 
 module.exports = router;

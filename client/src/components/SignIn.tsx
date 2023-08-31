@@ -35,7 +35,7 @@ const SignIn = ({onClick}: Props) => {
         }
       })
 			toast.success("Login Success!")
-			navigate('/homestudent')
+			navigate('/dashboard')
 		} catch (error) {
 			if (
 				error.response &&
@@ -46,8 +46,6 @@ const SignIn = ({onClick}: Props) => {
         toast.error(error.response.data.message)
 			}
 		}
-
-    console.log(formData)
   }
   return (
       <div className='flex flex-col justify-center items-center'>

@@ -372,9 +372,8 @@ export function create_new_room (countries: Array<string>, rules:{[key: string]:
     })
 
     const room : Room = {
-        room_id: "helloworld",
         team: team, // After finished the above logic, replace this array to team 
-        status: true,
+        status: false,
         round: 1,
         room_size: countries.length,
         key_time: "1 hour"

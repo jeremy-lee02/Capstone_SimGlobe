@@ -14,7 +14,7 @@ import roomService from '../services/teamService';
 
 
 const HomeStudent: React.FC = () => {
-  const {setInRoom, isInRoom} = useContext(gameContext);
+  const {codeRoom} = useContext(gameContext);
   const [room, setRoom] = useState('');
 
   const handleChange = event => {
@@ -41,8 +41,9 @@ const HomeStudent: React.FC = () => {
 		try {
 			const url = `http://localhost:9000/api/rooms/join/${room}`;
 			const { data: res } = await axios.get(url);
+      
       joinRoom();
-      navigate(`/join/${room}`);
+      navigate(`/join/room=${room}`);
 		} catch (error) {
 			if (
 				error.response &&

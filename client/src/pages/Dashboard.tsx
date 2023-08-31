@@ -1,6 +1,6 @@
 import Logo from '../components/Logo'
 import Avatar from '../assets/logo/vn.png'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AdminIcon from '../components/icons/AdminIcon'
 import LecturerIcon from '../components/icons/LecturerIcon'
 import Administrator from '../components/dashboard/Admin'
@@ -9,13 +9,12 @@ import NumberofTeam from '../components/dashboard/roomcreation/NumberofTeam'
 import CountriesSelection from '../components/dashboard/roomcreation/CountriesSelection'
 import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 import GameRules from '../components/dashboard/GameRules'
-
-
+import axios from 'axios'
 
 function Dashboard() {
 const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 const [selectedLecturerOption, setSelectedLecturerOption] = useState("rules");
-
+const [name, setName] = useState("");
 const handleMoveToRules = () => {
     setSelectedLecturerOption('rules');
   };
@@ -29,8 +28,21 @@ const handleMoveTocountriesSelect= () => {
 setSelectedLecturerOption('countriesSelect');
 };
 
-
-
+const handleSubmit = async () => {
+  try {
+    const url = "http://localhost:9000/api/users/userData";
+    const { data: res } = await axios.get(url);
+    setName(res.userData)
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.status >= 400 &&
+      error.response.status <= 500
+    ) {
+      
+    }
+  }
+};
 
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
@@ -118,7 +130,7 @@ const renderComponent = () => {
         {/* Username */}
                 <div className="flex flex-col">
                     <h1 className="text-gray-300" >{"Welcome"}</h1>
-                    <h1 className="text-lg text-white font-semibold" >{"Daniel Borer"}</h1>
+                    <h1 className="text-lg text-white font-semibold" >${name}</h1>
                 </div>
         {/* Searchbar */}
             <div className="relative w-[400px] mr-[10%]">
