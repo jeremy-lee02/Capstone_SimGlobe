@@ -11,7 +11,6 @@ import RoomStudent from "./pages/RoomStudent"
 import RoomHost from "./pages/RoomHost"
 import HomeStudent from "./pages/HomeStudent"
 import socketService from "./services/socketService";
-import gameContext, {IGameContextProps} from "./gameContext";
 import Dashboard from "./pages/Dashboard"
 import GameContext from "./gameContext";
 
@@ -33,14 +32,8 @@ function App() {
     connectSocket();
   }, []);
 
-  const gameContextValue: IGameContextProps = {
-    isInRoom,
-    setInRoom,
-    codeRoom,
-    setCodeRoom,
-  }
   return (
-    <GameContext.Provider value={gameContextValue}>
+    <>
       <Routes>
         <Route path="/" element= {
           <RequireAuth loginPath="/login">
@@ -57,14 +50,14 @@ function App() {
         } />
         <Route path= {`/game/:id`} element= {<GamePlay />} />
         <Route path="/join/:roomId" element={<RoomStudent />} />
-        <Route path="/play/:roomId/:teamId" element={<GamePlay />} />
+        <Route path="/play" element={<GamePlay />} />
         {/* Room and Game play same route (Room isStart == true => GamePlay) */}
         <Route path="/room" element={<RoomStudent />} />
         <Route path="/roomhost/:roomId" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-    </GameContext.Provider>
+    </>
   )
 }
 

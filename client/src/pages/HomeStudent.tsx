@@ -45,7 +45,7 @@ const HomeStudent: React.FC = () => {
 			const { data: res } = await axios.get(url);
       
       joinRoom();
-      navigate(`/join/${room}`);
+      navigate(`/join/room=${room}`);
 		} catch (error) {
 			if (
 				error.response &&

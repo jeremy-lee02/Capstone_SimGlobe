@@ -1,19 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { simGlobe_logo } from '../assets';
 import TeamCard from '../components/TeamCard';
 import LeaveIcon from '../components/icons/LeaveIcon';
 import "../index.css"
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import socketService from '../services/socketService';
-import gameService from '../services/gameService';
-import roomService from '../services/teamService';
-import teamService from '../services/teamService';
+import {useNavigate} from 'react-router-dom';
 
 import Username from '../components/Username';
 import Logo from '../components/Logo';
-import gameContext from '../gameContext';
 import db from '../firebase';
 import { doc, getDoc, onSnapshot, query, updateDoc, where, collection } from 'firebase/firestore';
 
@@ -26,7 +18,6 @@ export type Team = {
 const RoomStudent: React.FC = () => {
   const navigate = useNavigate();
   const [joinedTeam, setJoinedTeam] = useState<number | null>(null);
-
 
   const handleJoinTeam = (teamNumber: number) => {
     if (teamNumber !== joinedTeam) {
@@ -77,7 +68,7 @@ const RoomStudent: React.FC = () => {
     if(docSnap.exists()) {
       const teamData = docSnap.data();
       if (teamData.status) {
-        navigate(`/play/${params.split("room=")[1]}/${sessionStorage.getItem("team")}`)
+        navigate(`/play?room=${params.split("room=")[1]}&team=${sessionStorage.getItem("team")}`)
       }
     }
   }
@@ -106,7 +97,6 @@ const RoomStudent: React.FC = () => {
     if (teamData){
       const updatedTeam = [...teamData.userList]
       updatedTeam.push(userInfo)
-      console.log(updatedTeam);
       await updateDoc(docRef, {
         userList: updatedTeam
       })
@@ -125,7 +115,6 @@ const RoomStudent: React.FC = () => {
           updatedTeam.splice(i,1);
         }
       }
-      console.log(updatedTeam);
       await updateDoc(docRef, {
         userList: updatedTeam
       })

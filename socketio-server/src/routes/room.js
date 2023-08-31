@@ -34,9 +34,9 @@ router.post("/", async (req, res) => {
 
 
 router.get("/join/:roomId", async (req, res) => {
-    const roomRef = db.collection("rooms");
-    const queryRoomRef = await roomRef.where('roomId', '==', req.params.roomId).get();
-    if (queryRoomRef.size < 1) {
+	const roomDB = db.collection('rooms').doc(req.params.roomId);
+	const roomGetter = (await roomDB.get()).data();
+    if (roomGetter.size < 1) {
         return res
             .status(409)
             .send({ message: "Room not Exist!" });

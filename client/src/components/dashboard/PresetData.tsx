@@ -75,7 +75,6 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
     const [name, setName] = useState("small_small")
     const {data, updateData} = usePresetData(name, initialPresetData)
     const navigate = useNavigate();
-    const {codeRoom, setCodeRoom} = useContext(gameContext);
     const populations = ['BIG', 'MEDIUM', 'SMALL'];
     const gdps = ['BIG', 'MEDIUM', 'SMALL'];
     
@@ -102,8 +101,7 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
         const url = "http://localhost:9000/api/lecture";
         const { data: res } = await axios.post(url, data);
         toast.success(res.message)
-        setCodeRoom(res.roomId)
-        navigate(`/join/room=${res.roomId}`)
+        navigate(`/roomhost/room=${res.roomId}`)
       } catch (error) {
         if (
           error.response &&
