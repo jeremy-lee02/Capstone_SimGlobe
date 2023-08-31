@@ -6,7 +6,6 @@ export interface Team {
     score: number
 }
 export interface Room {
-    room_id: string,
     team: Array<Team>,
     status: boolean,
     round: number,
