@@ -10,9 +10,6 @@ import CountriesSelection from '../components/dashboard/roomcreation/CountriesSe
 import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 import GameRules from '../components/dashboard/GameRules'
 import axios from 'axios'
-import toast from 'react-hot-toast'
-import db from '../firebase'
-import { doc, onSnapshot, collection, getDocs, QuerySnapshot } from "firebase/firestore";
 
 function Dashboard() {
 const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
@@ -46,28 +43,6 @@ const handleSubmit = async () => {
     }
   }
 };
-
-const querySnapshot = async () =>{
-try {
- const a =  await getDocs(collection(db, "users"));
-    a.forEach((doc) => {
-    console.log(`${doc.id} => ${doc.data()}`);
-    }) 
-  } catch (e) {
-    console.log(e)
-  }
-};
-
-onSnapshot(doc(db, "users", "3wxVNa83u6oV4H5U4W34"), (doc) => {
-  console.log(" data: ", doc.data());
-});
-
-useEffect(() => {
-  // unsub();
-  // handleSubmit();
-  querySnapshot();
-}, []);
-
 
 const renderComponent = () => {
     if (selectedComponent === 'admin') {
