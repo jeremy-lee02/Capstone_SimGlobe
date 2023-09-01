@@ -82,6 +82,7 @@ const RoomHost: React.FC = () => {
   const params = window.location.href;
 
   const getTeamList = async () => {
+    console.log('getTeamList');
     const roomCode =  params.split("room=")[1];
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
@@ -115,15 +116,17 @@ const RoomHost: React.FC = () => {
     }
   }
 
-  //Listening onchanged of teams
-  const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
-  onSnapshot(q, (doc) => {
-    getTeamList();
-  })
+
 
   useEffect(() => {
+    //Listening onchanged of teams
+    const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
+    const teamUpdated = onSnapshot(q, (doc) => {
+      getTeamList();
+    })
     getTeamList();
     return () => {
+      teamUpdated;
       // Clear any active timers when the component unmounts
       clearInterval(countdownInterval!);
     };
@@ -144,7 +147,7 @@ const RoomHost: React.FC = () => {
 
         {/* TEAMS */}
         <div className="flex flex-col items-center">
-          <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
+          <h1 className="text-3xl font-bold mb-8">CodeRoom: {params.split("room=")[1]}</h1>
           <div className="grid grid-cols-2 ml-4 gap-10 max-h-96 pr-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
             {teams.map((team) => (
               <TeamCard
