@@ -10,9 +10,10 @@ import HomeStudent from "./pages/HomeStudent"
 import socketService from "./services/socketService";
 import EmailVerify from "./components/EmailVerify"
 import GamePlay from "./pages/GamePlay"
-import Home from "./pages/Home"
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/AdminDashboard";
 import Leaderboard from "./pages/LeaderBoard";
+import LecturerDashboard from "./pages/LecturerDashboard";
+import Login from "./pages/Login";
 
 
 
@@ -35,10 +36,11 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element= {<Home />} />
+        <Route path="/" element= {<LecturerDashboard />} />
         <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
+        <Route path="/login" element={<Login/>}/>
         <Route path= "/gameplay" element= {
-          <RequireAuth loginPath="/">
+          <RequireAuth loginPath="/login">
             <GamePlay />
           </RequireAuth>
         } />
@@ -54,7 +56,10 @@ function App() {
         <Route path="/room" element={<RoomStudent />} />
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/admin" element={<Dashboard />} />
+
+        <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
     </>

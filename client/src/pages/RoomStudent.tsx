@@ -134,7 +134,6 @@ const RoomStudent: React.FC = () => {
   return (
     <>
       <Logo/>
-      <Username name="Daniel Borer"/>
       <div className="flex flex-col items-center bg-gray-900 text-white min-h-screen">
         <div className="flex flex-col justify-center items-center flex-grow">
           <h1 className="text-3xl font-bold mb-8">CodeRoom: {params.split("room=")[1]}</h1>
