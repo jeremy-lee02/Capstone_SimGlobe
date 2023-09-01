@@ -73,17 +73,6 @@ const RoomStudent: React.FC = () => {
     }
   }
 
-  //Listening onchanged of teams
-  const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
-  onSnapshot(q, (doc) => {
-    getTeamList();
-  })
-
-  // Listening onchanged of game round
-  onSnapshot(doc(db, "rooms", params.split("room=")[1]), (doc) => {
-    checkIfGameStart()
-  });
-
   const setUserInfo = () => {
     //suppose to get the user from req
     sessionStorage.setItem("users", "Thomas")
@@ -125,9 +114,24 @@ const RoomStudent: React.FC = () => {
     navigate('/homestudent')
   };
 
-  useEffect(() => {
+  useEffect(() => {    
+  //Listening onchanged of teams
+  const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
+  const realTimeTeamList = onSnapshot(q, (doc) => {
     getTeamList();
-    setUserInfo();
+  })
+
+  // Listening onchanged of game round
+  const realTimeGameStatus = onSnapshot(doc(db, "rooms", params.split("room=")[1]), (doc) => {
+    checkIfGameStart()
+  });
+
+  getTeamList();
+  setUserInfo();
+  return() => {
+    realTimeTeamList;
+    realTimeGameStatus;
+  };
   }, []);
 
 
