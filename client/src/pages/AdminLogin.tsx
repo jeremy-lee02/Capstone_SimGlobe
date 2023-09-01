@@ -5,7 +5,8 @@ import SignIn from '../components/SignIn'
 
 type Props = {}
 
-const Login = (props: Props) => {
+
+const AdminLogin = (props: Props) => {
   const [checkState, setCheckState] = useState('login')
   return (
     <div className='background pl-5 py-4'>
@@ -13,10 +14,10 @@ const Login = (props: Props) => {
       <div className='flex items-center justify-center'>
         <img src= {simGlobe_logo} width={500} height={500} />
       </div>
-      {checkState === 'login'? (<SignIn onClick={()=> setCheckState('register')} />): (<Register onClick={()=> setCheckState('login')} />)}
+      <SignIn  onClick={()=> setCheckState('register')} />
 
     </div>
   )
 }
 
-export default Login
+export default AdminLogin

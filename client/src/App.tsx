@@ -14,6 +14,7 @@ import Dashboard from "./pages/AdminDashboard";
 import Leaderboard from "./pages/LeaderBoard";
 import LecturerDashboard from "./pages/LecturerDashboard";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 
 
 
@@ -57,7 +58,7 @@ function App() {
         <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
 
-        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminLogin />} />
 
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/leaderboard" element={<Leaderboard />} />

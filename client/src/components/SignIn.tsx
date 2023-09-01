@@ -56,8 +56,8 @@ const SignIn = ({onClick}: Props) => {
             <button type='submit' className='text-white bg-[#044C87] py-2 px-5 w-[25%] font-semibold rounded-sm border border-[#0000003c] hover:bg-white hover:text-[#044C87]'>Login</button>
           </div>
         </form>
-        <div className='w-[50%] border-[0.1px] border-white mt-7' />
-        <p className='text-[#00A3FF] hover:text-white mt-5 cursor-pointer' onClick={onClick}>Don't have an account?</p>
+        <div className='w-[50%] h-px bg-gray-400 mt-7 rounded-full' />
+        <p className={'text-[#00A3FF] hover:text-white mt-5 cursor-pointer'} onClick={onClick}>Create new account?</p>
       </div>
   )
 }
