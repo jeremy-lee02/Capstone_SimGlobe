@@ -93,7 +93,7 @@ const CountriesSelection: React.FC<{
                 <button
                   key={country}
                   className={`px-4 py-2 rounded-md ${
-                    isCountrySelected(country) ? 'bg-orange-500 text-white' : 'bg-black text-orange-500'
+                    isCountrySelected(country) ? 'bg-orange-500 text-white' : 'bg-black text-white'
                   }`}
                   onClick={() => handleCountrySelection(country)}
                 >

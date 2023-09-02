@@ -5,7 +5,7 @@ import SignIn from '../components/SignIn'
 
 type Props = {}
 
-const Home = (props: Props) => {
+const Login = (props: Props) => {
   const [checkState, setCheckState] = useState('login')
   return (
     <div className='background pl-5 py-4'>
@@ -19,4 +19,4 @@ const Home = (props: Props) => {
   )
 }
 
-export default Home
+export default Login
