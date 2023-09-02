@@ -4,6 +4,7 @@ import Input from './Input'
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useSignIn } from 'react-auth-kit';
 
 type Props = {
   onClick: () => void
@@ -16,7 +17,7 @@ type FormValues = {
 const SignIn = ({onClick}: Props) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
-
+  const signIn = useSignIn();
   const formRef = useRef<HTMLFormElement>(null)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -15,7 +15,7 @@ const Login = (props: Props) => {
     if(isAuthenticated()){
       navigate("/")
     }
-  })
+  },[])
   return (
     <div className='background pl-5 py-4'>
       <img src= {rmit_logo} width={150} height={60} className='object-contain' />
