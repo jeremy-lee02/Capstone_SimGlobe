@@ -19,7 +19,9 @@ router.post("/", async (req, res) => {
 				const team = db.collection('teams').doc(round +"-"+i);
 				await team.set({
 					roomId: roomId,
-					userList: []
+					userList: [],
+					deviceList: [],
+					turn: 0
 					})
 			} catch (error) {
 				console.log(error);
