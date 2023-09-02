@@ -37,31 +37,39 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element= {<LecturerDashboard />} />
-        <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
+        //Lecture
         <Route path="/login" element={<Login/>}/>
-        <Route path= "/gameplay" element= {
-          <RequireAuth loginPath="/login">
-            <GamePlay />
-          </RequireAuth>
-        } />
+        <Route path="/roomhost/:room" element={
+          <RequireAuth loginPath={'/login'}>
+            <RoomHost />
+          </RequireAuth>} />
+        <Route path="/" element={
+          <RequireAuth loginPath={'/login'}>
+            <LecturerDashboard />
+          </RequireAuth>} />
+        <Route path="/users/:id/verify/:token" element={
+          <RequireAuth loginPath={'/login'}>
+            <EmailVerify />
+          </RequireAuth>} />
 
-        <Route path= {`/game/:id`} element= {<GamePlay />} />
+        //User
+        <Route path= "/play" element= {<GamePlay/>} />
         <Route path="/join/:roomId" element={<RoomStudent />} />
-
-        <Route path= {`/game/:id`} element= {<GamePlay />} />
-        <Route path="/join/:roomId" element={<RoomStudent />} />
-        <Route path= {`/${1}`} element= {<GamePlay />} />
-        {/* Room and Game play same route (Room isStart == true => GamePlay) */}
-        <Route path= {`/room/:id`} element= {<GamePlay />} />
-        <Route path="/room" element={<RoomStudent />} />
-        <Route path="/roomhost" element={<RoomHost />} />
         <Route path="/homestudent" element={<HomeStudent />} />
 
-        <Route path="/admin" element={<AdminLogin />} />
-
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
+        //Admin
+        <Route path="/admin" element={
+          <RequireAuth loginPath={'/login'}>
+            <AdminLogin />
+          </RequireAuth>} />
+        <Route path="/admin/dashboard" element={
+          <RequireAuth loginPath={'/login'}>
+            <Dashboard />
+          </RequireAuth>} />
+        <Route path="/leaderboard" element={
+          <RequireAuth loginPath={'/login'}>
+            <Leaderboard />
+          </RequireAuth>} />
       </Routes>
     </>
   )

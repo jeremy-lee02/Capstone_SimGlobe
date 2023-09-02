@@ -73,21 +73,21 @@ const RoomStudent: React.FC = () => {
     }
   }
 
-  const setUserInfo = () => {
-    //suppose to get the user from req
-    sessionStorage.setItem("users", "Thomas")
-  }
-
   const updateTeam = async (teamNum: any) => {
     const docRef = doc(db, "teams", params.split("room=")[1] + "-" + teamNum);
     const docSnap = await getDoc(docRef);
     const teamData = docSnap.data();
     var userInfo = sessionStorage.getItem("users");
+    var deviceInfo = sessionStorage.getItem("device");
+
     if (teamData){
       const updatedTeam = [...teamData.userList]
       updatedTeam.push(userInfo)
+      const updatedDevice = [...teamData.deviceList]
+      updatedDevice.push(deviceInfo)
       await updateDoc(docRef, {
-        userList: updatedTeam
+        userList: updatedTeam,
+        deviceList: updatedDevice
       })
     }
   }
@@ -97,15 +97,21 @@ const RoomStudent: React.FC = () => {
     const docSnap = await getDoc(docRef);
     const teamData = docSnap.data();
     var userInfo = sessionStorage.getItem("users");
+    var deviceInfo = sessionStorage.getItem("device");
     if (teamData){
       const updatedTeam = [...teamData.userList]
+      const updatedDevice = [...teamData.deviceList]
       for ( let i = 0; i < updatedTeam.length; i++) {
         if ( updatedTeam[i] == userInfo) {
           updatedTeam.splice(i,1);
         }
+        if (updatedDevice[i] == deviceInfo) {
+          updatedDevice.splice(i,1);
+        }
       }
       await updateDoc(docRef, {
-        userList: updatedTeam
+        userList: updatedTeam,
+        deviceList: updatedDevice
       })
     }
   }
@@ -114,7 +120,15 @@ const RoomStudent: React.FC = () => {
     navigate('/homestudent')
   };
 
-  useEffect(() => {    
+  const checkValidUser = () => {
+    const userInfo = sessionStorage.getItem("users")
+    if (!userInfo) {
+      navigate("/homestudent")
+    }
+  }
+
+  useEffect(() => {
+  checkValidUser();
   //Listening onchanged of teams
   const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
   const realTimeTeamList = onSnapshot(q, (doc) => {
@@ -127,7 +141,6 @@ const RoomStudent: React.FC = () => {
   });
 
   getTeamList();
-  setUserInfo();
   return() => {
     realTimeTeamList;
     realTimeGameStatus;
