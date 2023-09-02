@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
 			expiresIn: "7d",
 		});
 
-		res.json({message: "Logged in successfully", token: token})
+		res.json({message: "Logged in successfully", token: token, name: userInfo[0].firstName })
 
 	} catch (error) {
 		res.status(500).send({ message: "Internal Server Error" });

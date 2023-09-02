@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
 			return res.status(400).send({ message: error.details[0].message });
 		}
 
-		const adminRef = db.collection("users");
+		const adminRef = db.collection("admin");
 		const queryAdminRef = await adminRef.where('email', '==', req.body.email).get();
 		const adminInfo = [];
 
@@ -27,18 +27,17 @@ router.post("/", async (req, res) => {
 		const validPassword = await bcrypt.compare(
 			req.body.password,
 			adminInfo[0].password
-		);
-
+		);		
 
 		if (!validPassword) {
 			return res.status(401).send({ message: "Invalid Email or Password" });
 		}
 
-		const token = jwt.sign({ _id: userInfo[0].user_id, email: req.body.email }, process.env.JWTPRIVATEKEY, {
+		const token = jwt.sign({ _id: adminInfo[0].user_id, email: req.body.email}, process.env.JWTPRIVATEKEY, {
 			expiresIn: "7d",
 		});
 
-		res.json({message: "Logged in successfully", token: token})
+		res.json({message: "Logged in successfully", token: token, name: adminInfo[0].firstName })
 
 	} catch (error) {
 		res.status(500).send({ message: "Internal Server Error" });

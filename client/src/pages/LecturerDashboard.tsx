@@ -12,7 +12,7 @@ import axios from 'axios'
 function LecturerDashboard() {
 const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 const [selectedLecturerOption, setSelectedLecturerOption] = useState("rules");
-const [name, setName] = useState("");
+const [name, setName] = useState<string | null>("");
 const handleMoveToRules = () => {
     setSelectedLecturerOption('rules');
   };
@@ -25,23 +25,9 @@ setSelectedLecturerOption('numOfTeam');
 const handleMoveTocountriesSelect= () => {
 setSelectedLecturerOption('countriesSelect');
 };
-
-const handleSubmit = async () => {
-  try {
-    const url = "http://localhost:9000/api/users/userData";
-    const { data: res } = await axios.get(url);
-    setName(res.userData)
-  } catch (error) {
-    if (
-      error.response &&
-      error.response.status >= 400 &&
-      error.response.status <= 500
-    ) {
-      
-    }
-  }
-};
-
+useEffect(()=> {
+  setName(sessionStorage.getItem('userName'));
+})
 const renderComponent = () => {
    
       if (selectedLecturerOption === 'rules') {
@@ -121,7 +107,7 @@ const renderComponent = () => {
         {/* Username */}
                 <div className="flex flex-col">
                     <h1 className="text-gray-300" >{"Welcome"}</h1>
-                    <h1 className="text-lg text-white font-semibold" >${name}</h1>
+                    <h1 className="text-lg text-white font-semibold" >{name}</h1>
                 </div>
         {/* Searchbar */}
             <div className="relative w-[400px] mr-[10%]">
