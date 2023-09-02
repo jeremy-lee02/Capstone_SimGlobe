@@ -59,15 +59,13 @@ function App() {
 
         //Admin
         <Route path="/admin" element={
-          <RequireAuth loginPath={'/login'}>
-            <AdminLogin />
-          </RequireAuth>} />
+            <AdminLogin />}/>
         <Route path="/admin/dashboard" element={
-          <RequireAuth loginPath={'/login'}>
+          <RequireAuth loginPath={'/admin'}>
             <Dashboard />
           </RequireAuth>} />
         <Route path="/leaderboard" element={
-          <RequireAuth loginPath={'/login'}>
+          <RequireAuth loginPath={'/admin'}>
             <Leaderboard />
           </RequireAuth>} />
       </Routes>

@@ -1,7 +1,6 @@
 import { simGlobe_logo, rmit_logo } from '../assets'
 import {useState} from 'react'
-import Register from '../components/Register'
-import SignIn from '../components/SignIn'
+import SignInAdmin from '../components/SiginAdmin'
 
 type Props = {}
 
@@ -14,8 +13,7 @@ const AdminLogin = (props: Props) => {
       <div className='flex items-center justify-center'>
         <img src= {simGlobe_logo} width={500} height={500} />
       </div>
-      <SignIn  onClick={()=> setCheckState('register')} />
-
+      <SignInAdmin  onClick={()=> setCheckState('register')} />
     </div>
   )
 }
