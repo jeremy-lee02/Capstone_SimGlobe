@@ -5,10 +5,11 @@ type Props = {
     value: number,
     min: number,
     max: number,
+    status: boolean,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const RangeSlider = ({name, value, min, max, onChange}: Props) => {
+const RangeSlider = ({name, value, min, max, onChange, status}: Props) => {
   return (
     <div className='mb-4'>
         <div className='ml-16 flex justify-start items-center gap-2 mb-3'>
@@ -24,6 +25,7 @@ const RangeSlider = ({name, value, min, max, onChange}: Props) => {
             max= {max}
             step={2} 
             value={value}
+            disabled={status}
             onChange={onChange} />
             <p className='text-white text-lg'>{value}%</p>
         </div>
