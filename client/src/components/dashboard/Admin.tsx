@@ -1,4 +1,6 @@
-import React, { useState}from 'react';
+import axios from 'axios';
+import React, { useEffect, useState}from 'react';
+import toast from 'react-hot-toast';
 
 const Administrator: React.FC = () => {
   const initialElasticitiesData = [
@@ -26,9 +28,67 @@ const Administrator: React.FC = () => {
       label: data.label,
       value: data.value,
     }));
-    
-    console.log("Updated Elasticities Data:", updatedElasticitiesData);
+    saveSetting(updatedElasticitiesData)
   };
+
+  const saveSetting = async (data: any) => {
+    try {
+      const url = "http://localhost:9000/api/setting";
+      const { data: res } = await axios.post(url, data);
+      toast.success(res.message)
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status <= 500
+      ) {
+        toast.error(error.response.data.message)
+      }
+    }
+  }
+
+  const config  = (res: any) => {
+    const setting = [...elasticitiesData]
+    setting[0].value = res.perpetualGrowth,
+    setting[1].value = res.inflation,
+		setting[2].value = res.IRC,
+    setting[3].value = res.IIRIC,
+    setting[4].value = res.IIRII,
+    setting[5].value = res.IRLII,
+    setting[6].value = res.IIRI,
+    setting[7].value = res.IIEI,
+    setting[8].value = res.SDI,
+    setting[9].value = res.IIRD,
+    setting[10].value = res.IFRII,
+    setting[11].value = res.AI,
+    setting[12].value = res.HS,
+    setting[13].value = res.WS,
+    setting[14].value = res.PS,
+    setting[15].value = res.SR
+    setElasticitiesData(setting)
+    return;
+  }
+
+  const getSetting = async () => {
+    try {
+      const url = "http://localhost:9000/api/setting/getter";
+      const { data: res } = await axios.post(url);
+      config(res)
+      console.log(res)
+      return;
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.status >= 400 &&
+        error.response.status <= 500
+      ) {
+        toast.error(error.response.data.message)
+      }
+    }
+  }
+  useEffect(()=> {
+    getSetting();
+  }, [])
 
   return (
     <div className="flex flex-col h-full">
@@ -52,6 +112,7 @@ const Administrator: React.FC = () => {
                 <input
                   type="text"
                   className="bg-gray-800 rounded p-2 w-16 text-white text-center"
+                  value={data.value}
                   onChange={(e) => {
                     const inputValue = e.target.value;
                     const parsedValue = parseFloat(inputValue);
