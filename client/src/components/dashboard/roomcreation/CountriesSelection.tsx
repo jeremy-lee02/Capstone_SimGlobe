@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast'
 
 const countryGroups = [
     {
@@ -45,9 +46,13 @@ const CountriesSelection: React.FC<{
 
 
 
-  const numTeams = parseInt(localStorage.getItem('numTeams') || '2', 10);
+  const numTeams = parseInt(localStorage.getItem('team_size') || '2', 10)
 
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+
+  useEffect(()=>{
+    localStorage.setItem("countries", JSON.stringify(selectedCountries))
+  },[selectedCountries])
 
   const handleCountrySelection = (country: string) => {
     if (selectedCountries.includes(country)) {
@@ -70,7 +75,8 @@ const CountriesSelection: React.FC<{
   });
 
   const handleNext = () => {
-    console.log('Selected Countries Object:', selectedCountriesObject);
+    if(selectedCountries.length === numTeams) return onMoveToPreset()
+    return toast.error("Please select " + numTeams + " countries")
   };
 
   return (
@@ -87,7 +93,7 @@ const CountriesSelection: React.FC<{
                 <button
                   key={country}
                   className={`px-4 py-2 rounded-md ${
-                    isCountrySelected(country) ? 'bg-orange-500 text-white' : 'bg-black text-orange-500'
+                    isCountrySelected(country) ? 'bg-orange-500 text-white' : 'bg-black text-white'
                   }`}
                   onClick={() => handleCountrySelection(country)}
                 >
@@ -110,7 +116,7 @@ const CountriesSelection: React.FC<{
         <div className=''>
           <button
             className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            onClick={onMoveToPreset}
+            onClick={handleNext}
           >
             Next
           </button>

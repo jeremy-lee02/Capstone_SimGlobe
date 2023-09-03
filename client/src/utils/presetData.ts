@@ -239,50 +239,50 @@ export function updatePresetData(label:string, preset: PresetValue): number {
     return result
 }
 
-// export function updatePresetData(label:string, preset: PresetValue): PresetValue {
-//     let result = {...preset}
-//     switch (label) {
-//         case "Initial Consumption":
-//             result =  preset.initial_consumption
-//             break;
-//         case "Initial Investment":
-//             result =  preset.initial_investment
-//             break;
-//         case "Initial Spending":
-//             result =  preset.initial_spending
-//             break;
-//         case "Initial Growth":
-//             result =  preset.initial_growth
-//             break;
-//         case "Initial Capital Stock":
-//             result =  preset.initial_capital_stock
-//             break;
-//         case "Initial Autonomous Imports":
-//             result =  preset.initial_autonomous_imports
-//             break;
-//         case "Depreciation":
-//             result =  preset.depreciation
-//             break;
-//         case "Impact of Government Debt on Investment Growth":
-//             result =  preset.impact_of_government_debt_on_investment_growth
-//             break;
-//         case "Impact of Real GDP on Unemployment":
-//             result =  preset.impact_of_real_gdp_on_unemployment
-//             break;
-//         case "Portion of GDP as Induced Import":
-//             result =  preset.portion_of_gdp_as_induced_import
-//             break;
-//         case "Unemployment":
-//             result =  preset.unemployment
-//             break;
-//         case "Inflation":
-//             result =  preset.inflation
-//             break;
-//         case "Max GDP Score":
-//             result =  preset.max_gDP_score
-//             break;
-//         default:
-//             break;
-//     }
-//     return result
-// }
+export function check_and_update_PresetData(label:string, value:number, preset: PresetValue): PresetValue {
+    let result = {...preset}
+    switch (label) {
+        case "Initial Consumption":
+            result.initial_consumption = value
+            break;
+        case "Initial Investment":
+            result.initial_investment = value
+            break;
+        case "Initial Spending":
+            result.initial_spending = value
+            break;
+        case "Initial Growth":
+            result.initial_growth = value
+            break;
+        case "Initial Capital Stock":
+            result.initial_capital_stock = value
+            break;
+        case "Initial Autonomous Imports":
+            result.initial_autonomous_imports = value
+            break;
+        case "Depreciation":
+            result.depreciation = value
+            break;
+        case "Impact of Government Debt on Investment Growth":
+            result.impact_of_government_debt_on_investment_growth = value
+            break;
+        case "Impact of Real GDP on Unemployment":
+            result.impact_of_real_gdp_on_unemployment = value
+            break;
+        case "Portion of GDP as Induced Import":
+            result.portion_of_gdp_as_induced_import = value
+            break;
+        case "Unemployment":
+            result.unemployment = value
+            break;
+        case "Inflation":
+            result.inflation = value
+            break;
+        case "Max GDP Score":
+            result.max_gDP_score = value
+            break;
+        default:
+            break;
+    }
+    return result
+}

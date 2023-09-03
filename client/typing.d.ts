@@ -6,7 +6,6 @@ export interface Team {
     score: number
 }
 export interface Room {
-    room_id: string,
     team: Array<Team>,
     status: boolean,
     round: number,
@@ -29,10 +28,10 @@ export interface CountryCluster {
     score: ClusterScore
 }
 
-export interface Preset_Value {
-    name: string,
-    value: number
-}
+// export interface Preset_Value {
+//     name: string,
+//     value: number
+// }
 
 export interface PresetValue {
     initial_consumption: number,
@@ -122,4 +121,4 @@ export interface ClusterScore  {
         min: number,
         max: number,
     },
-  }
+};

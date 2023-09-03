@@ -4,6 +4,8 @@ import DeleteIcon from '../components/icons/DeleteIcon';
 import "../index.css"
 import Logo from '../components/Logo';
 import Username from '../components/Username';
+import { doc, getDoc, onSnapshot, query, updateDoc, where, collection } from 'firebase/firestore';
+import db from '../firebase';
 
 type Team = {
   teamNumber: number;
@@ -11,28 +13,7 @@ type Team = {
 };
 
 const RoomHost: React.FC = () => {
-  const [teams, setTeams] = useState<Team[]>([
-    { teamNumber: 1, teamMembers: 3 },
-    { teamNumber: 2, teamMembers: 4 },
-    { teamNumber: 3, teamMembers: 1 },
-    { teamNumber: 4, teamMembers: 2 },
-    { teamNumber: 5, teamMembers: 0 },
-    { teamNumber: 6, teamMembers: 4 },
-    { teamNumber: 7, teamMembers: 3 },
-    { teamNumber: 8, teamMembers: 0 },
-    { teamNumber: 9, teamMembers: 0 },
-    { teamNumber: 10, teamMembers: 0 },
-    { teamNumber: 1, teamMembers: 3 },
-    { teamNumber: 2, teamMembers: 4 },
-    { teamNumber: 3, teamMembers: 1 },
-    { teamNumber: 4, teamMembers: 2 },
-    { teamNumber: 5, teamMembers: 0 },
-    { teamNumber: 6, teamMembers: 4 },
-    { teamNumber: 7, teamMembers: 3 },
-    { teamNumber: 8, teamMembers: 0 },
-    { teamNumber: 9, teamMembers: 0 },
-    { teamNumber: 10, teamMembers: 0 },
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
 
   const handleDeleteRoom = () => {
     // Handle delete room functionality here
@@ -135,10 +116,54 @@ const RoomHost: React.FC = () => {
       }));
     }
   };
-  
+  const params = window.location.href;
+
+  const getTeamList = async () => {
+    console.log('getTeamList');
+    const roomCode =  params.split("room=")[1];
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()) {
+      const teamData = docSnap.data();
+      getTeamMembers(roomCode, teamData.team.length)
+    }
+  }
+
+  const getTeamMembers = async (roomCode: string, roomSize: number) => {
+    const newTeams: Team[] = [];
+    for ( let j = 1; j < roomSize+1; j++) {
+      const teamRef = doc(db, "teams", roomCode + "-" + j.toString());
+      const teamSnap = await getDoc(teamRef);
+      if (teamSnap.exists()) {
+        const teamData = teamSnap.data();
+        newTeams.push({ teamNumber: j, teamMembers: teamData.userList.length });
+      }
+    }
+    setTeams(newTeams)
+  }
+
+  const updateGame = async () => {
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
+    const docSnap = await getDoc(docRef);
+    const gameData = docSnap.data();
+    if (gameData){
+      await updateDoc(docRef, {
+        status: true
+      })
+    }
+  }
+
+
 
   useEffect(() => {
+    //Listening onchanged of teams
+    const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
+    const teamUpdated = onSnapshot(q, (doc) => {
+      getTeamList();
+    })
+    getTeamList();
     return () => {
+      teamUpdated;
       // Clear any active timers when the component unmounts
       clearInterval(countdownInterval!);
     };
@@ -159,7 +184,7 @@ const RoomHost: React.FC = () => {
 
         {/* TEAMS */}
         <div className="flex flex-col items-center">
-          <h1 className="text-3xl font-bold mb-8">CodeRoom: HELLOWORLD</h1>
+          <h1 className="text-3xl font-bold mb-8">CodeRoom: {params.split("room=")[1]}</h1>
           <div className="grid grid-cols-2 ml-4 gap-10 max-h-96 pr-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300 scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
             {teams.map((team) => (
               <TeamCard

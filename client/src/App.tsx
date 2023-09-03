@@ -1,35 +1,73 @@
-import EmailVerify from "./pages/EmailVerify"
-import GamePlay from "./pages/GamePlay"
-import Home from "./pages/Home"
+
 import { RequireAuth} from "react-auth-kit"
+import React, { useEffect, useState } from "react";
+
 import {Routes, Route} from "react-router-dom"
+
 import RoomStudent from "./pages/RoomStudent"
 import RoomHost from "./pages/RoomHost"
 import HomeStudent from "./pages/HomeStudent"
-import Dashboard from "./pages/Dashboard"
+import socketService from "./services/socketService";
+import EmailVerify from "./components/EmailVerify"
+import GamePlay from "./pages/GamePlay"
+import Dashboard from "./pages/AdminDashboard";
+import Leaderboard from "./pages/LeaderBoard";
+import LecturerDashboard from "./pages/LecturerDashboard";
+import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 
 
 
 
 function App() {
+
+  const connectSocket = async () => {
+    const socket = await socketService
+      .connect("http://localhost:9000")
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
+  };
+
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
+  
   return (
     <>
       <Routes>
-        <Route path="/" element= {<Home />} />
-        <Route path="/admin" element= {<Home />} />
-        <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
-        <Route path= "/gameplay" element= {
-          <RequireAuth loginPath="/">
-            <GamePlay />
-          </RequireAuth>
-        } />
-        <Route path= {`/${1}`} element= {<GamePlay />} />
-        {/* Room and Game play same route (Room isStart == true => GamePlay) */}
-        <Route path= {`/room/:id`} element= {<GamePlay />} />
-        <Route path="/room" element={<RoomStudent />} />
-        <Route path="/roomhost" element={<RoomHost />} />
+        //Lecture
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/roomhost/:room" element={
+          <RequireAuth loginPath={'/login'}>
+            <RoomHost />
+          </RequireAuth>} />
+        <Route path="/" element={
+          <RequireAuth loginPath={'/login'}>
+            <LecturerDashboard />
+          </RequireAuth>} />
+        <Route path="/users/:id/verify/:token" element={
+          <RequireAuth loginPath={'/login'}>
+            <EmailVerify />
+          </RequireAuth>} />
+
+        //User
+        <Route path= "/play" element= {<GamePlay/>} />
+        <Route path="/join/:roomId" element={<RoomStudent />} />
         <Route path="/homestudent" element={<HomeStudent />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        //Admin
+        <Route path="/admin" element={
+            <AdminLogin />}/>
+        <Route path="/admin/dashboard" element={
+          <RequireAuth loginPath={'/admin'}>
+            <Dashboard />
+          </RequireAuth>} />
+        <Route path="/leaderboard" element={
+          <RequireAuth loginPath={'/admin'}>
+            <Leaderboard />
+          </RequireAuth>} />
       </Routes>
     </>
   )
