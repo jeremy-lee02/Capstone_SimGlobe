@@ -40,7 +40,7 @@ const AdjustEconomy = ({input_values, onUpdateCountry, room}: Props) => {
         // const newCountry = {...room[2]}
         // newCountry.cluster.input_value = values
         // function take in values
-        const updatedRoom = useUpdateRoom(newRoom)
+        const updatedRoom = useUpdateRoom(newRoom, input_values, newRoom.team[2].country.name ) // Take in new Room with updated input, previous Input, country name //Assume country is the second one in the array
         onUpdateCountry(updatedRoom.team[2])
         // console.log(newRoom[2].cluster.other_value.global_interestRate)
     }

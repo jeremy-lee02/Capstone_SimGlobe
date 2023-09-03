@@ -208,7 +208,7 @@ function import_pre_tariff(country: CountryCluster){
 }
 
 function govDebtUs(country: CountryCluster) {
-    return parseFloat((country.other_value.debt_to_gdp * nominal_gdp(country)/100).toFixed(2))
+    return parseFloat((debt_to_gdp() * nominal_gdp(country)/100).toFixed(2))
 }
 
 function tariff_revanue(country:CountryCluster){
@@ -218,8 +218,80 @@ function tariff_revanue(country:CountryCluster){
 function import_value(country: CountryCluster){
     return import_pre_tariff(country) * (1- country.input_value.import_tariff_rate/100)
 }
+function debt_to_gdp(){
+    return 60
+} //Government Debt as % of GDP
 
 
+function export_value(room: Room){
+    // Calculate average exchange rate.
+     const updateRoom = {...room}
+     let sum_of_exchangeRate = -100
+     console.log(sum_of_exchangeRate)
+     room.team.forEach(team => {
+         sum_of_exchangeRate = sum_of_exchangeRate + team.country.cluster.other_value.exchage_rate
+     });
+     console.log(sum_of_exchangeRate)
+     const average_exchageRate = sum_of_exchangeRate / (room.team.length - 1)
+     // Calculate the percentages of export in that country
+     const country_export = room.team.map((t)=>{
+         return {
+             country: t.country.name,
+             export_value: t.country.cluster.other_value.import_value / (room.team.length - 1),
+             exchange_rate: t.country.cluster.other_value.exchage_rate
+         }
+     }) 
+     // [{country: Vietnam, export: 9.9}, {country: Us, export: 9.9}]
+ 
+     // Calculate other countries export to that country
+     const export_to = country_export.map(c => {
+         const new_country = {
+             country: c.country,
+         }
+         let import_countries = []
+         for (let index = 0; index < room.team.length; index++) {
+             if(room.team[index].country.name === new_country.country) continue
+             let imported = {
+                 country: room.team[index].country.name,
+                 export: c.export_value + c.export_value * ((c.exchange_rate - average_exchageRate)/100)
+             }
+             import_countries.push(imported)
+         }
+ 
+         return {... new_country, imported_country: import_countries}
+     })
+     // Calculate the sum of that country export to other countries
+ 
+     updateRoom.team.forEach(t => {
+         let sum_export = 0
+         export_to.forEach(element => {
+             element?.imported_country.forEach(c =>{
+                 if (c.country !== t.country.name) return
+                 sum_export = sum_export + c.export
+             })
+         });
+         t.country.cluster.other_value = {
+             ...t.country.cluster.other_value,
+         export_value: sum_export
+     }
+     })
+     console.log(export_to)
+     console.log(country_export)
+     
+     return updateRoom
+}
+
+
+//budget_surplus_billion
+
+function budget_surplus_billion(country:CountryCluster){
+    return income_tax(country) + corporate_tax(country) + tariff_revanue(country) - country.input_value.government_expenditure_us
+}
+
+//budget_surplus_percent
+function budget_surplus_percent(country:CountryCluster){
+    return budget_surplus_billion(country)/nominal_gdp(country) * 100
+}
 
 //Check country cluster
 function check_country_cluster(country: string): string {
@@ -387,7 +459,6 @@ function calculate_initial_value(room : Room): Room {
 
 
   const calculatedGlobalInterestRate = global_interestRate(updatedRoom);
-  const import_and_export_value  = parseFloat((10 / room.team.length).toFixed(2))
 
   updatedRoom.team.forEach(team => {
     team.country.cluster.other_value = {
@@ -405,21 +476,20 @@ function calculate_initial_value(room : Room): Room {
       corporate_tax: corporate_tax(team.country.cluster),
       tariff_revanue: tariff_revanue(team.country.cluster),
       gov_debt: govDebtUs(team.country.cluster), 
-      debt_to_gdp: team.country.cluster.other_value.debt_to_gdp,
+      debt_to_gdp: debt_to_gdp(),
       exchage_rate: team.country.cluster.other_value.exchage_rate,
-      export_value: import_and_export_value,
+      export_value: 0,
       import_value: import_value(team.country.cluster),
       import_preTariff: import_pre_tariff(team.country.cluster),
       trade_balance: trade_balance(team.country.cluster),
       net_capital: net_capital(team.country.cluster, calculatedGlobalInterestRate),
       global_interestRate: calculatedGlobalInterestRate,
-      budget_surplus_billion: -0.4,
-      budget_surplus_percent: -0.6
+      budget_surplus_billion: budget_surplus_billion(team.country.cluster),
+      budget_surplus_percent: budget_surplus_percent(team.country.cluster)
     }
-
-
   })
-  return updatedRoom
+  const newUpdateRoom = export_value(updatedRoom)
+  return newUpdateRoom
 }
 
 
