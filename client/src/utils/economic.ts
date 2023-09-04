@@ -220,44 +220,44 @@ function updateCountry(room : Room, userInput: Array<UserInput>): Room {
         const cloneCluster = team.country.cluster
         const newInput = userInput.find(i => i.name === team.country.name)!
         //Calculate other_value
-        console.log(team.country.cluster.preset_value.initial_consumption)
-        team.country.cluster.preset_value = {
-            ...team.country.cluster.preset_value,
-            initial_consumption: consumption_pre_tax(team.country.cluster, newInput.input),
-            initial_investment: investment_pre_tax(team.country.cluster, newInput.input)
+        console.log(cloneCluster.preset_value.initial_consumption)
+        cloneCluster.preset_value = {
+            ...cloneCluster.preset_value,
+            initial_consumption: consumption_pre_tax(cloneCluster, newInput.input),
+            initial_investment: investment_pre_tax(cloneCluster, newInput.input)
         }
-        console.log(team.country.cluster.preset_value.initial_consumption)
+        // console.log(team.country.cluster.preset_value.initial_consumption)
         // Update capital stock 
-        team.country.cluster.preset_value = {
-            ...team.country.cluster.preset_value,
-            initial_capital_stock: capital_stock(team.country.cluster, newInput.input)
+        cloneCluster.preset_value = {
+            ...cloneCluster.preset_value,
+            initial_capital_stock: capital_stock(cloneCluster, newInput.input)
         }
-        team.country.cluster.other_value = {
-        consumption: consumption(team.country.cluster, newInput.input),
-        investment: investment(team.country.cluster, newInput.input), 
-        demand: demand(team.country.cluster, newInput.input, room, team.country.name),
+        cloneCluster.other_value = {
+        consumption: consumption(cloneCluster, newInput.input),
+        investment: investment(cloneCluster, newInput.input), 
+        demand: demand(cloneCluster, newInput.input, room, team.country.name),
         supply: supply(team.country.cluster, newInput.input),
-        nominal: nominal_growth(team.country.cluster, newInput.input, room, team.country.name),
+        nominal: nominal_growth(cloneCluster, newInput.input, room, team.country.name),
         real_gdp: 0,
-        capital_growth: capital_growth(team.country.cluster, newInput.input),
-        labor: team.country.cluster.other_value.labor + 1,
-        technological: team.country.cluster.other_value.technological + 2,
-        consumer_price_index: team.country.cluster.other_value.consumer_price_index,
-        income_tax: income_tax(team.country.cluster, newInput.input),
-        corporate_tax: corporate_tax(team.country.cluster, newInput.input),
-        tariff_revanue: tariff_revanue(team.country.cluster, newInput.input),
-        gov_debt: govDebtUs(team.country.cluster, newInput.input), 
-        debt_to_gdp: debt_to_gdp(team.country.cluster, newInput.input, room, team.country.name),
+        capital_growth: capital_growth(cloneCluster, newInput.input),
+        labor: cloneCluster.other_value.labor + 1,
+        technological: cloneCluster.other_value.technological + 2,
+        consumer_price_index: cloneCluster.other_value.consumer_price_index,
+        income_tax: income_tax(cloneCluster, newInput.input),
+        corporate_tax: corporate_tax(cloneCluster, newInput.input),
+        tariff_revanue: tariff_revanue(cloneCluster, newInput.input),
+        gov_debt: govDebtUs(cloneCluster, newInput.input), 
+        debt_to_gdp: debt_to_gdp(cloneCluster, newInput.input, room, team.country.name),
         exchage_rate: 85,
         export_value: export_value(room, team.country.name),
-        import_value: import_value(team.country.cluster, newInput.input),
-        import_preTariff: import_pre_tariff(team.country.cluster, newInput.input),
-        trade_balance: trade_balance(team.country.cluster, newInput.input, room, team.country.name),
-        net_capital: net_capital(team.country.cluster, calculatedGlobalInterestRate, newInput.input),
+        import_value: import_value(cloneCluster, newInput.input),
+        import_preTariff: import_pre_tariff(cloneCluster, newInput.input),
+        trade_balance: trade_balance(cloneCluster, newInput.input, room, team.country.name),
+        net_capital: net_capital(cloneCluster, calculatedGlobalInterestRate, newInput.input),
         global_interestRate: calculatedGlobalInterestRate,
-        budget_surplus_billion: budget_surplus_billion(team.country.cluster, newInput.input),
-        budget_surplus_percent: budget_surplus_percent(team.country.cluster, newInput.input, room, team.country.name),
-        nominal_gdp: nominal_gdp(team.country.cluster, newInput.input, room, team.country.name),
+        budget_surplus_billion: budget_surplus_billion(cloneCluster, newInput.input),
+        budget_surplus_percent: budget_surplus_percent(cloneCluster, newInput.input, room, team.country.name),
+        nominal_gdp: nominal_gdp(cloneCluster, newInput.input, room, team.country.name),
         real: 0
         }
     })

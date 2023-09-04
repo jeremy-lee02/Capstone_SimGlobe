@@ -8,7 +8,7 @@ import RoomStudent from "./pages/RoomStudent"
 import RoomHost from "./pages/RoomHost"
 import HomeStudent from "./pages/HomeStudent"
 import socketService from "./services/socketService";
-import EmailVerify from "./components/EmailVerify"
+import EmailVerify from "./pages/EmailVerify"
 import GamePlay from "./pages/GamePlay"
 import Dashboard from "./pages/AdminDashboard";
 import Leaderboard from "./pages/LeaderBoard";
@@ -47,10 +47,7 @@ function App() {
           <RequireAuth loginPath={'/login'}>
             <LecturerDashboard />
           </RequireAuth>} />
-        <Route path="/users/:id/verify/:token" element={
-          <RequireAuth loginPath={'/login'}>
-            <EmailVerify />
-          </RequireAuth>} />
+        <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
 
         //User
         <Route path= "/play" element= {<GamePlay/>} />
