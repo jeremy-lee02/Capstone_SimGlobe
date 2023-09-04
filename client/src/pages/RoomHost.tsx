@@ -25,6 +25,7 @@ const RoomHost: React.FC = () => {
   let rounds = 0;
   let cycle = 7;
   const handleStartGame = () => {
+    updateGame();
     const initialCountdownValues = {
       days: remainingTime.days,
       hours: remainingTime.hours,
@@ -69,7 +70,7 @@ const RoomHost: React.FC = () => {
                 rounds += 1;
                 cycle -=1;
                 console.log("Round",rounds);
-                
+                updateRound();
               }
             }
               return {
@@ -152,8 +153,17 @@ const RoomHost: React.FC = () => {
       })
     }
   }
-
-
+  
+  const updateRound = async () => {
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
+    const docSnap = await getDoc(docRef);
+    const gameData = docSnap.data();
+    if (gameData && gameData.status < 7){
+      await updateDoc(docRef, {
+        round: gameData.round + 1
+      })
+    }
+  }
 
   useEffect(() => {
     //Listening onchanged of teams
