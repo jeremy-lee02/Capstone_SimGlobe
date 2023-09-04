@@ -102,7 +102,7 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
         const { data: res } = await axios.post(url, data);
         toast.success(res.message)
         navigate(`/roomhost/room=${res.roomId}`)
-      } catch (error) {
+      } catch (error: any) {
         if (
           error.response &&
           error.response.status >= 400 &&

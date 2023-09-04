@@ -1,9 +1,7 @@
 import Logo from '../components/Logo'
 import Avatar from '../assets/logo/vn.png'
 import { useState, useEffect } from 'react'
-import AdminIcon from '../components/icons/AdminIcon'
 import LecturerIcon from '../components/icons/LecturerIcon'
-import Administrator from '../components/dashboard/Admin'
 import PresetData from '../components/dashboard/PresetData'
 import NumberofTeam from '../components/dashboard/roomcreation/NumberofTeam'
 import CountriesSelection from '../components/dashboard/roomcreation/CountriesSelection'
@@ -11,10 +9,10 @@ import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 import GameRules from '../components/dashboard/GameRules'
 import axios from 'axios'
 
-function Dashboard() {
+function LecturerDashboard() {
 const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 const [selectedLecturerOption, setSelectedLecturerOption] = useState("rules");
-const [name, setName] = useState("");
+const [name, setName] = useState<string | null>("");
 const handleMoveToRules = () => {
     setSelectedLecturerOption('rules');
   };
@@ -27,27 +25,11 @@ setSelectedLecturerOption('numOfTeam');
 const handleMoveTocountriesSelect= () => {
 setSelectedLecturerOption('countriesSelect');
 };
-
-const handleSubmit = async () => {
-  try {
-    const url = "http://localhost:9000/api/users/userData";
-    const { data: res } = await axios.get(url);
-    setName(res.userData)
-  } catch (error) {
-    if (
-      error.response &&
-      error.response.status >= 400 &&
-      error.response.status <= 500
-    ) {
-      
-    }
-  }
-};
-
+useEffect(()=> {
+  setName(sessionStorage.getItem('userName'));
+})
 const renderComponent = () => {
-    if (selectedComponent === 'admin') {
-      return <Administrator />;
-    } else if (selectedComponent === 'lecturer') {
+   
       if (selectedLecturerOption === 'rules') {
         return <GameRules onMoveToNumberofTeam={handleMoveToNumberofTeam} />;
       } else if (selectedLecturerOption === 'presetData') {
@@ -65,7 +47,7 @@ const renderComponent = () => {
         onMoveToNumberofTeam={handleMoveToNumberofTeam}
         onMoveToPreset={handleMoveToPreset}
         />;
-      }
+      
 
     } else {
       return null;
@@ -79,11 +61,6 @@ const renderComponent = () => {
             <Logo/>
             {/* Admin/Lecturer selection */}
             <div className= 'w-[220px] h-[100px] absolute top-[20%] flex flex-col gap-10 '>
-                <div className='flex flex-row items-center gap-4 text-white pl-4 hover:cursor-pointer'
-                onClick={() => setSelectedComponent('admin')}>
-                    <AdminIcon color={selectedComponent === 'admin' ? '#FF7100' : '#A9A9A9'}/>
-                    <h1 className={`text-xl font-bold ${selectedComponent === 'admin' ? 'text-orange-500' : ''}`}>{"Administrator"}</h1>
-                </div>
                 <div className='flex flex-col text-white pl-4 hover:cursor-pointer'
                 onClick={() => setSelectedComponent('lecturer')}>
                     <div className='flex flex-row items-center gap-4'>
@@ -130,7 +107,7 @@ const renderComponent = () => {
         {/* Username */}
                 <div className="flex flex-col">
                     <h1 className="text-gray-300" >{"Welcome"}</h1>
-                    <h1 className="text-lg text-white font-semibold" >${name}</h1>
+                    <h1 className="text-lg text-white font-semibold" >{name}</h1>
                 </div>
         {/* Searchbar */}
             <div className="relative w-[400px] mr-[10%]">
@@ -159,4 +136,4 @@ const renderComponent = () => {
   )
 }
 
-export default Dashboard
+export default LecturerDashboard

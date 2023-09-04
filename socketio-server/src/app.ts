@@ -31,7 +31,7 @@ app.use(cors());
 // routes
 app.use("/", indexRouter);
 app.use("/api/users", userRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/auth/admin", adminRoutes);
 app.use("/api/lecture", lectureRoutes);
 app.use("/api/setting", settingRoutes);
 app.use("/api/auth", authRoutes);

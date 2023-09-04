@@ -5,7 +5,7 @@ import AdjustEconomy from '../components/gameplay/AdjustEconomy'
 import CurrentEconomy from '../components/gameplay/CurrentEconomy'
 import TeamInfo from '../components/gameplay/TeamInfo'
 
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import db from '../firebase';
 import { useNavigate } from 'react-router-dom'
 
@@ -34,7 +34,6 @@ const GamePlay = (props: Props) => {
                 teamData.user = teamInfo.userList
                 setTeam(teamData);
             }
-            console.log(team);
         }
         }
     }
@@ -42,6 +41,7 @@ const GamePlay = (props: Props) => {
     const [roomData, setRoomData] = useState<Room>(room)
     // use state and use effect to get the country
     const [team, setTeam] = useState<Team>(initialTeam)
+    const [status, setStatus] = useState<boolean>(true)
 
     function handleCountryUpdate(updatedRoom: Room){
         const newRoom = {...updatedRoom}
@@ -55,10 +55,30 @@ const GamePlay = (props: Props) => {
             navigate('/homestudent')
         }
     }
+    const checkStatusUser = async() => {
+        const teamRef = doc(db, "teams", roomCode + "-" + teamCode);
+        const teamSnap = await getDoc(teamRef);
+        const teamLists = teamSnap.data();
+        const deviceId = sessionStorage.getItem("device");
+        if (teamLists) {
+            console.log(deviceId +"       "+teamLists.deviceList[teamLists.turn] + "     " + deviceId == teamLists.deviceList[teamLists.turn])
+            if (deviceId == teamLists.deviceList[teamLists.turn]) {
+                setStatus(false)
+            } else {
+                setStatus(true)
+            }
+        }
+    }
     //Handle API logic here to get Team
     useEffect(()=>{
+        const statusOfRound = onSnapshot(doc(db, "teams", roomCode + "-" + teamCode), (doc) => {
+            checkStatusUser()
+        });
         checkTeam();
         getValue();
+        return() => {
+            statusOfRound
+        }
     },[])
   return (
     <div className='bg-[#1A1C22] min-h-screen'>
@@ -76,7 +96,7 @@ const GamePlay = (props: Props) => {
         {/* Game Play during each round */}
         <div className='flex mx-5 my-10 gap-10 items-start justify-between'>
             <CurrentEconomy country={team.country.cluster}/>
-            <AdjustEconomy input_values={team.country.cluster.input_value} room={roomData} onUpdateCountry={handleCountryUpdate} countryName= {team.country.name} />
+            <AdjustEconomy input_values={team.country.cluster.input_value} room={roomData} onUpdateCountry={handleCountryUpdate} countryName= {team.country.name} userStatus={status} />
         </div>
     </div>
   )

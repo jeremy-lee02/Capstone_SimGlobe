@@ -5,6 +5,7 @@ import {InputValue, Room, Team } from '../../../typing';
 import { useUpdateRoom } from '../../utils/economic';
 type Props = {
     input_values: InputValue
+    userStatus:boolean
     room: Room
     countryName: string
     onUpdateCountry: (updatedValues: Room) => void;
@@ -14,7 +15,7 @@ interface UserInput {
     input: InputValue
 }
 
-const AdjustEconomy = ({input_values, onUpdateCountry, room, countryName}: Props) => {
+const AdjustEconomy = ({input_values, onUpdateCountry, room, userStatus, countryName}: Props) => {
     const [interestRate, setInterestRate] = useState(input_values.interest_rate)
     const [vatRate, setVatRate] = useState(input_values.vat_rate)
     const [corporateTax, setCorporateTax] = useState(input_values.corporate_tax_rate)
@@ -22,6 +23,7 @@ const AdjustEconomy = ({input_values, onUpdateCountry, room, countryName}: Props
     const [govExpenditure, setGovExpenditure] = useState(input_values.government_expenditure_us)
     const [values, setValues] = useState<InputValue>(input_values)
     const [userInput, setUserInput] = useState<Array<UserInput>>(JSON.parse(localStorage.getItem("country_inputs") || "[]")) // Initialize once the create room is triggered
+    const [status, setStatus] = useState(userStatus)
     useEffect(()=>{
         //Update values when any of the 5 input changes
         const newValues = {
@@ -59,31 +61,35 @@ const AdjustEconomy = ({input_values, onUpdateCountry, room, countryName}: Props
             min={0}
             value={interestRate}
             max={20}
+            status={userStatus}
             onChange={(e)=> setInterestRate(Number(e.target.value))} />
             <RangeSlider
             name='VAT Rate:'
             min={0}
             value={vatRate}
             max={50}
+            status={userStatus}
             onChange={(e)=> setVatRate(Number(e.target.value))} />
             <RangeSlider
             name='Corporate Tax Rate'
             min={0}
             value={corporateTax}
             max={50}
+            status={userStatus}
             onChange={(e)=> setCorporateTax(Number(e.target.value))} />
             <RangeSlider
             name='Import Tariff Rate'
             min={0}
             value={importTariff}
             max={100}
+            status={userStatus}
             onChange={(e)=> setImportTariff(Number(e.target.value))} />
             <div className='ml-16 flex justify-start items-center gap-2 mb-3'>
                 <p>{"Government Expenditure in USD (Billion)"}: </p>
-                <input type='number' min={0} value={govExpenditure} onChange={(e)=> setGovExpenditure(Number(e.target.value))} className='bg-[#1A1C22] rounded-md pl-2 py-2 outline-[#FF7100]' />
+                <input disabled={userStatus} type='number' min={0} value={govExpenditure} onChange={(e)=> setGovExpenditure(Number(e.target.value))} className='bg-[#1A1C22] rounded-md pl-2 py-2 outline-[#FF7100]' />
             </div>
             <div className='flex justify-end mx-16 my-10'>
-                <button type='submit' className='bg-[#1A1C22] py-2 px-4 transition hover:scale-105 hover:bg-[#FF7100] hover:text-[#1A1C22] rounded-md text-[#FF7100]'>Save Record</button>
+                <button disabled={userStatus} type='submit' className='bg-[#1A1C22] py-2 px-4 transition hover:scale-105 hover:bg-[#FF7100] hover:text-[#1A1C22] rounded-md text-[#FF7100]'>Save Record</button>
             </div>
         </form>
 

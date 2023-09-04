@@ -22,7 +22,6 @@ router.post("/", async (req, res) => {
 
 
 		const user = db.collection('users').doc()
-		console.log(req.body)
 		await user.set({
 		...req.body,
 		user_id: user.id,	

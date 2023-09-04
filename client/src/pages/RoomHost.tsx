@@ -20,17 +20,21 @@ const RoomHost: React.FC = () => {
   };
 
  
-  const [remainingTime, setRemainingTime] = useState({ days: '02', hours: '00', minutes: '00', seconds: '00' });
+  const [remainingTime, setRemainingTime] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
   const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout | null>(null);
-
+  let rounds = 0;
+  let cycle = 7;
   const handleStartGame = () => {
     updateGame();
-    if (countdownInterval === null) {
-      setCountdownInterval(
-        setInterval(() => {
+    const initialCountdownValues = {
+      days: remainingTime.days,
+      hours: remainingTime.hours,
+      minutes: remainingTime.minutes,
+      seconds: remainingTime.seconds,
+    };
+    const intervalId = setInterval(() => {
           setRemainingTime((prevState) => {
             const { days, hours, minutes, seconds } = prevState;
-  
             let updatedSeconds = parseInt(seconds, 10) - 1;
             let updatedMinutes = parseInt(minutes, 10);
             let updatedHours = parseInt(hours, 10);
@@ -46,19 +50,38 @@ const RoomHost: React.FC = () => {
             }
             if (updatedHours < 0) {
               updatedHours = 23;
-              updatedDays -= 1;
+              if(updatedDays === 0){
+                updatedDays = 0
+              }else{
+                updatedDays -= 1;
+              }
+              
             }
-  
-            return {
-              days: updatedDays.toString().padStart(2, '0'),
-              hours: updatedHours.toString().padStart(2, '0'),
-              minutes: updatedMinutes.toString().padStart(2, '0'),
-              seconds: updatedSeconds.toString().padStart(2, '0'),
-            };
+            if (updatedDays === 0 && updatedHours === 0 && updatedMinutes === 0 && updatedSeconds === 0) {
+              if (cycle === 0) {
+                clearInterval(intervalId);
+                setCountdownInterval(null);
+              } else {
+                updatedDays = parseInt(initialCountdownValues.days, 10);
+                updatedHours = parseInt(initialCountdownValues.hours, 10);
+                updatedMinutes = parseInt(initialCountdownValues.minutes, 10);
+                updatedSeconds = parseInt(initialCountdownValues.seconds, 10);
+
+                rounds += 1;
+                cycle -=1;
+                console.log("Round",rounds);
+                updateRound();
+              }
+            }
+              return {
+                days: updatedDays.toString().padStart(2, '0'),
+                hours: updatedHours.toString().padStart(2, '0'),
+                minutes: updatedMinutes.toString().padStart(2, '0'),
+                seconds: updatedSeconds.toString().padStart(2, '0'),
+              };
           });
         }, 1000)
-      );
-    }
+        setCountdownInterval(intervalId);
   };
 
   const handleNumberChange = (field: string, value: number) => {
@@ -66,18 +89,33 @@ const RoomHost: React.FC = () => {
   
     if (field === 'days') {
       adjustedValue = Math.min(value, 31);
+      adjustedValue = Math.max(adjustedValue, 0);
+      setRemainingTime((prevState) => ({
+        ...prevState,
+        days: adjustedValue.toString().padStart(2, '0'),
+      }));
     } else if (field === 'hours') {
       adjustedValue = Math.min(value, 24);
-    } else {
+      adjustedValue = Math.max(adjustedValue, 0);
+      setRemainingTime((prevState) => ({
+        ...prevState,
+        hours: adjustedValue.toString().padStart(2, '0'),
+      }));
+    } else if (field === 'minutes') {
       adjustedValue = Math.min(value, 60);
+      adjustedValue = Math.max(adjustedValue, 0);
+      setRemainingTime((prevState) => ({
+        ...prevState,
+        minutes: adjustedValue.toString().padStart(2, '0'),
+      }));
+    } else if (field === 'seconds') {
+      adjustedValue = Math.min(value, 60);
+      adjustedValue = Math.max(adjustedValue, 0);
+      setRemainingTime((prevState) => ({
+        ...prevState,
+        seconds: adjustedValue.toString().padStart(2, '0'),
+      }));
     }
-  
-    adjustedValue = Math.max(adjustedValue, 0);
-  
-    setRemainingTime((prevState) => ({
-      ...prevState,
-      [field]: adjustedValue.toString().padStart(2, '0'),
-    }));
   };
   const params = window.location.href;
 
@@ -115,8 +153,17 @@ const RoomHost: React.FC = () => {
       })
     }
   }
-
-
+  
+  const updateRound = async () => {
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
+    const docSnap = await getDoc(docRef);
+    const gameData = docSnap.data();
+    if (gameData && gameData.status < 7){
+      await updateDoc(docRef, {
+        round: gameData.round + 1
+      })
+    }
+  }
 
   useEffect(() => {
     //Listening onchanged of teams
