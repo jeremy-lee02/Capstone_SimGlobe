@@ -174,22 +174,22 @@ export const score9: ClusterScore = {
 
 
 
-function handle_score(team : Team): number{
-    const score_gdp = gpd(team.country.cluster.other_value.real_gdp, team.country.cluster.score.gdp.min, team.country.cluster.score.gdp.max);
-    const score_inflation = inflation(team.country.cluster.preset_value.inflation, team.country.cluster.score.inflation.min, team.country.cluster.score.inflation.max, team.country.cluster.score.inflation.second_min);
-    const score_budget = budget(team.country.cluster.other_value.budget_surplus_billion, team.country.cluster.score.budget_surplus.min, team.country.cluster.score.budget_surplus.max);
-    const score_unemployment = unemployment(team.country.cluster.preset_value.unemployment, team.country.cluster.score.unemployment.min, team.country.cluster.score.unemployment.max);
-    return team.score + score_gdp + score_budget+ score_inflation + score_unemployment
-}
+// function handle_score(team : Team): number{
+//     const score_gdp = gpd(team.country.cluster.other_value.real_gdp, team.country.cluster.score.gdp.min, team.country.cluster.score.gdp.max);
+//     const score_inflation = inflation(team.country.cluster.preset_value.inflation, team.country.cluster.score.inflation.min, team.country.cluster.score.inflation.max, team.country.cluster.score.inflation.second_min);
+//     const score_budget = budget(team.country.cluster.other_value.budget_surplus_billion, team.country.cluster.score.budget_surplus.min, team.country.cluster.score.budget_surplus.max);
+//     const score_unemployment = unemployment(team.country.cluster.preset_value.unemployment, team.country.cluster.score.unemployment.min, team.country.cluster.score.unemployment.max);
+//     return team.score + score_gdp + score_budget+ score_inflation + score_unemployment
+// }
 
-function gpd (value: number, min: number, max: number): number {
+export function gpd (value: number, min: number, max: number): number {
     if(value >= max) return 25
     if(value <= min) return 0
     const value_percent = (value - min) / (max - min)
     const final_score = value_percent * 25
     return parseFloat(final_score.toFixed(1))
 }
-function unemployment (value: number, min: number, max: number): number {
+export function unemployment (value: number, min: number, max: number): number {
     if(value >= max) return 0
     if(value <= min) return 25
     const value_percent = (value - min) / (max - min)
@@ -197,14 +197,14 @@ function unemployment (value: number, min: number, max: number): number {
     return parseFloat((25 - final_score).toFixed(1))
 }
 
-function budget(value: number, min: number, max: number): number {
+export function budget(value: number, min: number, max: number): number {
     if(value >= max) return 25
     if(value <= min) return 0
     const value_percent = (value - min) / (max - min)
     const final_score = value_percent * 25
     return parseFloat(final_score.toFixed(1))
 }
-function inflation(value: number, min: number, max: number, second_min: number): number {
+export function inflation(value: number, min: number, max: number, second_min: number): number {
     if(value >= max) return 0
     if(value === min) return 25
     if(value <= second_min) return 0
@@ -219,13 +219,13 @@ function inflation(value: number, min: number, max: number, second_min: number):
     }
 }
 
-export function calculate_score (room: Room): Room {
-    if(room.round > 0){
-        const updateRoom ={...room}
-        updateRoom.team.forEach(team => {
-            team.score = handle_score(team)
-        })
-        return updateRoom
-    }
-    return room
-}
+// export function calculate_score (room: Room): Room {
+//     if(room.round > 0){
+//         const updateRoom ={...room}
+//         updateRoom.team.forEach(team => {
+//             team.score = handle_score(team)
+//         })
+//         return updateRoom
+//     }
+//     return room
+// }

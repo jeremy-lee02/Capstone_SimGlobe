@@ -51,7 +51,7 @@ export function country_logo(country: string) {
     switch (country) {
         case "Vietnam":
             return vn_logo;
-        case "United States":
+        case "USA":
             return us_logo;
         case "Vanuatu":
             return vanuatu_logo;
