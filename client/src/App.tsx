@@ -47,10 +47,7 @@ function App() {
           <RequireAuth loginPath={'/login'}>
             <LecturerDashboard />
           </RequireAuth>} />
-        <Route path="/users/:id/verify/:token" element={
-          <RequireAuth loginPath={'/login'}>
-            <EmailVerify />
-          </RequireAuth>} />
+        <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
 
         //User
         <Route path= "/play" element= {<GamePlay/>} />

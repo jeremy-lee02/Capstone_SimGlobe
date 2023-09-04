@@ -72,7 +72,9 @@ const country_template : Country = {
             net_capital: 0,
             global_interestRate: 0,
             budget_surplus_billion: -0.4,
-            budget_surplus_percent: -0.6
+            budget_surplus_percent: -0.6,
+            nominal_gdp: 0,
+            real: 0
         },
         score: {
             gdp: {
@@ -178,6 +180,12 @@ function net_capital (country: CountryCluster, global_interestRate: number) {
 function consumption (country: CountryCluster){
     return country.preset_value.initial_consumption * (1 - country.input_value.vat_rate/100)
 }
+
+function nominal_growth(country: CountryCluster){
+    const prev_nominal = (100 - country.preset_value.initial_growth) /100 * nominal_gdp(country)
+    return (nominal_gdp(country) - prev_nominal)/ prev_nominal * 100
+
+}
   
 function investment(country: CountryCluster){
     return country.preset_value.initial_investment * (1 - country.input_value.corporate_tax_rate/100)
@@ -192,7 +200,7 @@ function nominal_gdp(country: CountryCluster){
 }
   
 function trade_balance(country:CountryCluster){
-    return country.other_value.export_value - country.other_value.import_value
+    return import_value(country) - import_value(country) 
 }
   
 function income_tax(country:CountryCluster){
@@ -208,7 +216,7 @@ function import_pre_tariff(country: CountryCluster){
 }
 
 function govDebtUs(country: CountryCluster) {
-    return parseFloat((country.other_value.debt_to_gdp * nominal_gdp(country)/100).toFixed(2))
+    return parseFloat((debt_to_gdp() * nominal_gdp(country)/100).toFixed(2))
 }
 
 function tariff_revanue(country:CountryCluster){
@@ -218,8 +226,20 @@ function tariff_revanue(country:CountryCluster){
 function import_value(country: CountryCluster){
     return import_pre_tariff(country) * (1- country.input_value.import_tariff_rate/100)
 }
+function debt_to_gdp(){
+    return 60
+} //Government Debt as % of GDP
 
+//budget_surplus_billion
 
+function budget_surplus_billion(country:CountryCluster){
+    return income_tax(country) + corporate_tax(country) + tariff_revanue(country) - country.input_value.government_expenditure_us
+}
+
+//budget_surplus_percent
+function budget_surplus_percent(country:CountryCluster){
+    return budget_surplus_billion(country)/nominal_gdp(country) * 100
+}
 
 //Check country cluster
 function check_country_cluster(country: string): string {
@@ -384,47 +404,84 @@ export function create_new_room (countries: Array<string>, rules:{[key: string]:
 // Calculate the rest value based on the preset value
 function calculate_initial_value(room : Room): Room {
   const updatedRoom: Room = {... room}
-
-
   const calculatedGlobalInterestRate = global_interestRate(updatedRoom);
-  const import_and_export_value  = parseFloat((10 / room.team.length).toFixed(2))
 
   updatedRoom.team.forEach(team => {
     team.country.cluster.other_value = {
-      consumption: consumption(team.country.cluster),
-      investment: investment(team.country.cluster), 
-      demand: demand(team.country.cluster),
-      supply: team.country.cluster.other_value.supply,
-      nominal: nominal_gdp(team.country.cluster),
-      real_gdp: nominal_gdp(team.country.cluster),
-      capital_growth: team.country.cluster.other_value.capital_growth,
+      consumption: parseFloat(consumption(team.country.cluster).toFixed(2)),
+      investment: parseFloat(investment(team.country.cluster).toFixed(2)), 
+      demand: parseFloat(demand(team.country.cluster).toFixed(2)),
+      supply: parseFloat(team.country.cluster.other_value.supply.toFixed(2)),
+      nominal: parseFloat(nominal_growth(team.country.cluster).toFixed(2)),
+      real_gdp: parseFloat(nominal_gdp(team.country.cluster).toFixed(2)),
+      capital_growth: parseFloat(team.country.cluster.other_value.capital_growth.toFixed(2)),
       labor: 1,
       technological: 2,
-      consumer_price_index: team.country.cluster.other_value.consumer_price_index,
-      income_tax: income_tax(team.country.cluster),
-      corporate_tax: corporate_tax(team.country.cluster),
-      tariff_revanue: tariff_revanue(team.country.cluster),
-      gov_debt: govDebtUs(team.country.cluster), 
-      debt_to_gdp: team.country.cluster.other_value.debt_to_gdp,
-      exchage_rate: team.country.cluster.other_value.exchage_rate,
-      export_value: import_and_export_value,
-      import_value: import_value(team.country.cluster),
-      import_preTariff: import_pre_tariff(team.country.cluster),
-      trade_balance: trade_balance(team.country.cluster),
-      net_capital: net_capital(team.country.cluster, calculatedGlobalInterestRate),
-      global_interestRate: calculatedGlobalInterestRate,
-      budget_surplus_billion: -0.4,
-      budget_surplus_percent: -0.6
+      consumer_price_index: parseFloat(team.country.cluster.other_value.consumer_price_index.toFixed(2)),
+      income_tax: parseFloat(income_tax(team.country.cluster).toFixed(2)),
+      corporate_tax: parseFloat(corporate_tax(team.country.cluster).toFixed(2)),
+      tariff_revanue: parseFloat(tariff_revanue(team.country.cluster).toFixed(2)),
+      gov_debt: parseFloat(govDebtUs(team.country.cluster).toFixed(2)), 
+      debt_to_gdp: parseFloat(debt_to_gdp().toFixed(2)),
+      exchage_rate: parseFloat(team.country.cluster.other_value.exchage_rate.toFixed(2)),
+      import_value: parseFloat(import_value(team.country.cluster).toFixed(2)), // At the start, export and import equals
+      export_value: parseFloat(import_value(team.country.cluster).toFixed(2)), // At the start, export and import equals
+      import_preTariff: parseFloat(import_pre_tariff(team.country.cluster).toFixed(2)),
+      trade_balance: parseFloat(trade_balance(team.country.cluster).toFixed(2)),
+      net_capital: parseFloat(net_capital(team.country.cluster, calculatedGlobalInterestRate).toFixed(2)),
+      global_interestRate: parseFloat(calculatedGlobalInterestRate.toFixed(2)),
+      budget_surplus_billion: parseFloat(budget_surplus_billion(team.country.cluster).toFixed(2)),
+      budget_surplus_percent: parseFloat(budget_surplus_percent(team.country.cluster).toFixed(2)),
+      nominal_gdp: parseFloat(nominal_gdp(team.country.cluster).toFixed(2)),
+      real: parseFloat(nominal_growth(team.country.cluster).toFixed(2))
     }
-
-
   })
+//     // Re-calculate with export value
+//   const newUpdateRoom = {...export_value(updatedRoom)}
+//   newUpdateRoom.team.forEach(team => {
+//     team.country.cluster.other_value = {
+//       consumption: consumption(team.country.cluster),
+//       investment: investment(team.country.cluster), 
+//       demand: demand(team.country.cluster),
+//       supply: team.country.cluster.other_value.supply,
+//       nominal: nominal_gdp(team.country.cluster),
+//       real_gdp: nominal_gdp(team.country.cluster),
+//       capital_growth: team.country.cluster.other_value.capital_growth,
+//       labor: 1,
+//       technological: 2,
+//       consumer_price_index: team.country.cluster.other_value.consumer_price_index,
+//       income_tax: income_tax(team.country.cluster),
+//       corporate_tax: corporate_tax(team.country.cluster),
+//       tariff_revanue: tariff_revanue(team.country.cluster),
+//       gov_debt: govDebtUs(team.country.cluster), 
+//       debt_to_gdp: debt_to_gdp(),
+//       exchage_rate: team.country.cluster.other_value.exchage_rate,
+//       export_value: team.country.cluster.other_value.export_value,
+//       import_value: import_value(team.country.cluster),
+//       import_preTariff: import_pre_tariff(team.country.cluster),
+//       trade_balance: trade_balance(team.country.cluster),
+//       net_capital: net_capital(team.country.cluster, calculatedGlobalInterestRate),
+//       global_interestRate: calculatedGlobalInterestRate,
+//       budget_surplus_billion: budget_surplus_billion(team.country.cluster),
+//       budget_surplus_percent: budget_surplus_percent(team.country.cluster)
+//     }
+//   })
+
+
   return updatedRoom
 }
 
 
 export function finalizeRoom (countries: Array<string>, rules:{[key: string]: ClusterScore}, presets: {[key: string]: PresetValue}) : Room {
-    return calculate_initial_value(create_new_room(countries,rules, presets))
+    const newRoom = calculate_initial_value(create_new_room(countries,rules, presets))
+    const countryInput = newRoom.team.map(team => {
+        return {
+            name: team.country.name,
+            input: team.country.cluster.input_value
+        }
+    })
+    localStorage.setItem("country_inputs", JSON.stringify(countryInput)) // Set countries inputs 
+    return newRoom
 }
 
 

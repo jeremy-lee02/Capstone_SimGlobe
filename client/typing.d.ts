@@ -92,7 +92,9 @@ export interface OtherValue {
     net_capital: number,
     global_interestRate: number,
     budget_surplus_billion: number,
-    budget_surplus_percent: number
+    budget_surplus_percent: number,
+    nominal_gdp: number,
+    real:number
 }
 
 export interface InputValue {

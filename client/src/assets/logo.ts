@@ -44,13 +44,14 @@ import germany_logo from './country_logo/germany.png'
 import uk_logo from './country_logo/uk.png'
 import australia_logo from './country_logo/australia.png'
 import korea_logo from './country_logo/south_korea.png'
+import colombia_logo from './country_logo/colombia.png'
 
 
 export function country_logo(country: string) {
     switch (country) {
         case "Vietnam":
             return vn_logo;
-        case "United States":
+        case "USA":
             return us_logo;
         case "Vanuatu":
             return vanuatu_logo;
@@ -140,6 +141,8 @@ export function country_logo(country: string) {
             return australia_logo;
         case "Korea":
             return korea_logo;
+        case "Colombia":
+            return colombia_logo;
         default:
             return vn_logo;
             break;
