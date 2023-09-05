@@ -166,16 +166,14 @@ const RoomHost: React.FC = () => {
     let roomSize = 0
     if (gameData && roomData){
       newInput = [...gameData.input]
+      console.log(rounds + " " +gameData.team, roomData.room_size-1)
       const missingTeam = findMissingElements(gameData.team, roomData.room_size);
       roomSize = roomData.room_size;
+      console.log(missingTeam);
       for (let i = 0; i < missingTeam.length; i++) {
-        const docRef = doc(db, "teams", params.split("room=")[1] + "-" + missingTeam[i]);
-        const docSnap = await getDoc(docRef);
-        const teamInputValue = docSnap.data();
-        if (teamInputValue) {
-          newInput.push({'input': teamInputValue.input,
+          console.log(roomData.team[missingTeam[i]].country.cluster.input_value + " " + missingTeam[i]);
+          newInput.push({'input': roomData.team[missingTeam[i]].country.cluster.input_value,
                           'team': missingTeam[i]})
-        }
       }
       await updateDoc(docRef, {
         input: newInput,
@@ -186,8 +184,21 @@ const RoomHost: React.FC = () => {
   }
   
   function findMissingElements(arr: any, size: any) {
-    const fullRange = Array.from({ length: size }, (_, index) => index + 1);
-    const missingElements = fullRange.filter(element => !arr.includes(element));
+    // Create a set to store the elements in the array
+    const elementSet = new Set(arr);
+  
+    // Initialize an array to store missing elements
+    const missingElements = [];
+  
+    // Iterate through numbers from 0 to (size-1)
+    for (let i = 0; i < size; i++) {
+      // If the current number is not in the set, it's missing
+      if (!elementSet.has(i)) {
+        missingElements.push(i);
+      }
+    }
+  
+    // Return the array of missing elements
     return missingElements;
   }
 
