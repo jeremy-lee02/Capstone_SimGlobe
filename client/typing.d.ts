@@ -1,6 +1,8 @@
 export interface Team {
     team_id: string,
     user: Array<string>
+    device: Array<string>
+    turn: number
     country: Country,
     max_player: number,
     score: number

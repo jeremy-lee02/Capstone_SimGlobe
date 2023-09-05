@@ -69,15 +69,16 @@ const AdjustEconomy = ({input_values, onUpdateCountry, room, userStatus, country
         const teamData = teamDoc.data()
         var input = []
         var team = []
-        var newInput = {'input' : values}
+        var newInput = {'input' : values,
+                        'team': teamInfo}
         if (teamData) {
             input = [...teamData.input];
-            team = [...teamData.teams];
+            team = [...teamData.team];
             input.push(newInput)
-            team.push(teamInfo)
+            team.push(parseInt(teamInfo ? teamInfo : ''))
             await updateDoc(teamRef, {
                 input: input,
-                teams: team
+                team: team
             })
         }
     }

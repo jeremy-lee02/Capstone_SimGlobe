@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
 					roomId: roomId,
 					userList: [],
 					deviceList: [],
-					input:[],
+					input: req.body.team[i-1].country.cluster.input_value,
 					turn: 0
 					})
 			} catch (error) {
@@ -35,7 +35,7 @@ router.post("/", async (req, res) => {
 				const round = db.collection('rounds').doc(number +"-"+i);
 				await round.set({
 					input:[],
-					teams:[]
+					team: []
 					})
 			} catch (error) {
 				console.log(error);
