@@ -13,22 +13,22 @@ router.post("/", async (req, res) => {
         return result;
     }
 	const roomId = generateString(5).split(" ").join("");
-	const createTeam = async (round, number) => {
-		for (let i = 1; i < number+1; i++) {
-			try {
-				const team = db.collection('teams').doc(round +"-"+i);
-				await team.set({
-					roomId: roomId,
-					userList: [],
-					deviceList: [],
-					input: req.body.team[i-1].country.cluster.input_value,
-					turn: 0
-					})
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	}
+	// const createTeam = async (round, number) => {
+	// 	for (let i = 1; i < number+1; i++) {
+	// 		try {
+	// 			const team = db.collection('teams').doc(round +"-"+i);
+	// 			await team.set({
+	// 				roomId: roomId,
+	// 				userList: [],
+	// 				deviceList: [],
+	// 				input: req.body.team[i-1].country.cluster.input_value,
+	// 				turn: 0
+	// 				})
+	// 		} catch (error) {
+	// 			console.log(error);
+	// 		}
+	// 	}
+	// }
 	const createRound = async (number) => {
 		for (let i = 1; i < 8 ; i++) {
 			try {
@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
 	}
 	try {
 		const room = db.collection('rooms').doc(roomId);
-		createTeam(roomId, req.body.team.length, 4)
+		// createTeam(roomId, req.body.team.length, 4)
 		createRound(roomId)
 		await room.set({
 		...req.body,
