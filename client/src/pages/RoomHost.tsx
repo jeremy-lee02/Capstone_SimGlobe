@@ -14,7 +14,7 @@ type Team = {
 
 const RoomHost: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
-
+  const [numberOfTeams, setNumbTeams] = useState(0)
   const handleDeleteRoom = () => {
     // Handle delete room functionality here
   };
@@ -69,8 +69,7 @@ const RoomHost: React.FC = () => {
 
                 rounds += 1;
                 cycle -=1;
-                console.log("Round",rounds);
-                updateRound();
+                updateInput();
               }
             }
               return {
@@ -120,13 +119,15 @@ const RoomHost: React.FC = () => {
   const params = window.location.href;
 
   const getTeamList = async () => {
-    console.log('getTeamList');
-    const roomCode =  params.split("room=")[1];
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
     if(docSnap.exists()) {
       const teamData = docSnap.data();
-      getTeamMembers(roomCode, teamData.team.length)
+      const newTeams: Team[] = [];
+      for ( let j = 0; j <  teamData.team.length; j++) {
+          newTeams.push({ teamNumber: j, teamMembers: teamData.team[j].user.length });
+      }
+      setTeams(newTeams)
     }
   }
 
@@ -153,27 +154,85 @@ const RoomHost: React.FC = () => {
       })
     }
   }
+
+  const updateInput = async () => {
+    const roomRef = doc(db, "rooms", params.split("room=")[1]);
+    const roomSnap = await getDoc(roomRef);
+    const roomData = roomSnap.data();
+    const docRef = doc(db, "rounds", params.split("room=")[1] + "-" + rounds);
+    const docSnap = await getDoc(docRef);
+    const gameData = docSnap.data();
+    let newInput =[]
+    let roomSize = 0
+    if (gameData && roomData){
+      newInput = [...gameData.input]
+      const missingTeam = findMissingElements(gameData.team, roomData.room_size);
+      roomSize = roomData.room_size;
+      for (let i = 0; i < missingTeam.length; i++) {
+        const docRef = doc(db, "teams", params.split("room=")[1] + "-" + missingTeam[i]);
+        const docSnap = await getDoc(docRef);
+        const teamInputValue = docSnap.data();
+        if (teamInputValue) {
+          newInput.push({'input': teamInputValue.input,
+                          'team': missingTeam[i]})
+        }
+      }
+      await updateDoc(docRef, {
+        input: newInput,
+      })
+    }
+    updateRound();
+    updateTurn(roomSize)
+  }
   
+  function findMissingElements(arr: any, size: any) {
+    const fullRange = Array.from({ length: size }, (_, index) => index + 1);
+    const missingElements = fullRange.filter(element => !arr.includes(element));
+    return missingElements;
+  }
+
   const updateRound = async () => {
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
     const gameData = docSnap.data();
     if (gameData && gameData.status < 7){
+      setNumbTeams(gameData.room_size)
       await updateDoc(docRef, {
         round: gameData.round + 1
       })
     }
   }
 
+  const updateTurn = async (teams: number) => {
+    for (let i = 0; i < teams ; i++) {
+      const docRef = doc(db, "rooms", params.split("room=")[1]);
+        const docSnap = await getDoc(docRef);
+        const teamInputValue = docSnap.data();
+        if (teamInputValue) {
+          const oldMap = teamInputValue.team
+          if (teamInputValue.team[i].turn < teamInputValue.team[i].user.length - 1) {
+            oldMap[i].turn = oldMap[i].turn + 1;
+            await updateDoc(docRef, {
+              team: oldMap
+            })
+          } else {
+            oldMap[i].turn = 0
+            await updateDoc(docRef, {
+              team: oldMap
+            })
+          }
+        }
+    }
+  }
+
   useEffect(() => {
     //Listening onchanged of teams
-    const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
-    const teamUpdated = onSnapshot(q, (doc) => {
+  // Listening onchanged of game round
+    const realTimeGameStatus = onSnapshot(doc(db, "rooms", params.split("room=")[1]), (doc) => {
       getTeamList();
-    })
-    getTeamList();
+    });
     return () => {
-      teamUpdated;
+      realTimeGameStatus;
       // Clear any active timers when the component unmounts
       clearInterval(countdownInterval!);
     };

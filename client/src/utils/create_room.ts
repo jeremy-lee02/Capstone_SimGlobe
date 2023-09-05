@@ -368,6 +368,8 @@ export function create_new_room (countries: Array<string>, rules:{[key: string]:
         const newTeam: Team = {
             team_id: id.toFixed(0),
             user: [],
+            device: [],
+            turn: 0,
             country: country_template,
             max_player: 4,
             score: 0

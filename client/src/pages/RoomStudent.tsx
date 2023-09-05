@@ -22,12 +22,14 @@ const RoomStudent: React.FC = () => {
   const handleJoinTeam = (teamNumber: number) => {
     if (teamNumber !== joinedTeam) {
       const updatedTeams = teams.map((team) => {
+        if (team.teamNumber === teamNumber) {
+          setTimeout(()=> {
+            updateTeam(teamNumber)
+          },1000)
+          sessionStorage.setItem('team', teamNumber.toString())
+        }
         if (team.teamNumber === joinedTeam) {
           removeTeam(joinedTeam)
-        }
-        if (team.teamNumber === teamNumber) {
-          updateTeam(teamNumber)
-          sessionStorage.setItem('team', teamNumber.toString())
         }
         return team;
       });
@@ -40,12 +42,15 @@ const RoomStudent: React.FC = () => {
   const params = window.location.href;
 
   const getTeamList = async () => {
-    const roomCode =  params.split("room=")[1];
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
     if(docSnap.exists()) {
       const teamData = docSnap.data();
-      getTeamMembers(roomCode, teamData.team.length)
+      const newTeams: Team[] = [];
+      for ( let j = 0; j <  teamData.team.length; j++) {
+          newTeams.push({ teamNumber: j, teamMembers: teamData.team[j].user.length });
+      }
+      setTeams(newTeams)
     }
   }
 
@@ -73,34 +78,55 @@ const RoomStudent: React.FC = () => {
     }
   }
 
-  const updateTeam = async (teamNum: any) => {
-    const docRef = doc(db, "teams", params.split("room=")[1] + "-" + teamNum);
+  // const updateTeam = async (teamNum: any) => {
+  //   const docRef = doc(db, "teams", params.split("room=")[1] + "-" + teamNum);
+  //   const docSnap = await getDoc(docRef);
+  //   const teamData = docSnap.data();
+  //   var userInfo = sessionStorage.getItem("users");
+  //   var deviceInfo = sessionStorage.getItem("device");
+
+  //   if (teamData){
+  //     const updatedTeam = [...teamData.userList]
+  //     updatedTeam.push(userInfo)
+  //     const updatedDevice = [...teamData.deviceList]
+  //     updatedDevice.push(deviceInfo)
+  //     await updateDoc(docRef, {
+  //       userList: updatedTeam,
+  //       deviceList: updatedDevice
+  //     })
+  //   }
+  // }
+  
+  const updateTeam  = async (teamNum: any) => {
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
-    const teamData = docSnap.data();
     var userInfo = sessionStorage.getItem("users");
     var deviceInfo = sessionStorage.getItem("device");
-
-    if (teamData){
-      const updatedTeam = [...teamData.userList]
+    const teamData = docSnap.data();
+    if(teamData) {
+      const oldMap = teamData.team
+      const updatedTeam = [...teamData.team[teamNum].user]
       updatedTeam.push(userInfo)
-      const updatedDevice = [...teamData.deviceList]
+      const updatedDevice = [...teamData.team[teamNum].device]
       updatedDevice.push(deviceInfo)
+      oldMap[teamNum].device.push(deviceInfo)
+      oldMap[teamNum].user.push(userInfo)
       await updateDoc(docRef, {
-        userList: updatedTeam,
-        deviceList: updatedDevice
+        team: oldMap,
       })
     }
   }
 
   const removeTeam = async (teamNum: any) => {
-    const docRef = doc(db, "teams", params.split("room=")[1] + "-" + teamNum);
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
-    const teamData = docSnap.data();
     var userInfo = sessionStorage.getItem("users");
     var deviceInfo = sessionStorage.getItem("device");
+    const teamData = docSnap.data();
     if (teamData){
-      const updatedTeam = [...teamData.userList]
-      const updatedDevice = [...teamData.deviceList]
+      const oldMap = teamData.team
+      const updatedTeam = [...teamData.team[teamNum].user]
+      const updatedDevice = [...teamData.team[teamNum].device]
       for ( let i = 0; i < updatedTeam.length; i++) {
         if ( updatedTeam[i] == userInfo) {
           updatedTeam.splice(i,1);
@@ -109,9 +135,10 @@ const RoomStudent: React.FC = () => {
           updatedDevice.splice(i,1);
         }
       }
+      oldMap[teamNum].device = updatedDevice
+      oldMap[teamNum].user = updatedTeam
       await updateDoc(docRef, {
-        userList: updatedTeam,
-        deviceList: updatedDevice
+        team: oldMap,
       })
     }
   }
@@ -129,21 +156,16 @@ const RoomStudent: React.FC = () => {
 
   useEffect(() => {
   checkValidUser();
-  //Listening onchanged of teams
-  const q = query(collection(db, "teams"), where("roomId", "==", params.split("room=")[1]));
-  const realTimeTeamList = onSnapshot(q, (doc) => {
-    getTeamList();
-  })
-
   // Listening onchanged of game round
   const realTimeGameStatus = onSnapshot(doc(db, "rooms", params.split("room=")[1]), (doc) => {
+    getTeamList();
     checkIfGameStart()
   });
 
   getTeamList();
+  // realTimeGameStatus();
   return() => {
-    realTimeTeamList;
-    realTimeGameStatus;
+    realTimeGameStatus();
   };
   }, []);
 
