@@ -196,10 +196,30 @@ const RoomHost: React.FC = () => {
     const docSnap = await getDoc(docRef);
     const gameData = docSnap.data();
     if (gameData && gameData.status < 7){
+    //todo generate new room here
       setNumbTeams(gameData.room_size)
       await updateDoc(docRef, {
         round: gameData.round + 1
       })
+    }
+  }
+
+  //todo 
+  const getRoomValue = async () => {
+    const docRef = doc(db, "rooms", params.split("room=")[1]);
+    const docSnap = await getDoc(docRef);
+    const gameData = docSnap.data();
+    
+    if (gameData) {
+      for (let i = 0; i < gameData.room_size ; i++) {
+        // gameData.team[i].country
+        //return value : room
+      }
+      const inputRef = doc(db, "rounds", params.split("room=")[1] + "-" + gameData.round);
+      const inputSnap = await getDoc(inputRef);
+      const inputData = inputSnap.data();
+      // inputData.input
+      // =>eco(gameData.team[i].country, inputData.input)
     }
   }
 

@@ -21,23 +21,23 @@ const GamePlay = (props: Props) => {
     const teamCode = searchParams.get('team') ? searchParams.get('team') : '';
     const navigate = useNavigate();
     const params = window.location.href;
-    const getValue = async () => {
-        if (roomCode && teamCode) {
-            const docRef = doc(db, "rooms", roomCode);
-            const teamRef = doc(db, "teams", roomCode + "-" + teamCode);
-            const docSnap = await getDoc(docRef);
-            const teamSnap = await getDoc(teamRef);
-            const teamLists = docSnap.data();
-            const teamInfo = teamSnap.data();
-            if (teamLists){
-            const teamData = teamLists.team[parseInt(teamCode)-1]
-            if (teamInfo) {
-                teamData.user = teamInfo.userList
-                setTeam(teamData);
-            }
-        }
-        }
-    }
+    // const getValue = async () => {
+    //     if (roomCode && teamCode) {
+    //         const docRef = doc(db, "rooms", roomCode);
+    //         const teamRef = doc(db, "teams", roomCode + "-" + teamCode);
+    //         const docSnap = await getDoc(docRef);
+    //         const teamSnap = await getDoc(teamRef);
+    //         const teamLists = docSnap.data();
+    //         const teamInfo = teamSnap.data();
+    //         if (teamLists){
+    //         const teamData = teamLists.team[parseInt(teamCode)-1]
+    //         if (teamInfo) {
+    //             teamData.user = teamInfo.userList
+    //             setTeam(teamData);
+    //         }
+    //     }
+    //     }
+    // }
 
     const [roomData, setRoomData] = useState<Room>(room)
     // use state and use effect to get the country
@@ -80,13 +80,12 @@ const GamePlay = (props: Props) => {
 
     //Handle API logic here to get Team
     useEffect(()=>{
-        const statusOfRound = onSnapshot(doc(db, "rooms", params.split("room=")[1]), (doc) => {
+        const statusOfRound = onSnapshot(doc(db, "rooms", params.split("room=")[1].split("&")[0]), (doc) => {
             checkStatusUser();
         });
         checkStatusUser();
         checkTeam();
-        getValue();
-        return statusOfRound
+    return statusOfRound
     },[])
   return (
     <div className='bg-[#1A1C22] min-h-screen'>
