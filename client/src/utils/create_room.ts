@@ -107,7 +107,7 @@ const elasticities_template: Elasticity = {
     impact_of_interest_rate_on_induced_consumption_level:	0.25,
     impact_of_interest_rate_on_induced_investment_change:	0.75,
     impact_of_interest_rate_on_induced_investment_level:0.25,
-    impact_of_interest_rate_on_inflation:	1,
+    impact_of_interest_rate_on_inflation:	0.5,
     impact_of_inflation_expectation_on_inflation:	0.75,
     impact_of_supply_and_demand_change_on_inflation:	0.3,
     impact_of_interest_rate_differential_on_capital_flow:	3,

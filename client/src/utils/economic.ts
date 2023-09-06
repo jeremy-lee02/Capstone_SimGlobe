@@ -211,7 +211,7 @@ function supply(country:CountryCluster, newInput: InputValue){
 
 // Calculate the rest value based on the preset value
 function updateCountry(room : Room, userInput: Array<UserInput>): Room {
-    const updatedRoom: Room = {...room, round: room.round++}
+    const updatedRoom: Room = {...room}
 
 
     const calculatedGlobalInterestRate = global_interestRate(userInput);
@@ -236,7 +236,7 @@ function updateCountry(room : Room, userInput: Array<UserInput>): Room {
         consumption: consumption(cloneCluster, newInput.input),
         investment: investment(cloneCluster, newInput.input), 
         demand: demand(cloneCluster, newInput.input, room, team.country.name),
-        supply: supply(team.country.cluster, newInput.input),
+        supply: supply(cloneCluster, newInput.input),
         nominal: nominal_growth(cloneCluster, newInput.input, room, team.country.name),
         real_gdp: 0,
         capital_growth: capital_growth(cloneCluster, newInput.input),
