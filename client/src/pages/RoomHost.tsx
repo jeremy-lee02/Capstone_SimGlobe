@@ -6,6 +6,8 @@ import Logo from '../components/Logo';
 import Username from '../components/Username';
 import { doc, getDoc, onSnapshot, query, updateDoc, where, collection } from 'firebase/firestore';
 import db from '../firebase';
+import { useUpdateRoom } from '../utils/economic';
+import { Room } from '../../typing';
 
 type Team = {
   teamNumber: number;
@@ -208,6 +210,16 @@ const RoomHost: React.FC = () => {
     const gameData = docSnap.data();
     if (gameData && gameData.status < 7){
     //todo generate new room here
+      // console.log(await getRoomValue())
+      const required_value_to_updateRoom: any = await getRoomValue()
+      const newInputs = required_value_to_updateRoom.input.map((e: { team: any; input: any; }) => {
+        return {
+          name: e.team,
+          input: e.input,
+        }
+      })
+
+      console.log(useUpdateRoom(required_value_to_updateRoom.room,newInputs))
       setNumbTeams(gameData.room_size)
       await updateDoc(docRef, {
         round: gameData.round + 1
@@ -220,18 +232,19 @@ const RoomHost: React.FC = () => {
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
     const gameData = docSnap.data();
-    
+    let data = {}
     if (gameData) {
-      for (let i = 0; i < gameData.room_size ; i++) {
-        // gameData.team[i].country
-        //return value : room
-      }
       const inputRef = doc(db, "rounds", params.split("room=")[1] + "-" + gameData.round);
       const inputSnap = await getDoc(inputRef);
       const inputData = inputSnap.data();
-      // inputData.input
-      // =>eco(gameData.team[i].country, inputData.input)
+      if(inputData) {
+        data = {...data,
+          room: gameData,
+          input: inputData.input,
+        }
+      }
     }
+    return data
   }
 
   const updateTurn = async (teams: number) => {

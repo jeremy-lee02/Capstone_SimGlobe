@@ -58,19 +58,13 @@ function trade_balance(country: CountryCluster, newInput: InputValue, room: Room
 
 
 function real_gdp(country: CountryCluster, newInput: InputValue, room: Room, countryId:number){
-    const inflation_records = [country.preset_value.inflation]
-    inflation_records.push(inflation_function())
-    let product_function = 1
-    inflation_records.forEach(i => {
-        product_function = product_function * supply(country, newInput)/(1 + i/100)
-    })
-    const result = nominal_gdp(country,newInput, room, countryId) / product_function
-    if(result > 0) return parseFloat(result.toFixed(2))
-    return 0
+    const result = nominal_gdp(country, newInput, room, countryId) /( consumer_price_index(country, newInput, room, countryId) /100)
+    return parseFloat(result.toFixed(2))
 
 }
 function real_growth(country: CountryCluster, newInput: InputValue, room: Room, countryId:number){
     const result = (country.other_value.real_gdp - real_gdp(country, newInput, room, countryId)) / country.other_value.real_gdp * 100
+    if(result < 0) return 0
     return parseFloat(result.toFixed(2))
 
 }
@@ -214,17 +208,22 @@ function supply(country:CountryCluster, newInput: InputValue){
 }  
 
 // ! Code Inflation formula
-function inflation_function () {
-    return 0
+function inflation_function (country:CountryCluster, newInput: InputValue, room: Room, countryId: number) {
+    const result = (country.other_value.consumer_price_index - consumer_price_index(country,newInput, room, countryId))/country.other_value.consumer_price_index * 100
+    if(result<0) return 0
+
+    return parseFloat(result.toFixed(2))
 }
 // ! Code Unemployment formula
-function unemployment_function () {
-    return 0
+function unemployment_function (country:CountryCluster) {
+    const result = country.preset_value.unemployment + 0.25 * (country.other_value.real - country.preset_value.inflation)
+    if(result<0) return 0
+    return parseFloat(result.toFixed(2))
 }
 
 function consumer_price_index (country:CountryCluster, newInput: InputValue, room: Room, countryId: number){
     const demand_over_supply = (((demand(country, newInput, room, countryId) - country.other_value.demand)/(supply(country, newInput) - country.other_value.supply)) - 1) * country.elasticity.impact_of_supply_and_demand_change_on_inflation + 1
-    const f_t_1 = 1 + ((country.preset_value.inflation + inflation_function())/2) * (country.elasticity.impact_of_inflation_expectation_on_inflation/100)
+    const f_t_1 = 1 + ((country.preset_value.inflation)/2) * (country.elasticity.impact_of_inflation_expectation_on_inflation/100)
     const interest_rate_calculation = 1 - (newInput.interest_rate - country.input_value.interest_rate * country.elasticity.impact_of_interest_rate_on_inflation/100)
     const final_result = demand_over_supply * f_t_1 * interest_rate_calculation
     return parseFloat(final_result.toFixed(2))
@@ -252,16 +251,18 @@ function updateCountry(room : Room, userInput: Array<UserInput>): Room {
     updatedRoom.team.forEach(team => {
         const cloneCluster = team.country.cluster
         const newInput = userInput.find(i => parseFloat(team.country.country_id) === i.name)!
+        console.log(newInput)
         //Calculate other_value
-        console.log(cloneCluster.preset_value.initial_consumption)
-        cloneCluster.preset_value = {
+        team.country.cluster.preset_value = {
             ...cloneCluster.preset_value,
             initial_consumption: consumption_pre_tax(cloneCluster, newInput.input),
             initial_investment: investment_pre_tax(cloneCluster, newInput.input),
-            initial_capital_stock: capital_stock(cloneCluster, newInput.input)
+            initial_capital_stock: capital_stock(cloneCluster, newInput.input),
+            inflation: inflation_function(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            unemployment: unemployment_function(cloneCluster)
         }
         // console.log(team.country.cluster.preset_value.initial_consumption)
-        cloneCluster.other_value = {
+        team.country.cluster.other_value = {
         consumption: consumption(cloneCluster, newInput.input),
         investment: investment(cloneCluster, newInput.input), 
         demand: demand(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
@@ -291,8 +292,6 @@ function updateCountry(room : Room, userInput: Array<UserInput>): Room {
         }
     })
 
-
-    console.log(updatedRoom.team[1])
   return updatedRoom
 }
 
