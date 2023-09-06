@@ -208,18 +208,18 @@ const RoomHost: React.FC = () => {
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
     const gameData = docSnap.data();
+    
     if (gameData && gameData.status < 7){
     //todo generate new room here
       // console.log(await getRoomValue())
-      const required_value_to_updateRoom: any = await getRoomValue()
-      const newInputs = required_value_to_updateRoom.input.map((e: { team: any; input: any; }) => {
-        return {
-          name: e.team,
-          input: e.input,
-        }
-      })
-
-      console.log(useUpdateRoom(required_value_to_updateRoom.room,newInputs))
+      // const required_value_to_updateRoom: any = await getRoomValue()
+      // const newInputs = required_value_to_updateRoom.input.map((e: { team: any; input: any; }) => {
+      //   return {
+      //     name: e.team,
+      //     input: e.input,
+      //   }
+      // })
+      await getRoomValue()
       setNumbTeams(gameData.room_size)
       await updateDoc(docRef, {
         round: gameData.round + 1
@@ -231,20 +231,24 @@ const RoomHost: React.FC = () => {
   const getRoomValue = async () => {
     const docRef = doc(db, "rooms", params.split("room=")[1]);
     const docSnap = await getDoc(docRef);
-    const gameData = docSnap.data();
+    const gameData:any = docSnap.data();
     let data = {}
     if (gameData) {
       const inputRef = doc(db, "rounds", params.split("room=")[1] + "-" + gameData.round);
       const inputSnap = await getDoc(inputRef);
       const inputData = inputSnap.data();
       if(inputData) {
-        data = {...data,
-          room: gameData,
-          input: inputData.input,
-        }
+        const newInputs = inputData.input.map((e: { team: any; input: any; }) => {
+          return {
+            name: e.team,
+            input: e.input,
+          }
+
+        })
+        
+        console.log("New Value: ",useUpdateRoom(gameData, newInputs).team[0].country.cluster.preset_value.initial_consumption)
       }
     }
-    return data
   }
 
   const updateTurn = async (teams: number) => {

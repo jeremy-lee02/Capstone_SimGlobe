@@ -73,6 +73,7 @@ const CurrentEconomy = ({country}: Props) => {
             <li className="mb-2 font-semibold" >Nominal GDP: <span className="font-normal">{country.other_value.nominal}</span></li>
             <li className="mb-2 font-semibold" >Real GDP: <span className="font-normal">{country.other_value.real}</span></li>
             <li className="mb-2 font-semibold" >Unemployment Rate: <span className="font-normal">{country.preset_value.unemployment}</span></li>
+            <li className="mb-2 font-semibold" >Inflation Rate: <span className="font-normal">{country.preset_value.inflation}</span></li>
             {/* 2 values below has not finished */}
             <li className="mb-2 font-semibold" >Budget Surplus (Deficit) as % of GDP: <span className="font-normal">{country.other_value.budget_surplus_percent}</span></li>
             <li className="mb-2 font-semibold" >Government Debt as % of GDP: <span className="font-normal">{country.other_value.gov_debt}</span></li>

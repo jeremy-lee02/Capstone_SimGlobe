@@ -209,10 +209,13 @@ function supply(country:CountryCluster, newInput: InputValue){
 
 // ! Code Inflation formula
 function inflation_function (country:CountryCluster, newInput: InputValue, room: Room, countryId: number) {
-    const result = (country.other_value.consumer_price_index - consumer_price_index(country,newInput, room, countryId))/country.other_value.consumer_price_index * 100
-    if(result<0) return 0
+    if(consumer_price_index(country,newInput, room, countryId )){
+        const result = ((consumer_price_index(country,newInput, room, countryId )- country.other_value.consumer_price_index))/country.other_value.consumer_price_index * 100
+        if(result<0) return 0
+        return parseFloat(result.toFixed(2))
+    }
 
-    return parseFloat(result.toFixed(2))
+    return 0
 }
 // ! Code Unemployment formula
 function unemployment_function (country:CountryCluster) {
@@ -222,11 +225,18 @@ function unemployment_function (country:CountryCluster) {
 }
 
 function consumer_price_index (country:CountryCluster, newInput: InputValue, room: Room, countryId: number){
-    const demand_over_supply = (((demand(country, newInput, room, countryId) - country.other_value.demand)/(supply(country, newInput) - country.other_value.supply)) - 1) * country.elasticity.impact_of_supply_and_demand_change_on_inflation + 1
-    const f_t_1 = 1 + ((country.preset_value.inflation)/2) * (country.elasticity.impact_of_inflation_expectation_on_inflation/100)
-    const interest_rate_calculation = 1 - (newInput.interest_rate - country.input_value.interest_rate * country.elasticity.impact_of_interest_rate_on_inflation/100)
-    const final_result = demand_over_supply * f_t_1 * interest_rate_calculation
-    return parseFloat(final_result.toFixed(2))
+
+    if(demand(country, newInput, room, countryId) && supply(country, newInput)){
+        const demand_over_supply = (((demand(country, newInput, room, countryId) - country.other_value.demand)/(supply(country, newInput) - country.other_value.supply)) - 1) * country.elasticity.impact_of_supply_and_demand_change_on_inflation + 1
+        const f_t_1 = 1 + (country.preset_value.inflation) * (country.elasticity.impact_of_inflation_expectation_on_inflation/100)
+        const interest_rate_calculation = 1 - (newInput.interest_rate - country.input_value.interest_rate * country.elasticity.impact_of_interest_rate_on_inflation/100)
+        const final_result = demand_over_supply * f_t_1 * interest_rate_calculation
+    
+        return parseFloat(final_result.toFixed(2))
+
+    }
+    return 0
+
 }
 
 
@@ -240,18 +250,36 @@ function consumer_price_index (country:CountryCluster, newInput: InputValue, roo
 // }
 
 
+//Check country input value
+
+function check_input_value(team_id: number, userInput: Array<UserInput>, inputValue: InputValue): UserInput {
+    let newInput = {
+        name: 0,
+        input: inputValue
+    }
+    userInput.forEach(u => {
+        if(u.name === team_id) {
+            newInput = {...newInput,
+                name: u.name,
+                input: u.input
+            }
+        }
+    })
+    return newInput
+}
+
 
 // Calculate the rest value based on the preset value
 function updateCountry(room : Room, userInput: Array<UserInput>): Room {
     const updatedRoom: Room = {...room}
 
-
+    
     const calculatedGlobalInterestRate = global_interestRate(userInput);
     // Update room value
     updatedRoom.team.forEach(team => {
         const cloneCluster = team.country.cluster
-        const newInput = userInput.find(i => parseFloat(team.country.country_id) === i.name)!
-        console.log(newInput)
+
+        const newInput: UserInput = check_input_value(parseFloat(team.team_id) - 1, userInput, team.country.cluster.input_value)
         //Calculate other_value
         team.country.cluster.preset_value = {
             ...cloneCluster.preset_value,
@@ -261,37 +289,38 @@ function updateCountry(room : Room, userInput: Array<UserInput>): Room {
             inflation: inflation_function(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
             unemployment: unemployment_function(cloneCluster)
         }
-        // console.log(team.country.cluster.preset_value.initial_consumption)
-        team.country.cluster.other_value = {
-        consumption: consumption(cloneCluster, newInput.input),
-        investment: investment(cloneCluster, newInput.input), 
-        demand: demand(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        supply: supply(cloneCluster, newInput.input),
-        nominal: nominal_growth(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        real_gdp: real_gdp(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        capital_growth: capital_growth(cloneCluster, newInput.input),
-        labor: cloneCluster.other_value.labor + 1,
-        technological: cloneCluster.other_value.technological + 2,
-        consumer_price_index: consumer_price_index(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        income_tax: income_tax(cloneCluster, newInput.input),
-        corporate_tax: corporate_tax(cloneCluster, newInput.input),
-        tariff_revanue: tariff_revanue(cloneCluster, newInput.input),
-        gov_debt: govDebtUs(cloneCluster, newInput.input), 
-        debt_to_gdp: debt_to_gdp(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        exchage_rate: exchange_rate(cloneCluster, newInput.input, room, parseFloat(team.team_id), calculatedGlobalInterestRate),
-        export_value: export_value(room, parseFloat(team.team_id)),
-        import_value: import_value(cloneCluster, newInput.input),
-        import_preTariff: import_pre_tariff(cloneCluster, newInput.input),
-        trade_balance: trade_balance(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        net_capital: net_capital(cloneCluster, calculatedGlobalInterestRate, newInput.input),
-        global_interestRate: calculatedGlobalInterestRate,
-        budget_surplus_billion: budget_surplus_billion(cloneCluster, newInput.input),
-        budget_surplus_percent: budget_surplus_percent(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        nominal_gdp: nominal_gdp(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
-        real: real_growth(cloneCluster, newInput.input, room, parseFloat(team.team_id))
-        }
-    })
 
+        team.country.cluster.other_value = {
+            ...team.country.cluster.other_value,
+            consumption: consumption(cloneCluster, newInput.input),
+            investment: investment(cloneCluster, newInput.input), 
+            demand: demand(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            supply: supply(cloneCluster, newInput.input),
+            nominal: nominal_growth(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            real_gdp: real_gdp(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            capital_growth: capital_growth(cloneCluster, newInput.input),
+            labor: cloneCluster.other_value.labor + 1,
+            technological: cloneCluster.other_value.technological + 2,
+            consumer_price_index: consumer_price_index(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            income_tax: income_tax(cloneCluster, newInput.input),
+            corporate_tax: corporate_tax(cloneCluster, newInput.input),
+            tariff_revanue: tariff_revanue(cloneCluster, newInput.input),
+            gov_debt: govDebtUs(cloneCluster, newInput.input), 
+            debt_to_gdp: debt_to_gdp(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            exchage_rate: exchange_rate(cloneCluster, newInput.input, room, parseFloat(team.team_id), calculatedGlobalInterestRate),
+            export_value: export_value(room, parseFloat(team.team_id)),
+            import_value: import_value(cloneCluster, newInput.input),
+            import_preTariff: import_pre_tariff(cloneCluster, newInput.input),
+            trade_balance: trade_balance(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            net_capital: net_capital(cloneCluster, calculatedGlobalInterestRate, newInput.input),
+            global_interestRate: calculatedGlobalInterestRate,
+            budget_surplus_billion: budget_surplus_billion(cloneCluster, newInput.input),
+            budget_surplus_percent: budget_surplus_percent(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            nominal_gdp: nominal_gdp(cloneCluster, newInput.input, room, parseFloat(team.team_id)),
+            real: real_growth(cloneCluster, newInput.input, room, parseFloat(team.team_id))
+        }
+    })  
+    console.log("******** End Round Here **********")
   return updatedRoom
 }
 
