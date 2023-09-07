@@ -45,14 +45,14 @@ const GamePlay = (props: Props) => {
         // setRoomData(newRoom)
         // setTeam(newRoom.team[1])
     }
-
+    
     const checkTeam = () => {
         const joinTeam = sessionStorage.getItem('team')
         if (joinTeam && joinTeam !== teamCode) {
             navigate('/homestudent')
         }
     }
-    const checkStatusUser = async() => {
+    const checkStatusRound = async() => {
         if (roomCode) {
             const teamRef = doc(db, "rooms", roomCode);
             const teamSnap = await getDoc(teamRef);
@@ -66,6 +66,8 @@ const GamePlay = (props: Props) => {
                 }
                 if (gameInfo.round > round) {
                     setRound(gameInfo.round)
+        //             setTeam(gameInfo.team)
+        // console.log("new Team= ==== ", team)
                 }
             }
         }
@@ -73,11 +75,23 @@ const GamePlay = (props: Props) => {
 
     //Handle API logic here to get Team
     useEffect(()=>{
-        const statusOfRound = onSnapshot(doc(db, "rooms", params.split("room=")[1].split("&")[0]), (doc) => {
-            checkStatusUser();
+        const statusOfRound = onSnapshot(doc(db, "rooms", params.split("room=")[1].split("&")[0]), async (e) => {
+            await checkStatusRound();
+            if (roomCode) {
+                const teamRef = doc(db, "rooms", roomCode);
+                const teamSnap = await getDoc(teamRef);
+                const gameInfo = teamSnap.data();
+                
+                if (gameInfo && teamCode) {
+                    if (gameInfo.round > round) {
+                        setTeam(gameInfo.team[teamCode])
+                        console.log("new Team= ==== ", team)
+                    }
+                }
+            }
         });
         getValue();
-        checkStatusUser();
+        checkStatusRound();
         checkTeam();
     return statusOfRound
     },[])
