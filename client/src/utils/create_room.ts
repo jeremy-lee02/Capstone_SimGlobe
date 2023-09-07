@@ -1,6 +1,9 @@
+import { useEffect } from "react";
 import { Country, CountryCluster, Elasticity, Room, Team, ClusterScore, PresetValue } from "../../typing"
 
 import { input1,  input2,  input3 } from "./inputs";
+import { doc, getDoc } from "firebase/firestore";
+import db from "../firebase";
 
 
 const country_template : Country = {
@@ -99,6 +102,14 @@ const country_template : Country = {
     },
       
 }
+
+const getElasticity = async () => {
+    const docRef = doc(db, "setting", "settingGeneral");
+    const docSnap = await getDoc(docRef);
+    const settingData = docSnap.data();
+    console.log(settingData)
+    return settingData
+} 
 
 const elasticities_template: Elasticity = {
     perpetual_growth: 1,
@@ -364,6 +375,7 @@ function set_input (cluster: CountryCluster) : CountryCluster {
 export function create_new_room (countries: Array<string>, rules:{[key: string]: ClusterScore}, presets: {[key: string]: PresetValue}): Room  {
     let team: Array<Team> = []
     let id = 1
+    getElasticity();
     countries.forEach(c => {
         const newTeam: Team = {
             team_id: id.toFixed(0),
