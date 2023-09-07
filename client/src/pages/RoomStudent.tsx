@@ -105,10 +105,6 @@ const RoomStudent: React.FC = () => {
     const teamData = docSnap.data();
     if(teamData) {
       const oldMap = teamData.team
-      const updatedTeam = [...teamData.team[teamNum].user]
-      updatedTeam.push(userInfo)
-      const updatedDevice = [...teamData.team[teamNum].device]
-      updatedDevice.push(deviceInfo)
       oldMap[teamNum].device.push(deviceInfo)
       oldMap[teamNum].user.push(userInfo)
       await updateDoc(docRef, {

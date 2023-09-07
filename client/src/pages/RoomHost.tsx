@@ -4,19 +4,19 @@ import DeleteIcon from '../components/icons/DeleteIcon';
 import "../index.css"
 import Logo from '../components/Logo';
 import Username from '../components/Username';
-import { doc, getDoc, onSnapshot, query, updateDoc, where, collection } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, query, updateDoc, where, collection, setDoc } from 'firebase/firestore';
 import db from '../firebase';
 import { useUpdateRoom } from '../utils/economic';
-import { Room } from '../../typing';
+import { Team } from '../../typing';
 
-type Team = {
+type TeamLocal = {
   teamNumber: number;
   teamMembers: number;
 };
 
 const RoomHost: React.FC = () => {
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [numberOfTeams, setNumbTeams] = useState(0)
+  const [teams, setTeams] = useState<TeamLocal[]>([]);
+  const [updatedTeam, setUpdatedTeam] = useState<Team[]>([]);
   const handleDeleteRoom = () => {
     // Handle delete room functionality here
   };
@@ -125,25 +125,12 @@ const RoomHost: React.FC = () => {
     const docSnap = await getDoc(docRef);
     if(docSnap.exists()) {
       const teamData = docSnap.data();
-      const newTeams: Team[] = [];
+      const newTeams: TeamLocal[] = [];
       for ( let j = 0; j <  teamData.team.length; j++) {
           newTeams.push({ teamNumber: j, teamMembers: teamData.team[j].user.length });
       }
       setTeams(newTeams)
     }
-  }
-
-  const getTeamMembers = async (roomCode: string, roomSize: number) => {
-    const newTeams: Team[] = [];
-    for ( let j = 1; j < roomSize+1; j++) {
-      const teamRef = doc(db, "teams", roomCode + "-" + j.toString());
-      const teamSnap = await getDoc(teamRef);
-      if (teamSnap.exists()) {
-        const teamData = teamSnap.data();
-        newTeams.push({ teamNumber: j, teamMembers: teamData.userList.length });
-      }
-    }
-    setTeams(newTeams)
   }
 
   const updateGame = async () => {
@@ -219,11 +206,12 @@ const RoomHost: React.FC = () => {
       //     input: e.input,
       //   }
       // })
-      await getRoomValue()
-      setNumbTeams(gameData.room_size)
-      await updateDoc(docRef, {
-        round: gameData.round + 1
-      })
+      await getRoomValue();
+      setTimeout( async() => {
+        await updateDoc(docRef, {
+          round: gameData.round + 1,
+        })
+      }, 1000)
     }
   }
 
@@ -245,8 +233,11 @@ const RoomHost: React.FC = () => {
           }
 
         })
-        
-        console.log("New Value: ",useUpdateRoom(gameData, newInputs).team[0].country.cluster.preset_value.initial_consumption)
+        const value = useUpdateRoom(gameData, newInputs);
+        setTimeout( async ()=> {
+          await setDoc(doc(db, "rooms", params.split("room=")[1]), value);
+        }, 1000)
+        console.log("New Value: ",value.team)
       }
     }
   }
