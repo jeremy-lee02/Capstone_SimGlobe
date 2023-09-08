@@ -110,7 +110,8 @@ const Administrator: React.FC = () => {
               <div key={index} className="flex justify-between items-center py-2">
                 <p className="text-white">{data.label}</p>
                 <input
-                  type="text"
+                  type="number"
+                  step={0.1}
                   className="bg-gray-800 rounded p-2 w-16 text-white text-center"
                   value={data.value}
                   onChange={(e) => {

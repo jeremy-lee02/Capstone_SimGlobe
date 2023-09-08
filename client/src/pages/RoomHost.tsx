@@ -6,7 +6,7 @@ import Logo from '../components/Logo';
 import Username from '../components/Username';
 import { doc, getDoc, onSnapshot, query, updateDoc, where, collection, setDoc } from 'firebase/firestore';
 import db from '../firebase';
-import { useUpdateRoom } from '../utils/economic';
+import { updateCountry } from '../utils/economic';
 import { Team } from '../../typing';
 
 type TeamLocal = {
@@ -20,7 +20,6 @@ const RoomHost: React.FC = () => {
   const handleDeleteRoom = () => {
     // Handle delete room functionality here
   };
-
  
   const [remainingTime, setRemainingTime] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
   const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout | null>(null);
@@ -193,20 +192,15 @@ const RoomHost: React.FC = () => {
 
   const updateRound = async () => {
     const docRef = doc(db, "rooms", params.split("room=")[1]);
-    const docSnap = await getDoc(docRef);
+    const docSnap:any = await getDoc(docRef);
     const gameData = docSnap.data();
-    
     if (gameData && gameData.status < 7){
-    //todo generate new room here
-      // console.log(await getRoomValue())
-      // const required_value_to_updateRoom: any = await getRoomValue()
-      // const newInputs = required_value_to_updateRoom.input.map((e: { team: any; input: any; }) => {
-      //   return {
-      //     name: e.team,
-      //     input: e.input,
-      //   }
-      // })
-      await getRoomValue();
+      //todo generate new room here
+      const newInputs = await getRoomValue(docSnap.data())
+      const value = updateCountry(gameData, newInputs);
+      setTimeout( async ()=> {
+        await setDoc(doc(db, "rooms", params.split("room=")[1]), value);
+      }, 1000)
       setTimeout( async() => {
         await updateDoc(docRef, {
           round: gameData.round + 1,
@@ -216,29 +210,19 @@ const RoomHost: React.FC = () => {
   }
 
   //todo 
-  const getRoomValue = async () => {
-    const docRef = doc(db, "rooms", params.split("room=")[1]);
-    const docSnap = await getDoc(docRef);
-    const gameData:any = docSnap.data();
-    let data = {}
-    if (gameData) {
-      const inputRef = doc(db, "rounds", params.split("room=")[1] + "-" + gameData.round);
-      const inputSnap = await getDoc(inputRef);
-      const inputData = inputSnap.data();
-      if(inputData) {
-        const newInputs = inputData.input.map((e: { team: any; input: any; }) => {
-          return {
-            name: e.team,
-            input: e.input,
-          }
-
-        })
-        const value = useUpdateRoom(gameData, newInputs);
-        setTimeout( async ()=> {
-          await setDoc(doc(db, "rooms", params.split("room=")[1]), value);
-        }, 1000)
-        console.log("New Value: ",value.team)
-      }
+  const getRoomValue = async (gameData: any) => {
+    console.log(gameData.team)
+    const inputRef = doc(db, "rounds", params.split("room=")[1] + "-" + gameData.round);
+    const inputSnap = await getDoc(inputRef);
+    const inputData = inputSnap.data();
+    if(inputData) {
+      const newInputs = inputData.input.map((e: { team: any; input: any; }) => {
+        return {
+          name: e.team,
+          input: e.input,
+        }
+      })
+      return newInputs
     }
   }
 
