@@ -48,7 +48,8 @@ export interface PresetValue {
     impact_of_real_gdp_on_unemployment: number,
     portion_of_gdp_as_induced_import: number,
     unemployment: number, 
-    inflation: number
+    inflation: number,
+    
 }
 
 export interface Elasticity {
@@ -96,7 +97,12 @@ export interface OtherValue {
     budget_surplus_billion: number,
     budget_surplus_percent: number,
     nominal_gdp: number,
-    real:number
+    real:number,
+    consumption_pre_tax: number,
+    investment_pre_tax: number,
+    unemployment: number,
+    inflation: number, 
+    capital_stock: number
 }
 
 export interface InputValue {

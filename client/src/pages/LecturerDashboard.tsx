@@ -9,6 +9,7 @@ import ArrowSelectIcon from '../components/icons/ArrowSelectIcon'
 import GameRules from '../components/dashboard/GameRules'
 import axios from 'axios'
 
+
 function LecturerDashboard() {
 const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
 const [selectedLecturerOption, setSelectedLecturerOption] = useState("rules");
@@ -52,7 +53,8 @@ const renderComponent = () => {
     } else {
       return null;
     }
-  };
+};
+
   return (
     <div className="relative h-screen bg-gray-600">
         <div className="bg-gray-900 h-full">
@@ -106,7 +108,7 @@ const renderComponent = () => {
             <div className="flex w-screen h-[10%] justify-between items-center pl-60 pr-10 absolute">
         {/* Username */}
                 <div className="flex flex-col">
-                    <h1 className="text-gray-300" >{"Welcome"}</h1>
+                    <h1 className="text-gray-300">{"Welcome"}</h1>
                     <h1 className="text-lg text-white font-semibold" >{name}</h1>
                 </div>
         {/* Searchbar */}

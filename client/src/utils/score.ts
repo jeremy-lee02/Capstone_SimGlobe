@@ -182,14 +182,14 @@ export const score9: ClusterScore = {
 //     return team.score + score_gdp + score_budget+ score_inflation + score_unemployment
 // }
 
-export function gpd (value: number, min: number, max: number): number {
+export function gpd_score (value: number, min: number, max: number): number {
     if(value >= max) return 25
     if(value <= min) return 0
     const value_percent = (value - min) / (max - min)
     const final_score = value_percent * 25
     return parseFloat(final_score.toFixed(1))
 }
-export function unemployment (value: number, min: number, max: number): number {
+export function unemployment_score (value: number, min: number, max: number): number {
     if(value >= max) return 0
     if(value <= min) return 25
     const value_percent = (value - min) / (max - min)
@@ -197,14 +197,14 @@ export function unemployment (value: number, min: number, max: number): number {
     return parseFloat((25 - final_score).toFixed(1))
 }
 
-export function budget(value: number, min: number, max: number): number {
+export function budget_score(value: number, min: number, max: number): number {
     if(value >= max) return 25
     if(value <= min) return 0
     const value_percent = (value - min) / (max - min)
     const final_score = value_percent * 25
     return parseFloat(final_score.toFixed(1))
 }
-export function inflation(value: number, min: number, max: number, second_min: number): number {
+export function inflation_score(value: number, min: number, max: number, second_min: number): number {
     if(value >= max) return 0
     if(value === min) return 25
     if(value <= second_min) return 0

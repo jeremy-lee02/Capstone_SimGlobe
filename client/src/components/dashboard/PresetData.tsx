@@ -6,6 +6,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
 import gameContext from '../../gameContext';
+import { doc, getDoc } from "firebase/firestore";
+import db from "../../firebase";
 
 const selectedBoxStyle = "bg-[#282C35] bg- border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
 const optionBoxStyle = "dropdown-option bg-gray-700 border border-gray-300 rounded p-2 w-60 max-w-full text-white text-center";
@@ -77,14 +79,23 @@ const PresetData: React.FC<{ onMoveTocountriesSelect: () => void }> = ({ onMoveT
     const navigate = useNavigate();
     const populations = ['BIG', 'MEDIUM', 'SMALL'];
     const gdps = ['BIG', 'MEDIUM', 'SMALL'];
+
+    const getElasticity = async () => {
+      const docRef = doc(db, "setting", "settingGeneral");
+      const docSnap = await getDoc(docRef);
+      const settingData = docSnap.data();
+      return settingData
+    } 
+
     
-    const handleSaveChanges = () => {
+    const handleSaveChanges = async () => {
       const countries: Array<string> = JSON.parse(localStorage.getItem("countries")|| "[]")
       const rules = JSON.parse(localStorage.getItem("rules")|| "{}")
       const presets = JSON.parse(localStorage.getItem("presets")|| "{}")
-      const room = finalizeRoom(countries, rules, presets)
+      const value  = await getElasticity()
+      const room = finalizeRoom(countries, rules, presets, value)
       localStorage.setItem("room", JSON.stringify(room)) // Replace set value to local storage by calling API to create room
-      handleCreateRoom(finalizeRoom(countries, rules, presets))
+      handleCreateRoom(finalizeRoom(countries, rules, presets, value))
     };
     const handlePopulationChange = (value: string) => {
       setSelectedPopulation(value);
