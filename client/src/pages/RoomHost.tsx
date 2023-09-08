@@ -198,6 +198,9 @@ const RoomHost: React.FC = () => {
       //todo generate new room here
       const newInputs = await getRoomValue(docSnap.data())
       const value = updateCountry(gameData, newInputs);
+      //console log update team value + score
+      console.log(`Updated team value: ${value.team}`)
+      console.log(`Updated team score: ${value.team[0].score}`)
       setTimeout( async ()=> {
         await setDoc(doc(db, "rooms", params.split("room=")[1]), value);
       }, 1000)
@@ -211,7 +214,6 @@ const RoomHost: React.FC = () => {
 
   //todo 
   const getRoomValue = async (gameData: any) => {
-    console.log(gameData.team)
     const inputRef = doc(db, "rounds", params.split("room=")[1] + "-" + gameData.round);
     const inputSnap = await getDoc(inputRef);
     const inputData = inputSnap.data();
