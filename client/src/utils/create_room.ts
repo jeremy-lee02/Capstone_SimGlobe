@@ -1,6 +1,9 @@
+import { useEffect } from "react";
 import { Country, CountryCluster, Elasticity, Room, Team, ClusterScore, PresetValue } from "../../typing"
 
 import { input1,  input2,  input3 } from "./inputs";
+import { doc, getDoc } from "firebase/firestore";
+import db from "../firebase";
 
 
 
@@ -105,7 +108,6 @@ const country_template : Country = {
     },
       
 }
-
 
 
 const countryGroups = [
