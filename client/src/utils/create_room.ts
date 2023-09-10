@@ -403,7 +403,7 @@ export function create_new_room (countries: Array<string>, rules:{[key: string]:
     })
 
     const room : Room = {
-        team: team, // After finished the above logic, replace this array to team 
+        team: team,
         status: false,
         round: 1,
         room_size: countries.length,
@@ -452,6 +452,8 @@ function calculate_initial_value(room : Room): Room {
           capital_stock: team.country.cluster.preset_value.initial_capital_stock
         }
     })
+
+    
     return updatedRoom
 }
 
