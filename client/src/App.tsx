@@ -39,10 +39,11 @@ function App() {
       <Routes>
         //Lecture
         <Route path="/login" element={<Login/>}/>
-        <Route path="/roomhost/:room" element={
+        <Route path="/roomhost" element={<RoomHost/>}/>
+        {/* <Route path="/roomhost/:room" element={
           <RequireAuth loginPath={'/login'}>
             <RoomHost />
-          </RequireAuth>} />
+          </RequireAuth>} /> */}
         <Route path="/" element={
           <RequireAuth loginPath={'/login'}>
             <LecturerDashboard />
