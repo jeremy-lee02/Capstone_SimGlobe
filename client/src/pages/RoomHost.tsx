@@ -8,6 +8,7 @@ import { doc, getDoc, onSnapshot, query, updateDoc, where, collection, setDoc } 
 import db from '../firebase';
 import { updateCountry } from '../utils/economic';
 import { Team } from '../../typing';
+import toast from 'react-hot-toast';
 
 type TeamLocal = {
   teamNumber: number;
@@ -20,69 +21,14 @@ const RoomHost: React.FC = () => {
   const handleDeleteRoom = () => {
     // Handle delete room functionality here
   };
- 
-  const [remainingTime, setRemainingTime] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
-  const [remainingTime1, setRemainingTime1] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
-  const [isRunning, setIsRunning] = useState(false);
-  const rounds = useRef(0);
-  const cycles = useRef(8);
 
-    if(isRunning){
-      setTimeout(()=>{
-        const { days, hours, minutes, seconds } = remainingTime;
-            let updatedSeconds = parseInt(seconds, 10) - 1;
-            let updatedMinutes = parseInt(minutes, 10);
-            let updatedHours = parseInt(hours, 10);
-            let updatedDays = parseInt(days, 10);
-  
-            if (updatedSeconds < 0) {
-              updatedSeconds = 59;
-              updatedMinutes -= 1;
-            }
-            if (updatedMinutes < 0) {
-              updatedMinutes = 59;
-              updatedHours -= 1;
-            }
-            if (updatedHours < 0) {
-              updatedHours = 23;
-              if(updatedDays === 0){
-                updatedDays = 0
-              }else{
-                updatedDays -= 1;
-              }
-              
-            }
-            if (updatedDays === 0 && updatedHours === 0 && updatedMinutes === 0 && updatedSeconds === 0) {
-              updatedDays = parseInt(remainingTime1.days, 10);
-              updatedHours = parseInt(remainingTime1.hours, 10);
-              updatedMinutes = parseInt(remainingTime1.minutes, 10);
-              updatedSeconds = parseInt(remainingTime1.seconds, 10);
-              setRemainingTime(
-                {
-                  days: updatedDays.toString().padStart(2, '0'),
-                  hours: updatedHours.toString().padStart(2, '0'),
-                  minutes: updatedMinutes.toString().padStart(2, '0'),
-                  seconds: updatedSeconds.toString().padStart(2, '0'),
-                }
-              )
-              rounds.current++;
-              cycles.current--;
-              console.log("Round",rounds)
-              setIsRunning(false);
-            }
-            else {
-              setRemainingTime(
-                {
-                  days: updatedDays.toString().padStart(2, '0'),
-                  hours: updatedHours.toString().padStart(2, '0'),
-                  minutes: updatedMinutes.toString().padStart(2, '0'),
-                  seconds: updatedSeconds.toString().padStart(2, '0'),
-                }
-              )
-            }
-            
-      },1000)
-    }
+  const initialRemainingTime = { days: '00', hours: '00', minutes: '00', seconds: '00' };
+  const [remainingTime, setRemainingTime] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
+  const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout | null>(null);
+  const [isRunning, setIsRunning] = useState(false); // Set to false initially
+  const [cyclesRemaining, setCyclesRemaining] = useState(7);
+  const [rounds, setRounds] = useState(1);
+  // Function to handle number changes
   const handleNumberChange = (field: string, value: number) => {
     let adjustedValue = value;
   
@@ -90,10 +36,6 @@ const RoomHost: React.FC = () => {
       adjustedValue = Math.min(value, 31);
       adjustedValue = Math.max(adjustedValue, 0);
       setRemainingTime((prevState) => ({
-        ...prevState,
-        days: adjustedValue.toString().padStart(2, '0'),
-      }));
-      setRemainingTime1((prevState) => ({
         ...prevState,
         days: adjustedValue.toString().padStart(2, '0'),
       }));
@@ -106,11 +48,7 @@ const RoomHost: React.FC = () => {
         ...prevState,
         hours: adjustedValue.toString().padStart(2, '0'),
       }));
-      setRemainingTime1((prevState) => ({
-        ...prevState,
-        hours: adjustedValue.toString().padStart(2, '0'),
-      }));
-
+      
     } else if (field === 'minutes') {
       adjustedValue = Math.min(value, 60);
       adjustedValue = Math.max(adjustedValue, 0);
@@ -118,10 +56,7 @@ const RoomHost: React.FC = () => {
         ...prevState,
         minutes: adjustedValue.toString().padStart(2, '0'),
       }));
-      setRemainingTime1((prevState) => ({
-        ...prevState,
-        minutes: adjustedValue.toString().padStart(2, '0'),
-      }));
+      
     
     } else if (field === 'seconds') {
       adjustedValue = Math.min(value, 60);
@@ -130,12 +65,83 @@ const RoomHost: React.FC = () => {
         ...prevState,
         seconds: adjustedValue.toString().padStart(2, '0'),
       }));
-      setRemainingTime1((prevState) => ({
-        ...prevState,
-        seconds: adjustedValue.toString().padStart(2, '0'),
-      }));
     }
   };
+
+  // Function to start the countdown
+  const startCountdown = () => {
+    toast("Starting round "+ rounds);
+    const initialCountdownValues = {
+      days: remainingTime.days,
+      hours: remainingTime.hours,
+      minutes: remainingTime.minutes,
+      seconds: remainingTime.seconds,
+    };
+    setIsRunning(true); // Set the countdown to running
+    // Calculate the total time in seconds
+    let totalSeconds =
+      parseInt(remainingTime.days) * 24 * 60 * 60 +
+      parseInt(remainingTime.hours) * 60 * 60 +
+      parseInt(remainingTime.minutes) * 60 +
+      parseInt(remainingTime.seconds);
+
+    // Create a countdown timer
+    const interval = setInterval(() => {
+      if (totalSeconds > 0) {
+        // Update the remaining time
+        const days = Math.floor(totalSeconds / (24 * 60 * 60));
+        const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+        const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const seconds = totalSeconds % 60;
+
+        setRemainingTime({
+          days: days.toString().padStart(2, '0'),
+          hours: hours.toString().padStart(2, '0'),
+          minutes: minutes.toString().padStart(2, '0'),
+          seconds: seconds.toString().padStart(2, '0'),
+        });
+
+        totalSeconds -= 1;
+      } else {
+        setRemainingTime(initialRemainingTime);
+        clearInterval(interval); // Clear the interval when the countdown reaches 0
+        setIsRunning(false); // Set the countdown to not running
+        // Reduce the remaining cycles and check if there are more to go
+        setCyclesRemaining((cycles) => cycles - 1);
+        setRounds((rounds)=> rounds + 1);
+        updateInput();
+        if (cyclesRemaining > 0) {
+            toast("Cooldown starts!");
+            toast.success("Finish round " + rounds);
+            
+            
+          // Set a 10-second cooldown and start the next cycle
+          setTimeout(() => {
+            setRemainingTime(initialCountdownValues);
+            setIsRunning(true);
+          }, 10000);
+        } else {
+          // All cycles are completed
+          toast("Game Over!");
+          toast("All rounds has finished!");
+          
+        }
+      }
+    }, 1000);
+
+    setCountdownInterval(interval);
+  };
+
+  // Function to stop the countdown
+  const stopCountdown = () => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+    }
+    setIsRunning(false);
+  };
+
+
+
   const params = window.location.href;
 
   const getTeamList = async () => {
@@ -278,10 +284,18 @@ const RoomHost: React.FC = () => {
     return () => {
       realTimeGameStatus;
       // Clear any active timers when the component unmounts
-      
+
     };
   });
 
+    // Start the countdown when isRunning becomes true
+    useEffect(() => {
+      if (isRunning) {
+        startCountdown();
+      } else {
+        stopCountdown();
+      }
+    }, [isRunning]);
   type Username = {
     name: string;
   }
@@ -368,9 +382,9 @@ const RoomHost: React.FC = () => {
         <div className="flex items-center mt-4">
               <button
                   className="bg-green-500 text-white rounded-lg p-3 shadow-lg border border-green-500 hover:bg-white hover:text-green-500 transition-colors"
-                  onClick={()=> {
-                    setIsRunning(!isRunning);
-                  }}
+                  onClick={() => {
+                    updateGame();
+                    setIsRunning(prev => !prev)}}
               >
                   <span className="font-bold">Start Game</span>
               </button>
