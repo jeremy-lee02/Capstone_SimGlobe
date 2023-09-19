@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect} from 'react';
 import TeamCard from '../components/TeamCard';
 import DeleteIcon from '../components/icons/DeleteIcon';
 import "../index.css"
@@ -22,14 +22,20 @@ const RoomHost: React.FC = () => {
   };
  
   const [remainingTime, setRemainingTime] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
-  const [remainingTime1, setRemainingTime1] = useState({ days: '00', hours: '00', minutes: '00', seconds: '00' });
-  const [isRunning, setIsRunning] = useState(false);
-  const rounds = useRef(0);
-  const cycles = useRef(8);
-
-    if(isRunning){
-      setTimeout(()=>{
-        const { days, hours, minutes, seconds } = remainingTime;
+  const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout | null>(null);
+  let rounds = 0;
+  let cycle = 7;
+  const handleStartGame = () => {
+    updateGame();
+    const initialCountdownValues = {
+      days: remainingTime.days,
+      hours: remainingTime.hours,
+      minutes: remainingTime.minutes,
+      seconds: remainingTime.seconds,
+    };
+    const intervalId = setInterval(() => {
+          setRemainingTime((prevState) => {
+            const { days, hours, minutes, seconds } = prevState;
             let updatedSeconds = parseInt(seconds, 10) - 1;
             let updatedMinutes = parseInt(minutes, 10);
             let updatedHours = parseInt(hours, 10);
@@ -53,36 +59,31 @@ const RoomHost: React.FC = () => {
               
             }
             if (updatedDays === 0 && updatedHours === 0 && updatedMinutes === 0 && updatedSeconds === 0) {
-              updatedDays = parseInt(remainingTime1.days, 10);
-              updatedHours = parseInt(remainingTime1.hours, 10);
-              updatedMinutes = parseInt(remainingTime1.minutes, 10);
-              updatedSeconds = parseInt(remainingTime1.seconds, 10);
-              setRemainingTime(
-                {
-                  days: updatedDays.toString().padStart(2, '0'),
-                  hours: updatedHours.toString().padStart(2, '0'),
-                  minutes: updatedMinutes.toString().padStart(2, '0'),
-                  seconds: updatedSeconds.toString().padStart(2, '0'),
-                }
-              )
-              rounds.current++;
-              cycles.current--;
-              console.log("Round",rounds)
-              setIsRunning(false);
+              if (cycle === 0) {
+                clearInterval(intervalId);
+                setCountdownInterval(null);
+              } else {
+                updatedDays = parseInt(initialCountdownValues.days, 10);
+                updatedHours = parseInt(initialCountdownValues.hours, 10);
+                updatedMinutes = parseInt(initialCountdownValues.minutes, 10);
+                updatedSeconds = parseInt(initialCountdownValues.seconds, 10);
+
+                rounds += 1;
+                cycle -=1;
+                updateInput();
+              }
             }
-            else {
-              setRemainingTime(
-                {
-                  days: updatedDays.toString().padStart(2, '0'),
-                  hours: updatedHours.toString().padStart(2, '0'),
-                  minutes: updatedMinutes.toString().padStart(2, '0'),
-                  seconds: updatedSeconds.toString().padStart(2, '0'),
-                }
-              )
-            }
-            
-      },1000)
-    }
+              return {
+                days: updatedDays.toString().padStart(2, '0'),
+                hours: updatedHours.toString().padStart(2, '0'),
+                minutes: updatedMinutes.toString().padStart(2, '0'),
+                seconds: updatedSeconds.toString().padStart(2, '0'),
+              };
+          });
+        }, 1000)
+        setCountdownInterval(intervalId);
+  };
+
   const handleNumberChange = (field: string, value: number) => {
     let adjustedValue = value;
   
@@ -93,12 +94,6 @@ const RoomHost: React.FC = () => {
         ...prevState,
         days: adjustedValue.toString().padStart(2, '0'),
       }));
-      setRemainingTime1((prevState) => ({
-        ...prevState,
-        days: adjustedValue.toString().padStart(2, '0'),
-      }));
-  
-
     } else if (field === 'hours') {
       adjustedValue = Math.min(value, 24);
       adjustedValue = Math.max(adjustedValue, 0);
@@ -106,11 +101,6 @@ const RoomHost: React.FC = () => {
         ...prevState,
         hours: adjustedValue.toString().padStart(2, '0'),
       }));
-      setRemainingTime1((prevState) => ({
-        ...prevState,
-        hours: adjustedValue.toString().padStart(2, '0'),
-      }));
-
     } else if (field === 'minutes') {
       adjustedValue = Math.min(value, 60);
       adjustedValue = Math.max(adjustedValue, 0);
@@ -118,19 +108,10 @@ const RoomHost: React.FC = () => {
         ...prevState,
         minutes: adjustedValue.toString().padStart(2, '0'),
       }));
-      setRemainingTime1((prevState) => ({
-        ...prevState,
-        minutes: adjustedValue.toString().padStart(2, '0'),
-      }));
-    
     } else if (field === 'seconds') {
       adjustedValue = Math.min(value, 60);
       adjustedValue = Math.max(adjustedValue, 0);
       setRemainingTime((prevState) => ({
-        ...prevState,
-        seconds: adjustedValue.toString().padStart(2, '0'),
-      }));
-      setRemainingTime1((prevState) => ({
         ...prevState,
         seconds: adjustedValue.toString().padStart(2, '0'),
       }));
@@ -278,9 +259,9 @@ const RoomHost: React.FC = () => {
     return () => {
       realTimeGameStatus;
       // Clear any active timers when the component unmounts
-      
+      clearInterval(countdownInterval!);
     };
-  });
+  }, [countdownInterval]);
 
   type Username = {
     name: string;
@@ -368,9 +349,7 @@ const RoomHost: React.FC = () => {
         <div className="flex items-center mt-4">
               <button
                   className="bg-green-500 text-white rounded-lg p-3 shadow-lg border border-green-500 hover:bg-white hover:text-green-500 transition-colors"
-                  onClick={()=> {
-                    setIsRunning(!isRunning);
-                  }}
+                  onClick={handleStartGame}
               >
                   <span className="font-bold">Start Game</span>
               </button>
