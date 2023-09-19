@@ -1,4 +1,5 @@
 import React from 'react'
+import { country_logo } from '../assets/logo';
 
 type RankingProp = {
   teamRank: string;
@@ -15,7 +16,8 @@ const Ranking: React.FC<RankingProp> = ({
         {/* <h1 className='text-2xl font-semibold text-white'> {teamRank} </h1> */}
         <div className='flex items-center justify-start pl-4 w-[35vw] h-16 bg-[#282C35] rounded-lg gap-6 relative'>
           <div className='w-[70px] h-[45px] bg-white rounded-xl'>
-            {/* Countries Flag images */}
+            <img src={country_logo(countryName)} alt="Country Img" />
+            {/* <countryName country={countryName}/>  */}
           </div>
           <h1 className='text-xl font-semibold text-white' >{countryName}</h1>
           <h1 className='absolute right-2 text-[#D2D2D2] text-lg '>{points}{"pts"} </h1>

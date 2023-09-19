@@ -19,12 +19,12 @@ function RankingModal(props: Props) {
       <div className='flex justify-center items-center 2xl:max-h-[80vh] max-h-[75vh] max-w-[50vw] bg-[#282C35]'>
         <div className='bg-gray-900 rounded-2xl flex justify-center items-center m-6'>
           <div className="p-10 flex flex-col gap-10 2xl:max-h-[600px] max-h-[400px] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
-            {props.teams.map((Team) => (
-              <div key={Team.team_id}>
+            {props.teams.map((team) => (
+              <div key={team.team_id}>
                 <Ranking
                   teamRank={''}
-                  countryName={Team.country.name}
-                  points={Team.score} />
+                  countryName={team.country.name}
+                  points={team.score} />
               </div>
             ))}
           </div>

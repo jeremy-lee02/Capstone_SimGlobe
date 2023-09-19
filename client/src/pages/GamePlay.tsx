@@ -42,8 +42,9 @@ const GamePlay = (props: Props) => {
     const [team, setTeam] = useState<Team>(initialTeam)
     const [status, setStatus] = useState<boolean>(true)
     const [round, setRound] = useState(1)
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(true)
     const [showModal2, setShowModal2] = useState(false)
+    const [teams, setTeams] = useState<Array<Team>>(room.team)
     
 
     function handleCountryUpdate(updatedRoom: Room){
@@ -89,10 +90,14 @@ const GamePlay = (props: Props) => {
                 const teamRef = doc(db, "rooms", roomCode);
                 const teamSnap = await getDoc(teamRef);
                 const gameInfo = teamSnap.data();
-                
+                setTeams(() => {
+                    if (gameInfo) return gameInfo.team
+                    return room.team
+                } )
                 if (gameInfo && teamCode) {
                     if (gameInfo.round > round) {
                         setTeam(gameInfo.team[teamCode])
+                        
                         console.log("new Team= ==== ", team)
                     }
                 }
@@ -104,6 +109,7 @@ const GamePlay = (props: Props) => {
     return statusOfRound
     },[])
   return (
+
     <div className='bg-[#1A1C22] min-h-screen'>
         <div className='flex justify-between items-start pr-10 pt-4'>
             <img src= {simGlobe_logo} width={200} height={150} className='object-contain' />
@@ -129,7 +135,7 @@ const GamePlay = (props: Props) => {
         </Modal>
         <Modal isVisible={showModal2} onClose={()=> setShowModal2(false)} > 
             <div className='p-4'>
-                <RankingModal teams={room.team}/>
+                <RankingModal teams={teams}/>
             </div>
         </Modal>
 
