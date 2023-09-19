@@ -2,7 +2,7 @@ import React from 'react'
 
 type RankingProp = {
   teamRank: string;
-  countryName: string;
+  countryName: any;
   points: number;
 };
 
@@ -12,7 +12,7 @@ const Ranking: React.FC<RankingProp> = ({
   return (
 
     <div className='flex justify-center items-center gap-10 pr-2'>
-        <h1 className='text-2xl font-semibold text-white'> {teamRank} </h1>
+        {/* <h1 className='text-2xl font-semibold text-white'> {teamRank} </h1> */}
         <div className='flex items-center justify-start pl-4 w-[35vw] h-16 bg-[#282C35] rounded-lg gap-6 relative'>
           <div className='w-[70px] h-[45px] bg-white rounded-xl'>
             {/* Countries Flag images */}

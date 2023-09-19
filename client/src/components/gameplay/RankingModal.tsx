@@ -1,18 +1,16 @@
 import Ranking from '../Ranking';
+import { Team } from '../../../typing';
 
-interface Team {
-  id: string;
-  teamRank: string;
-  countryName: string;
-  points: number;
-}
+// interface Team {
+//   id: string;
+//   teamRank: string;
+//   countryName: string;
+//   points: number;
+// }
 
-interface Room {
-  team: Team;
-}
 
 interface Props {
-  Room: Room[];
+  teams: Team[];
 }
 
 function RankingModal(props: Props) {
@@ -21,13 +19,12 @@ function RankingModal(props: Props) {
       <div className='flex justify-center items-center 2xl:max-h-[80vh] max-h-[75vh] max-w-[50vw] bg-[#282C35]'>
         <div className='bg-gray-900 rounded-2xl flex justify-center items-center m-6'>
           <div className="p-10 flex flex-col gap-10 2xl:max-h-[600px] max-h-[400px] overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-rounded-md hover:scrollbar-thumb-gray-700">
-            {props.Room.map(( Room) => (
-              <div key={Room.team.id}>
+            {props.teams.map((Team) => (
+              <div key={Team.team_id}>
                 <Ranking
-                  teamRank={Room.team.teamRank}
-                  countryName={Room.team.countryName}
-                  points={Room.team.points}
-                />
+                  teamRank={''}
+                  countryName={Team.country.name}
+                  points={Team.score} />
               </div>
             ))}
           </div>

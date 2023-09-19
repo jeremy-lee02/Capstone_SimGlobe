@@ -123,13 +123,13 @@ const GamePlay = (props: Props) => {
             <AdjustEconomy input_values={team.country.cluster.input_value} room={roomData} onUpdateCountry={handleCountryUpdate} countryName= {team.country.name} userStatus={status} countryInput={[]} roundInfo={roomCode + "-" + round} teamInfo={teamCode} />
         </div>
         <Modal isVisible={showModal} onClose={()=> setShowModal(false)}> 
-            <div className=' max-w-[80vw] xl:max-w-[70vh] max-h-[80vh] p-4'>
+            <div className=' max-w-[80vw] 2xl:max-w-[70vh] max-h-[80vh] p-4'>
                 <Introduction/>
             </div>
         </Modal>
         <Modal isVisible={showModal2} onClose={()=> setShowModal2(false)} > 
             <div className='p-4'>
-                <RankingModal room={room}/>
+                <RankingModal teams={room.team}/>
             </div>
         </Modal>
 
