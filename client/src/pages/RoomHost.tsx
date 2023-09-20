@@ -286,7 +286,7 @@ const RoomHost: React.FC = () => {
       // Clear any active timers when the component unmounts
 
     };
-  });
+  }, [countdownInterval]);
 
     // Start the countdown when isRunning becomes true
     useEffect(() => {
