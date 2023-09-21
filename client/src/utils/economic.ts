@@ -13,271 +13,271 @@ interface UserInput {
 
 
 function check_input_value(
-    team_id: number,
-    userInput: Array<UserInput>,
-    inputValue: InputValue
-  ): UserInput {
-    let newInput = {
-      name: 0,
-      input: inputValue,
-    };
-    userInput.forEach(u => {
-      if (u.name === team_id) {
-        newInput = { ...newInput, name: u.name, input: u.input };
+  team_id: number,
+  userInput: Array<UserInput>,
+  inputValue: InputValue
+): UserInput {
+  let newInput = {
+    name: 0,
+    input: inputValue,
+  };
+  userInput.forEach(u => {
+    if (u.name === team_id) {
+      newInput = { ...newInput, name: u.name, input: u.input };
+    }
+  });
+  return newInput;
+}
+
+// consumption pre-tax
+function consumption_pre_tax_function(
+  country: CountryCluster,
+  newInput: InputValue
+) {
+  const last_year_Y_percent =
+    country.other_value.nominal + country.elasticity.perpetual_growth;
+  const inflation =
+    Math.abs(country.preset_value.inflation) *
+    country.elasticity.impact_of_inflation_on_induced_consumption;
+  const interestRate_change =
+    country.elasticity.impact_of_interest_rate_on_induced_consumption_change *
+    (-country.input_value.interest_rate + newInput.interest_rate);
+  const interest_rate_level =
+    country.elasticity.impact_of_interest_rate_on_induced_consumption_level *
+    (-country.input_value.interest_rate + newInput.interest_rate);
+
+  return (
+    country.other_value.consumption_pre_tax *
+    (1 +
+      (last_year_Y_percent -
+        inflation -
+        interestRate_change -
+        interest_rate_level) /
+        100)
+  );
+}
+
+function investment_pre_tax_function(
+  country: CountryCluster,
+  newInput: InputValue
+) {
+  const last_year_Y_percent = country.other_value.nominal;
+  const r =
+    country.elasticity.impact_of_interest_rate_on_induced_investment_change *
+    (-country.input_value.interest_rate + newInput.interest_rate);
+  const r_percent =
+    country.elasticity.impact_of_interest_rate_on_induced_investment_level *
+    country.input_value.interest_rate;
+  const new_gov_debt_percent = country.other_value.debt_to_gdp;
+  const sigmoid =
+    (country.elasticity.height_of_sigmoid *
+      Math.exp(
+        country.elasticity.width_of_sigmoid *
+          (new_gov_debt_percent - country.elasticity.position_of_sigmoid)
+      )) /
+      (Math.exp(
+        country.elasticity.width_of_sigmoid *
+          (new_gov_debt_percent - country.elasticity.position_of_sigmoid)
+      ) +
+        1) +
+    country.elasticity.size_of_rewards;
+  return (
+    country.other_value.investment_pre_tax +
+    (Math.abs(country.other_value.investment_pre_tax) *
+      (last_year_Y_percent -
+        r -
+        r_percent +
+        parseFloat(sigmoid.toFixed(2)) *
+          country.preset_value
+            .impact_of_government_debt_on_investment_growth)) /
+      100
+  );
+}
+
+function global_interestRate_function(userInput: Array<UserInput>) {
+  let total_interestRate = 0;
+  userInput.forEach(i => {
+    total_interestRate = total_interestRate + i.input.interest_rate;
+  });
+  return parseFloat((total_interestRate / userInput.length).toFixed(2));
+}
+
+function income_tax_function(
+  newInput: InputValue,
+  consumption_pre_tax: number
+) {
+  return (consumption_pre_tax * newInput.vat_rate) / 100;
+}
+function investment_function(newInput: InputValue, investment_pre_tax: number) {
+  return investment_pre_tax * (1 - newInput.corporate_tax_rate / 100);
+}
+
+function consumption_function(
+  newInput: InputValue,
+  consumption_pre_tax: number
+) {
+  return consumption_pre_tax * (1 - newInput.vat_rate / 100);
+}
+
+function import_preTariff_function(country: CountryCluster) {
+  const a =
+    country.preset_value.initial_autonomous_imports +
+    country.preset_value.portion_of_gdp_as_induced_import *
+      country.other_value.nominal;
+  const b =
+    ((country.other_value.exchage_rate - 100) *
+      country.elasticity.impact_of_fx_rate_on_induced_import) /
+      100 +
+    1;
+  return a / b;
+}
+
+function import_value_function(newInput: InputValue, import_preTariff: number) {
+  return import_preTariff * (1 - newInput.import_tariff_rate / 100);
+}
+
+function gov_tariff_billion_function(
+  importTarif: number,
+  import_value: number
+) {
+  return importTarif - import_value;
+}
+function corporate_tax_function(
+  newInput: InputValue,
+  investment_pre_tax: number
+) {
+  return (investment_pre_tax * newInput.corporate_tax_rate) / 100;
+}
+function budget_surplus_billion_function(
+  newInput: InputValue,
+  corporate_tax_revanue: number,
+  vat_revanue: number,
+  tariff_revanue: number
+) {
+  return (
+    vat_revanue +
+    corporate_tax_revanue +
+    tariff_revanue -
+    newInput.government_expenditure_us
+  );
+}
+
+function export_value_function(export_info: Array<any>, countryName: string) {
+  // Filter the input country
+  const filtered_export_info = export_info.filter(e => e.name !== countryName);
+  let result = 0;
+  filtered_export_info.forEach(f => {
+    f.value.forEach((value: { name: string; export_to: number }) => {
+      if (value.name === countryName) {
+        result = result + value.export_to;
       }
     });
-    return newInput;
-  }
-  
-  // consumption pre-tax
-  function consumption_pre_tax_function(
-    country: CountryCluster,
-    newInput: InputValue
-  ) {
-    const last_year_Y_percent =
-      country.other_value.nominal + country.elasticity.perpetual_growth;
-    const inflation =
-      Math.abs(country.preset_value.inflation) *
-      country.elasticity.impact_of_inflation_on_induced_consumption;
-    const interestRate_change =
-      country.elasticity.impact_of_interest_rate_on_induced_consumption_change *
-      (-country.input_value.interest_rate + newInput.interest_rate);
-    const interest_rate_level =
-      country.elasticity.impact_of_interest_rate_on_induced_consumption_level *
-      (-country.input_value.interest_rate + newInput.interest_rate);
-  
-    return (
-      country.other_value.consumption_pre_tax *
-      (1 +
-        (last_year_Y_percent -
-          inflation -
-          interestRate_change -
-          interest_rate_level) /
-          100)
-    );
-  }
-  
-  function investment_pre_tax_function(
-    country: CountryCluster,
-    newInput: InputValue
-  ) {
-    const last_year_Y_percent = country.other_value.nominal;
-    const r =
-      country.elasticity.impact_of_interest_rate_on_induced_investment_change *
-      (-country.input_value.interest_rate + newInput.interest_rate);
-    const r_percent =
-      country.elasticity.impact_of_interest_rate_on_induced_investment_level *
-      country.input_value.interest_rate;
-    const new_gov_debt_percent = country.other_value.debt_to_gdp;
-    const sigmoid =
-      (country.elasticity.height_of_sigmoid *
-        Math.exp(
-          country.elasticity.width_of_sigmoid *
-            (new_gov_debt_percent - country.elasticity.position_of_sigmoid)
-        )) /
-        (Math.exp(
-          country.elasticity.width_of_sigmoid *
-            (new_gov_debt_percent - country.elasticity.position_of_sigmoid)
-        ) +
-          1) +
-      country.elasticity.size_of_rewards;
-    return (
-      country.other_value.investment_pre_tax +
-      (Math.abs(country.other_value.investment_pre_tax) *
-        (last_year_Y_percent -
-          r -
-          r_percent +
-          parseFloat(sigmoid.toFixed(2)) *
-            country.preset_value
-              .impact_of_government_debt_on_investment_growth)) /
-        100
-    );
-  }
-  
-  function global_interestRate_function(userInput: Array<UserInput>) {
-    let total_interestRate = 0;
-    userInput.forEach(i => {
-      total_interestRate = total_interestRate + i.input.interest_rate;
-    });
-    return parseFloat((total_interestRate / userInput.length).toFixed(2));
-  }
-  
-  function income_tax_function(
-    newInput: InputValue,
-    consumption_pre_tax: number
-  ) {
-    return (consumption_pre_tax * newInput.vat_rate) / 100;
-  }
-  function investment_function(newInput: InputValue, investment_pre_tax: number) {
-    return investment_pre_tax * (1 - newInput.corporate_tax_rate / 100);
-  }
-  
-  function consumption_function(
-    newInput: InputValue,
-    consumption_pre_tax: number
-  ) {
-    return consumption_pre_tax * (1 - newInput.vat_rate / 100);
-  }
-  
-  function import_preTariff_function(country: CountryCluster) {
-    const a =
-      country.preset_value.initial_autonomous_imports +
-      country.preset_value.portion_of_gdp_as_induced_import *
-        country.other_value.nominal;
-    const b =
-      ((country.other_value.exchage_rate - 100) *
-        country.elasticity.impact_of_fx_rate_on_induced_import) /
-        100 +
-      1;
-    return a / b;
-  }
-  
-  function import_value_function(newInput: InputValue, import_preTariff: number) {
-    return import_preTariff * (1 - newInput.import_tariff_rate / 100);
-  }
-  
-  function gov_tariff_billion_function(
-    importTarif: number,
-    import_value: number
-  ) {
-    return importTarif - import_value;
-  }
-  function corporate_tax_function(
-    newInput: InputValue,
-    investment_pre_tax: number
-  ) {
-    return (investment_pre_tax * newInput.corporate_tax_rate) / 100;
-  }
-  function budget_surplus_billion_function(
-    newInput: InputValue,
-    corporate_tax_revanue: number,
-    vat_revanue: number,
-    tariff_revanue: number
-  ) {
-    return (
-      vat_revanue +
-      corporate_tax_revanue +
-      tariff_revanue -
-      newInput.government_expenditure_us
-    );
-  }
-  
-  function export_value_function(export_info: Array<any>, countryName: string) {
-    // Filter the input country
-    const filtered_export_info = export_info.filter(e => e.name !== countryName);
-    let result = 0;
-    filtered_export_info.forEach(f => {
-      f.value.forEach((value: { name: string; export_to: number }) => {
-        if (value.name === countryName) {
-          result = result + value.export_to;
-        }
-      });
-    });
-    return result;
-  }
-  
-  function net_capital_function(
-    newInput: InputValue,
-    elasticity: Elasticity,
-    global_interestRate: number
-  ) {
-    return (
-      (newInput.interest_rate - global_interestRate) *
-      elasticity.impact_of_interest_rate_differential_on_capital_flow
-    );
-  }
-  
-  function exchage_rate_function(
-    export_value: number,
-    import_value: number,
-    trade_balance: number,
-    net_capital: number
-  ) {
-    return 1 - (trade_balance + net_capital) / (export_value + import_value);
-  }
-  
-  function capital_stock_function(
-    investment: number,
-    preset: PresetValue,
-    other_value: OtherValue
-  ) {
-    const result =
-      other_value.capital_stock -
-      (other_value.capital_stock * preset.depreciation) / 100 +
-      investment;
-    if (result > 0) return result;
-    return 0;
-  }
-  
-  function supply_function(
-    other_value: OtherValue,
-    capital_growth: number,
-    labor: number,
-    technological: number
-  ) {
-    const list_value = [capital_growth, labor, technological];
-    let product_function = 1;
-    list_value.forEach(l => {
-      product_function = product_function * (1 + l / 100);
-    });
-    return other_value.supply * product_function;
-  }
-  
-  function consumer_price_index_function(
-    round: number,
-    other_value: OtherValue,
-    elasticity: Elasticity,
-    supply: number,
-    demand: number,
-    prevInput: InputValue,
-    newInput: InputValue
-  ) {
-    const demand_over_supply =
-      (demand / other_value.demand / (supply / other_value.supply) - 1) *
-        elasticity.impact_of_supply_and_demand_change_on_inflation +
-      1;
-    const f_t_1 =
-      1 +
-      other_value.inflation *
-        (elasticity.impact_of_inflation_expectation_on_inflation / 100);
-    const interest_rate_calculation =
-      1 -
-      ((newInput.interest_rate - prevInput.interest_rate) *
-        elasticity.impact_of_interest_rate_on_inflation) /
-        100;
-    const final_result =
-      other_value.consumer_price_index *
-      demand_over_supply *
-      f_t_1 *
-      interest_rate_calculation;
-    // console.log("demand",other_value.demand)
-    // console.log("supply" ,other_value.supply)
-    return final_result;
-  }
-  
-  function real_gdp_function(nominal_gdp: number, consumer_price_index: number) {
-    return nominal_gdp / (consumer_price_index / 100);
-  }
-  
-  function unemployment_function(
-    other_value: OtherValue,
-    preset_value: PresetValue
-  ) {
-    const condition =
-      other_value.unemployment +
-      0.25 *
-        (other_value.inflation -
-          preset_value.impact_of_government_debt_on_investment_growth *
-            other_value.real);
-    if (condition < 0) return 0;
-    return (
-      other_value.unemployment +
-      0.25 *
-        (other_value.inflation -
-          preset_value.impact_of_government_debt_on_investment_growth -
-          other_value.real)
-    );
-  }
+  });
+  return result;
+}
+
+function net_capital_function(
+  newInput: InputValue,
+  elasticity: Elasticity,
+  global_interestRate: number
+) {
+  return (
+    (newInput.interest_rate - global_interestRate) *
+    elasticity.impact_of_interest_rate_differential_on_capital_flow
+  );
+}
+
+function exchage_rate_function(
+  export_value: number,
+  import_value: number,
+  trade_balance: number,
+  net_capital: number
+) {
+  return 1 - (trade_balance + net_capital) / (export_value + import_value);
+}
+
+function capital_stock_function(
+  investment: number,
+  preset: PresetValue,
+  other_value: OtherValue
+) {
+  const result =
+    other_value.capital_stock -
+    (other_value.capital_stock * preset.depreciation) / 100 +
+    investment;
+  if (result > 0) return result;
+  return 0;
+}
+
+function supply_function(
+  other_value: OtherValue,
+  capital_growth: number,
+  labor: number,
+  technological: number
+) {
+  const list_value = [capital_growth, labor, technological];
+  let product_function = 1;
+  list_value.forEach(l => {
+    product_function = product_function * (1 + l / 100);
+  });
+  return other_value.supply * product_function;
+}
+
+function consumer_price_index_function(
+  round: number,
+  other_value: OtherValue,
+  elasticity: Elasticity,
+  supply: number,
+  demand: number,
+  prevInput: InputValue,
+  newInput: InputValue
+) {
+  const demand_over_supply =
+    (demand / other_value.demand / (supply / other_value.supply) - 1) *
+      elasticity.impact_of_supply_and_demand_change_on_inflation +
+    1;
+  const f_t_1 =
+    1 +
+    other_value.inflation *
+      (elasticity.impact_of_inflation_expectation_on_inflation / 100);
+  const interest_rate_calculation =
+    1 -
+    ((newInput.interest_rate - prevInput.interest_rate) *
+      elasticity.impact_of_interest_rate_on_inflation) /
+      100;
+  const final_result =
+    other_value.consumer_price_index *
+    demand_over_supply *
+    f_t_1 *
+    interest_rate_calculation;
+  // console.log("demand",other_value.demand)
+  // console.log("supply" ,other_value.supply)
+  return final_result;
+}
+
+function real_gdp_function(nominal_gdp: number, consumer_price_index: number) {
+  return nominal_gdp / (consumer_price_index / 100);
+}
+
+function unemployment_function(
+  other_value: OtherValue,
+  preset_value: PresetValue
+) {
+  const condition =
+    other_value.unemployment +
+    0.25 *
+      (other_value.inflation -
+        preset_value.impact_of_government_debt_on_investment_growth *
+          other_value.real);
+  if (condition < 0) return 0;
+  return (
+    other_value.unemployment +
+    0.25 *
+      (other_value.inflation -
+        preset_value.impact_of_government_debt_on_investment_growth -
+        other_value.real)
+  );
+}
 
 function calculate_score(unemployment: number, inflation: number, budget_value: number, realGDP: number, score:ClusterScore){
     const score1 = unemployment_score(unemployment, score.unemployment.min, score.unemployment.max)
