@@ -1,17 +1,70 @@
-import EmailVerify from "./components/EmailVerify"
-import GamePlay from "./pages/GamePlay"
-import Home from "./pages/Home"
+
+import { RequireAuth} from "react-auth-kit"
+import React, { useEffect, useState } from "react";
 
 import {Routes, Route} from "react-router-dom"
 
+import RoomStudent from "./pages/RoomStudent"
+import RoomHost from "./pages/RoomHost"
+import HomeStudent from "./pages/HomeStudent"
+import socketService from "./services/socketService";
+import EmailVerify from "./pages/EmailVerify"
+import GamePlay from "./pages/GamePlay"
+import Dashboard from "./pages/AdminDashboard";
+import Leaderboard from "./pages/LeaderBoard";
+import LecturerDashboard from "./pages/LecturerDashboard";
+import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
+
+
+
+
 function App() {
 
+  const connectSocket = async () => {
+    const socket = await socketService
+      .connect("http://localhost:9000")
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
+  };
+
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
+  
   return (
     <>
       <Routes>
-        <Route path="/" element= {<Home />} />
+        //Lecture
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/roomhost/:room" element={
+          <RequireAuth loginPath={'/login'}>
+            <RoomHost />
+          </RequireAuth>} />
+        <Route path="/" element={
+          <RequireAuth loginPath={'/login'}>
+            <LecturerDashboard />
+          </RequireAuth>} />
         <Route path="/users/:id/verify/:token" element={<EmailVerify />} />
-        <Route path= {`/${1}`} element= {<GamePlay />} />
+
+        //User
+        <Route path= "/play" element= {<GamePlay/>} />
+        <Route path="/join/:roomId" element={<RoomStudent />} />
+        <Route path="/homestudent" element={<HomeStudent />} />
+
+        //Admin
+        <Route path="/admin" element={
+            <AdminLogin />}/>
+        <Route path="/admin/dashboard" element={
+          <RequireAuth loginPath={'/admin'}>
+            <Dashboard />
+          </RequireAuth>} />
+        <Route path="/leaderboard" element={
+          <RequireAuth loginPath={'/admin'}>
+            <Leaderboard />
+          </RequireAuth>} />
       </Routes>
     </>
   )

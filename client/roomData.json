@@ -1,0 +1,255 @@
+{
+    "room_id": "helloworld",
+    "team": [
+      {
+        "team_id": "1",
+        "user": [
+          "Le Trung Tin",
+          "Anh Duc",
+          "Nhat Minh",
+          "Luu Toan"
+        ],
+        "country": {
+          "country_id": "1",
+          "name": "Vietnam",
+          "cluster": {
+            "name": "medium",
+            "preset_value": {
+              "initial_consumption": 50,
+              "initial_investment": 20,
+              "initial_spending": 15,
+              "initial_growth": 5,
+              "initial_capital_stock": 80,
+              "initial_autonomous_imports": 3,
+              "max_gDP_score": 8,
+              "depreciation": 20,
+              "impact_of_government_debt_on_investment_growth": 1,
+              "impact_of_real_gdp_on_unemployment": 1,
+              "portion_of_gdp_as_induced_import": 0.1,
+              "inflation": 3,
+              "unemployment": 10
+            },
+            "input_value": {
+              "interest_rate": 15,
+              "vat_rate": 15,
+              "corporate_tax_rate": 30,
+              "government_expenditure_us": 15,
+              "import_tariff_rate": 10
+            },
+            "elasticity": {
+              "perpetual_growth": 1,
+              "impact_of_inflation_on_induced_consumption": 1.5,
+              "impact_of_interest_rate_on_induced_consumption_change": 0.75,
+              "impact_of_interest_rate_on_induced_consumption_level": 0.25,
+              "impact_of_interest_rate_on_induced_investment_change": 0.75,
+              "impact_of_interest_rate_on_induced_investment_level": 0.25,
+              "impact_of_interest_rate_on_inflation": 1,
+              "impact_of_inflation_expectation_on_inflation": 0.75,
+              "impact_of_supply_and_demand_change_on_inflation": 0.3,
+              "impact_of_interest_rate_differential_on_capital_flow": 3,
+              "autonousmous_import": 3,
+              "impact_of_fx_rate_on_induced_import": 0.75,
+              "height_of_sigmoid": 22.5,
+              "width_of_sigmoid": 0.15,
+              "position_of_sigmoid": 74,
+              "size_of_rewards": 2.5
+            },
+            "other_value": {
+              "consumption": 42.5,
+              "investment": 14,
+              "demand": 71.5,
+              "supply": 60,
+              "nominal": 65.75,
+              "real_gdp": 65.75,
+              "capital_growth": 0,
+              "labor": 0,
+              "technological": 0,
+              "consumer_price_index": 0,
+              "income_tax": 7.5,
+              "corporate_tax": 6,
+              "tariff_revanue": 0,
+              "gov_debt": 0,
+              "debt_to_gdp": 0,
+              "exchage_rate": 100,
+              "export_value": 3.33,
+              "import_value": 3.33,
+              "import_preTariff": 0,
+              "trade_balance": 0,
+              "net_capital": 3.33,
+              "global_interestRate": 11.67
+            }
+          }
+        },
+        "max_player": 4,
+        "score": 0
+      },
+      {
+        "team_id": "2",
+        "user": [
+          "Le Trung Tin1",
+          "Anh Duc1",
+          "Nhat Minh1",
+          "Luu Toan1"
+        ],
+        "country": {
+          "country_id": "2",
+          "name": "China",
+          "cluster": {
+            "name": "small",
+            "preset_value": {
+              "initial_consumption": 100,
+              "initial_investment": 40,
+              "initial_spending": 30,
+              "initial_growth": 4,
+              "initial_capital_stock": 160,
+              "initial_autonomous_imports": 4,
+              "max_gDP_score": 6,
+              "depreciation": 19,
+              "impact_of_government_debt_on_investment_growth": 0.75,
+              "impact_of_real_gdp_on_unemployment": 1.25,
+              "portion_of_gdp_as_induced_import": 0.08,
+              "inflation": 3,
+              "unemployment": 8
+            },
+            "input_value": {
+              "interest_rate": 10,
+              "vat_rate": 15,
+              "corporate_tax_rate": 30,
+              "government_expenditure_us": 30,
+              "import_tariff_rate": 10
+            },
+            "elasticity": {
+              "perpetual_growth": 1,
+              "impact_of_inflation_on_induced_consumption": 1.5,
+              "impact_of_interest_rate_on_induced_consumption_change": 0.75,
+              "impact_of_interest_rate_on_induced_consumption_level": 0.25,
+              "impact_of_interest_rate_on_induced_investment_change": 0.75,
+              "impact_of_interest_rate_on_induced_investment_level": 0.25,
+              "impact_of_interest_rate_on_inflation": 1,
+              "impact_of_inflation_expectation_on_inflation": 0.75,
+              "impact_of_supply_and_demand_change_on_inflation": 0.3,
+              "impact_of_interest_rate_differential_on_capital_flow": 3,
+              "autonousmous_import": 3,
+              "impact_of_fx_rate_on_induced_import": 0.75,
+              "height_of_sigmoid": 22.5,
+              "width_of_sigmoid": 0.15,
+              "position_of_sigmoid": 74,
+              "size_of_rewards": 2.5
+            },
+            "other_value": {
+              "consumption": 85,
+              "investment": 28,
+              "demand": 143,
+              "supply": 120,
+              "nominal": 131.5,
+              "real_gdp": 131.5,
+              "capital_growth": 0,
+              "labor": 0,
+              "technological": 0,
+              "consumer_price_index": 0,
+              "income_tax": 15,
+              "corporate_tax": 12,
+              "tariff_revanue": 0,
+              "gov_debt": 0,
+              "debt_to_gdp": 0,
+              "exchage_rate": 100,
+              "export_value": 3.33,
+              "import_value": 3.33,
+              "import_preTariff": 0,
+              "trade_balance": 0,
+              "net_capital": -1.67,
+              "global_interestRate": 11.67
+            }
+          }
+        },
+        "max_player": 4,
+        "score": 0
+      },
+      {
+        "team_id": "3",
+        "user": [
+          "Le Trung Tin2",
+          "Anh Duc2",
+          "Nhat Minh2",
+          "Luu Toan2"
+        ],
+        "country": {
+          "country_id": "3",
+          "name": "United State",
+          "cluster": {
+            "name": "large",
+            "preset_value": {
+              "initial_consumption": 150,
+              "initial_investment": 60,
+              "initial_spending": 45,
+              "initial_growth": 3,
+              "initial_capital_stock": 240,
+              "initial_autonomous_imports": 5,
+              "max_gDP_score": 4,
+              "depreciation": 18,
+              "impact_of_government_debt_on_investment_growth": 0.5,
+              "impact_of_real_gdp_on_unemployment": 1.5,
+              "portion_of_gdp_as_induced_import": 0.06,
+              "inflation": 3,
+              "unemployment": 6
+            },
+            "input_value": {
+              "interest_rate": 10,
+              "vat_rate": 15,
+              "corporate_tax_rate": 30,
+              "government_expenditure_us": 30,
+              "import_tariff_rate": 10
+            },
+            "elasticity": {
+              "perpetual_growth": 1,
+              "impact_of_inflation_on_induced_consumption": 1.5,
+              "impact_of_interest_rate_on_induced_consumption_change": 0.75,
+              "impact_of_interest_rate_on_induced_consumption_level": 0.25,
+              "impact_of_interest_rate_on_induced_investment_change": 0.75,
+              "impact_of_interest_rate_on_induced_investment_level": 0.25,
+              "impact_of_interest_rate_on_inflation": 1,
+              "impact_of_inflation_expectation_on_inflation": 0.75,
+              "impact_of_supply_and_demand_change_on_inflation": 0.3,
+              "impact_of_interest_rate_differential_on_capital_flow": 3,
+              "autonousmous_import": 3,
+              "impact_of_fx_rate_on_induced_import": 0.75,
+              "height_of_sigmoid": 22.5,
+              "width_of_sigmoid": 0.15,
+              "position_of_sigmoid": 74,
+              "size_of_rewards": 2.5
+            },
+            "other_value": {
+              "consumption": 127.5,
+              "investment": 42,
+              "demand": 199.5,
+              "supply": 120,
+              "nominal": 159.75,
+              "real_gdp": 159.75,
+              "capital_growth": 0,
+              "labor": 0,
+              "technological": 0,
+              "consumer_price_index": 0,
+              "income_tax": 22.5,
+              "corporate_tax": 18,
+              "tariff_revanue": 0,
+              "gov_debt": 0,
+              "debt_to_gdp": 0,
+              "exchage_rate": 100,
+              "export_value": 3.33,
+              "import_value": 3.33,
+              "import_preTariff": 0,
+              "trade_balance": 0,
+              "net_capital": -1.67,
+              "global_interestRate": 11.67
+            }
+          }
+        },
+        "max_player": 4,
+        "score": 0
+      }
+    ],
+    "status": true,
+    "round": 1,
+    "room_size": 3,
+    "key_time": "1 hour"
+  } 
